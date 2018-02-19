@@ -42,6 +42,14 @@
       }
     ];
 
+    var fixHelper = function (e, ui) {
+      ui.children().each(function () {
+        console.log(e);
+        $(this).width($(this).width());
+      });
+      return ui;
+    };
+
     vm.sortableOptions = {
       'ui-floating': true,
       cancel: 'input,textarea,button,select,option,[contenteditable]',
@@ -54,7 +62,8 @@
 
           return lawsTitle;
         });
-      }
+      },
+      helper: fixHelper
     };
 
     function remove() {
