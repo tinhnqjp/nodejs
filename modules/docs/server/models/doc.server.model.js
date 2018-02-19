@@ -51,7 +51,7 @@ mongoose.model('Doc', DocSchema);
 * Seeds the User collection with document (Doc)
 * and provided options.
 */
-function seed(doc, options) {
+function seed(docx, options) {
   var Doc = mongoose.model('Doc');
 
   return new Promise(function (resolve, reject) {
@@ -83,7 +83,7 @@ function seed(doc, options) {
               return reject(err);
             }
 
-            doc.user = admin;
+            docx.user = admin;
 
             return resolve();
           });
@@ -94,7 +94,7 @@ function seed(doc, options) {
       return new Promise(function (resolve, reject) {
         Doc
           .findOne({
-            meishou: doc.meishou
+            meishou: docx.title
           })
           .exec(function (err, existing) {
             if (err) {
@@ -126,11 +126,11 @@ function seed(doc, options) {
       return new Promise(function (resolve, reject) {
         if (skip) {
           return resolve({
-            message: chalk.yellow('Database Seeding: Doc\t' + doc.meishou + ' skipped')
+            message: chalk.yellow('Database Seeding: Doc\t' + docx.title + ' skipped')
           });
         }
 
-        var doc = new Doc(doc);
+        var doc = new Doc(docx);
 
         doc.save(function (err) {
           if (err) {

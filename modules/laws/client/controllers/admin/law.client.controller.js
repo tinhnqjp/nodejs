@@ -4,7 +4,7 @@
   angular
     .module('laws.admin')
     .controller('LawsAdminController', LawsAdminController)
-    .directive("contenteditable", ContenteditableDirective);
+    .directive('contenteditable', ContenteditableDirective);
 
   LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve', 'Authentication', 'Notification'];
 
@@ -17,7 +17,7 @@
     vm.remove = remove;
     vm.removeLawsTitle = removeLawsTitle;
     vm.save = save;
-    vm.laws = 
+    vm.laws =
     [
       {
         '_id': '1',
@@ -41,18 +41,19 @@
         'sort': 3
       }
     ];
-    
 
     vm.sortableOptions = {
       'ui-floating': true,
       cancel: 'input,textarea,button,select,option,[contenteditable]',
-      stop: function(e, ui) {
+      stop: function (e, ui) {
         // this callback has the changed model
         var index = 0;
-        vm.law.laws_titles.map(function(lawsTitle) {
+        var updateLaws = vm.law.laws_titles.map(function (lawsTitle) {
           index++;
           lawsTitle.sort = index;
-        }).join();
+
+          return lawsTitle;
+        });
       }
     };
 
@@ -98,44 +99,41 @@
     }
   }
 
-  function ContenteditableDirective () {
+  function ContenteditableDirective() {
     return {
       require: '?ngModel',
-      link: function(scope, element, attrs, ctrl) {
-  
+      link: function (scope, element, attrs, ctrl) {
         // Do nothing if this is not bound to a model
         if (!ctrl) { return; }
-  
-        // Checks for updates (input or pressing ENTER)
         // view -> model
-        element.bind('input enterKey', function() {
+        element.bind('input enterKey', function () {
           var rerender = false;
           var html = element.html();
-  
+
           if (attrs.noLineBreaks) {
             html = html.replace(/<div>/g, '').replace(/<br>/g, '').replace(/<\/div>/g, '');
             rerender = true;
           }
-  
-          scope.$apply(function() {
+
+          scope.$apply(function () {
             ctrl.$setViewValue(html);
-            if(rerender) {
+            if (rerender) {
               ctrl.$render();
             }
           });
         });
-  
-        element.keyup(function(e){
-          if(e.keyCode === 13){
+
+        element.keyup(function (e) {
+          if (e.keyCode === 13) {
             element.trigger('enterKey');
           }
         });
-  
+
         // model -> view
-        ctrl.$render = function() {
+        ctrl.$render = function () {
           element.html(ctrl.$viewValue);
         };
-  
+
         // load init value from DOM
         ctrl.$render();
       }

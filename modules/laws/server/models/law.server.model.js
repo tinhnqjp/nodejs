@@ -30,7 +30,7 @@ var LawSchema = new Schema({
       houbun: String,
       sort: Number
     }
-  ],
+  ]
 });
 
 LawSchema.statics.seed = seed;
@@ -41,12 +41,12 @@ mongoose.model('Law', LawSchema);
 * Seeds the User collection with lawument (Law)
 * and provided options.
 */
-function seed(law, options) {
+function seed(doc, options) {
   var Law = mongoose.model('Law');
 
   return new Promise(function (resolve, reject) {
 
-    skipLawument()
+    skipDocument()
       .then(findAdminUser)
       .then(add)
       .then(function (response) {
@@ -73,18 +73,18 @@ function seed(law, options) {
               return reject(err);
             }
 
-            law.user = admin;
+            doc.user = admin;
 
             return resolve();
           });
       });
     }
 
-    function skipLawument() {
+    function skipDocument() {
       return new Promise(function (resolve, reject) {
         Law
           .findOne({
-            title: law.title
+            title: doc.title
           })
           .exec(function (err, existing) {
             if (err) {
@@ -116,11 +116,11 @@ function seed(law, options) {
       return new Promise(function (resolve, reject) {
         if (skip) {
           return resolve({
-            message: chalk.yellow('Database Seeding: Law\t' + law.title + ' skipped')
+            message: chalk.yellow('Database Seeding: Law\t' + doc.title + ' skipped')
           });
         }
 
-        var law = new Law(law);
+        var law = new Law(doc);
 
         law.save(function (err) {
           if (err) {
