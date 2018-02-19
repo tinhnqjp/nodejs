@@ -49,14 +49,10 @@
       stop: function(e, ui) {
         // this callback has the changed model
         var index = 0;
-        var logEntry = vm.law.laws_titles.map(function(lawsTitle){
-          console.log(lawsTitle);
+        vm.law.laws_titles.map(function(lawsTitle) {
           index++;
           lawsTitle.sort = index;
-          console.log(lawsTitle);
-        });
-        //console.log(vm.law.laws_titles);
-        //vm.law.laws_titles = logEntry;
+        }).join();
       }
     };
 
@@ -85,7 +81,7 @@
         return false;
       }
 
-      console.log(vm.law.laws_titles);  return;
+      console.log(vm.law.laws_titles); // return;
       // Create a new law, or update the current instance
       vm.law.createOrUpdate()
         .then(successCallback)
