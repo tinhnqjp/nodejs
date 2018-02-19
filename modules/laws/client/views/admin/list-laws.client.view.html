@@ -1,0 +1,90 @@
+﻿<div id="content1" class="w3-container" style="padding-top:50px">
+    <a type="button" class="btn btn-success pull-right" id="btnAdd" data-ui-sref="admin.laws.create">
+        <span class="glyphicon glyphicon-plus"></span> 登録
+    </a>
+    <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+    </div>
+    <div>
+        <strong style="font-size:20px;">法令管理</strong><br/>
+    </div>
+    <div style="font-weight:bold; padding-top:10px;">一覧</div>
+
+    <hr>
+    <div class="table-responsive">
+        <style>
+            .status_ok{
+                color:#009900;
+                font-weight:bold;
+                text-align:center;
+            }
+
+            #jquery-ui-sortable {
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+              width: 70%;
+            }
+            #jquery-ui-sortable li {
+              margin: 0 3px 3px 3px;
+              padding: 0.3em;
+              padding-left: 1em;
+              font-size: 15px;
+              font-weight: bold;
+              cursor: move;
+            }
+
+            * {
+              font-family: Consolas;
+            }
+
+            .editableTable {
+              border: solid 1px;
+              width: 100%;
+            }
+
+            .editableTable td {
+              border: solid 1px;
+            }
+
+            .editableTable .cellEditing {
+              padding: 0;
+            }
+
+            .editableTable .cellEditing input[type=text] {
+              width: 100%;
+              border: 0;
+              background-color: rgb(255,253,210);
+            }
+        </style>
+
+        <table id="ads_table" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="bg-primary" style="width:500px;">法令名称</th>
+                    <th class="bg-primary" style="width:100px;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="law in vm.laws | pagination: (vm.currentPage - 1) * vm.pageSize | limitTo: vm.pageSize">
+                    <td style="text-align:left;" data-ng-bind="law.title"></td>
+                    <td style="text-align:center;">
+                        <button class="btn btn-info btn-sm" data-ui-sref="admin.laws.edit({lawId: law._id})">
+                        <i class="glyphicon glyphicon-pencil"></i> 編集</button>
+                        <button class="btn btn-warning btn-sm"  ng-click="vm.copy(law)">
+                        <i class="glyphicon glyphicon-copyright-mark"></i> コピー</button>
+                        <button class="btn btn-danger btn-sm" ng-click="vm.remove(law)">
+                        <i class="glyphicon glyphicon-trash"></i> 削除</button>
+                    </td>
+                </tr>
+                <tr data-ng-if="vm.laws.$resolved && !vm.laws.length">
+                    <td colspan="2">No laws yet, why don't you <a data-ui-sref="admin.laws.create">create one</a>?</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+   
+    <div style="width:100%; text-align:center;">
+        <hr>
+        <ul uib-pagination total-items="vm.laws.length" items-per-page="vm.pageSize" ng-model="vm.currentPage"></ul>
+    </div>
+</div>

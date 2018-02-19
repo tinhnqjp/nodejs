@@ -1,0 +1,2050 @@
+<div id="content1" class="w3-container" style="padding-top:50px;">
+  <a type="button" onclick="page_next()" class="btn btn-success pull-right" id="btnAdd">
+    <span class="glyphicon glyphicon-plus"></span> 登録
+  </a>
+  <div id="myTop" class="w3-container w3-top w3-theme w3-large"></div>
+  <div>
+    <strong style="font-size:20px;">物件管理</strong><br/>
+  </div>
+  <div style="font-weight:bold; padding-top:10px;">一覧</div>
+
+  <hr>
+  <div class="table-responsive">
+      <style>
+          #jquery-ui-sortable {
+              list-style-type: none;
+              margin: 0;
+              padding: 0;
+              width: 70%;
+          }
+
+          #jquery-ui-sortable li {
+              margin: 0 3px 3px 3px;
+              padding: 0.3em;
+              padding-left: 1em;
+              font-size: 15px;
+              font-weight: bold;
+              cursor: move;
+          }
+      </style>
+      
+      <div style="float:right;padding:10px;">
+      <button class="btn btn-info btn-sm">
+        <i class="glyphicon glyphicon-allow-down"></i> NICEインポート</button>
+      </div>
+      <table id="bukken_table" class="table table-striped table-bordered table-hover">
+          <thead>
+              <tr>
+                  <th class="bg-primary">＃</th>
+                  <th class="bg-primary">名称</th>
+                  <th class="bg-primary" style="width:100px;">ドキュメント</th>
+                  <th class="bg-primary" style="width:150px;">操作</th>
+              </tr>
+          </thead>
+          <tbody id="bukken_tbody">
+              <td style="text-align:center;">1</td>
+              <td class="status_ok">デモ用物件データ</td>
+              <td ><button class="btn btn-primary btn-sm">
+                      <i class="glyphicon glyphicon-save"></i> ダウンロード</button></td>
+              <td style="text-align:center;">
+                  <button class="btn btn-info btn-sm">
+                      <i class="glyphicon glyphicon-pencil"></i> 編集</button>
+                  <button class="btn btn-danger btn-sm">
+                      <i class="glyphicon glyphicon-trash"></i> 削除</button>
+              </td>
+          </tbody>
+      </table>
+      <!-- <script src="../js/bukken.js"></script>
+      <script>init_bukken_table();</script> -->
+  </div>
+
+  <div style="width:100%; text-align:center;">
+      <hr>
+      <ul class="pagination">
+          <li><a href="#" style="background-color:#506e9b; color:#FFF;">1</a></li>
+      </ul>
+  </div>
+</div>
+
+<div id="content2" class="w3-container" style="padding-top:50px; display:none;">
+  <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+      <span id="myIntro" class="w3-hide">物件管理</span>
+  </div>
+  <div>
+      <strong style="font-size:20px;">物件管理</strong><br/>
+  </div>
+  <a type="button" class="btn btn-primary pull-right" id="btn_save_bukken">
+      <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
+  </a>
+  <a type="button" onclick="page_back()" class="mg15r btn btn-warning pull-right">
+      キャンセル
+  </a>
+  <div style="font-weight:bold; padding-top:10px;">
+      <a href="#" onclick="page_back();">一覧 </a> > 物件登録
+  </div>
+
+  <hr>
+  <div class="w3-bar w3-theme">
+  <button class="w3-bar-item w3-button tablink w3-red" onclick="openTab(event, 'men1')">物件概要</button>
+  <button class="w3-bar-item w3-button tablink" onclick="openTab(event, 'men3')">第三面</button>
+  <button class="w3-bar-item w3-button tablink" onclick="openTab(event, 'men4')">第四面</button>
+  </div>
+  <!-- #コントロールボタン -->
+  <!-- 入力Form -->
+  
+  <!-- 第一面 -->
+  <div class="row gamen" id="men1"  >
+      <div class="col-xs-12">
+          <div class="panel panel-primary">
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h5>受付欄</h5>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="input-group form-inline panel" id="uketsuke_date_picker">
+                              <span class="input-group-addon">年/月/日</span>
+                              <input type="text" class="form-control date" id="txt_uketsuke_date"/>
+                              <span id="btnDatePickerUketsuke" class="btn btn-default input-group-addon add-on flat">
+                                  <span class="glyphicon glyphicon-calendar"></span>
+                              </span>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">第</span>
+                              <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              <span class="input-group-addon add-on flat">号</span>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">係員印</span>
+                              <input type="text" class="form-control" id="txt_uketsuke_kakariin"/>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h5>消防関係同意欄</h5>
+                      </div>
+                      <div class="col-md-12">
+                          <div class="input-group form-inline panel" id="start_date_picker">
+                              <span class="input-group-addon">消防関係同意欄</span>
+                              <textarea type="text" class="form-control"></textarea>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h5>確認番号欄</h5>
+                      </div>
+                      <div class="col-md-12">
+                          <div class="input-group form-inline panel" id="start_date_picker">
+                              <span class="input-group-addon">確認番号欄</span>
+                              <textarea type="text" class="form-control"></textarea>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h5>確認番号欄</h5>
+                      </div>
+                      
+                      <div class="col-md-4">
+                          <div class="input-group form-inline panel" id="kakunin_date_picker">
+                              <span class="input-group-addon">年/月/日</span>
+                              <input type="text" class="form-control date" id="txt_kakunin_date"/>
+                              <span id="btnDatePickerKakunin" class="btn btn-default input-group-addon add-on flat">
+                                  <span class="glyphicon glyphicon-calendar"></span>
+                              </span>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">第</span>
+                              <input type="text" class="form-control" id="txt_kakunin_go" />
+                              <span id="btnDatePickerEnd" class="input-group-addon add-on flat">
+                                  号
+                              </span>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">係員印</span>
+                              <input type="text" class="form-control" id="txt_kakunin_kakariin"/>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- end 第一面 -->
+  <!-- 第三面 -->
+  <div class="row gamen" id="men3" style="display:none">
+      <div class="col-xs-12">
+          <div class="panel panel-primary">
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h5>建築物及びその敷地に関する事項</h5>
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【1.地名地番】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【2.住居表示】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-4 col-form-label">【3.都市計画区域及び準都市計画区域の内外の別等】</label>
+                      <div class="col-sm-8">
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">都市計画区域内
+                          </label>
+
+                          (<label class="checkbox-inline">
+                              <input type="checkbox" value="">市街化区域
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">市街化調整区域
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">区域区分非設定
+                          </label>）
+
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">準都市計画区域内
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">都市計画区域及び準都市計画区域外
+                          </label>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【4.防火地域】</label>
+                      <div class="col-sm-10">
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">防火地域
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">準防火地域
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">指定なし
+                          </label>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-4 col-form-label">【5.その他の区域、地域、地区又は街区】</label>
+                      <div class="col-sm-8">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【6.天井】</label>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-3">
+                                  【ｲ.幅　　員】
+                              </div>
+                              <div class="col-sm-9">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              </div>
+                              <div class="col-sm-3">
+                                  【ﾛ.敷地と接している部分の長さ】
+                              </div>
+                              <div class="col-sm-9">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【7.敷地面積】</label>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ｲ.敷地面積】
+                              </div>
+                              <div class="col-sm-1">
+                                  (1)
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_1_1" value="" onblur="sum_txt_shikichi(1)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_1_2" value="" onblur="sum_txt_shikichi(1)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_1_3" value="" onblur="sum_txt_shikichi(1)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_1_4" value="" onblur="sum_txt_shikichi(1)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-1">
+                                  (2)
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_2_1" value="" onblur="sum_txt_shikichi(2)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_2_2" value="" onblur="sum_txt_shikichi(2)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_2_3" value="" onblur="sum_txt_shikichi(2)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_2_4" value="" onblur="sum_txt_shikichi(2)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ﾛ.用途地域等】
+                              </div>
+                              <div class="col-sm-1">
+                              </div>
+                              <div class="col-sm-2">
+                                  <select class="form-control">
+                                      <option>第1種低層住居専用地域</option>
+                                      <option>第2種低層住居専用地域</option>
+                                      <option>第1種中高層住居専用地域</option>
+                                      <option>第2種中高層住居専用地域</option>
+                                      <option>第1種住居地域</option>
+                                      <option>第2種住居地域</option>
+                                      <option>準住居地域</option>
+                                      <option>近隣商業地域</option>
+                                      <option>商業地域</option>
+                                      <option>準工業地域</option>
+                                      <option>工業地域</option>
+                                      <option>工業専用地域</option>
+                                      <option>指定なし</option>
+                                  </select>
+                              </div>
+                              <div class="col-sm-2">
+                                  <select class="form-control">
+                                      <option>第1種低層住居専用地域</option>
+                                      <option>第2種低層住居専用地域</option>
+                                      <option>第1種中高層住居専用地域</option>
+                                      <option>第2種中高層住居専用地域</option>
+                                      <option>第1種住居地域</option>
+                                      <option>第2種住居地域</option>
+                                      <option>準住居地域</option>
+                                      <option>近隣商業地域</option>
+                                      <option>商業地域</option>
+                                      <option>準工業地域</option>
+                                      <option>工業地域</option>
+                                      <option>工業専用地域</option>
+                                      <option>指定なし</option>
+                                  </select>
+                              </div>
+                              <div class="col-sm-2">
+                                  <select class="form-control">
+                                      <option>第1種低層住居専用地域</option>
+                                      <option>第2種低層住居専用地域</option>
+                                      <option>第1種中高層住居専用地域</option>
+                                      <option>第2種中高層住居専用地域</option>
+                                      <option>第1種住居地域</option>
+                                      <option>第2種住居地域</option>
+                                      <option>準住居地域</option>
+                                      <option>近隣商業地域</option>
+                                      <option>商業地域</option>
+                                      <option>準工業地域</option>
+                                      <option>工業地域</option>
+                                      <option>工業専用地域</option>
+                                      <option>指定なし</option>
+                                  </select>
+                              </div>
+                              <div class="col-sm-2">
+                                  <select class="form-control">
+                                      <option>第1種低層住居専用地域</option>
+                                      <option>第2種低層住居専用地域</option>
+                                      <option>第1種中高層住居専用地域</option>
+                                      <option>第2種中高層住居専用地域</option>
+                                      <option>第1種住居地域</option>
+                                      <option>第2種住居地域</option>
+                                      <option>準住居地域</option>
+                                      <option>近隣商業地域</option>
+                                      <option>商業地域</option>
+                                      <option>準工業地域</option>
+                                      <option>工業地域</option>
+                                      <option>工業専用地域</option>
+                                      <option>指定なし</option>
+                                  </select>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  【ﾊ.建築基準法第52条第１項及び第２項の規定による建築物の容積率】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-1">
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  【ﾆ.建築基準法第53条第１項の規定による建築物の建蔽率】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-1">
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  【ﾎ.敷地面積の合計】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-1">
+                                  （1）
+                              </div>
+                              <div class="col-sm-9">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_goukei_1" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-1">
+                                  （2）
+                              </div>
+                              <div class="col-sm-9">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_goukei_2" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  【ﾍ.敷地に建築可能な延べ面積を敷地面積で除した数値】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-1">
+                              </div>
+                              <div class="col-sm-9">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value=""/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  【ﾄ.敷地に建築可能な建築面積を敷地面積で除した数値】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-1">
+                              </div>
+                              <div class="col-sm-9">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value=""/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-3">
+                                  【ﾁ.備　　考】
+                              </div>
+                              <div class="col-sm-9">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" value="" />
+                                      <span class="input-group-addon add-on flat">)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【8.主要用途】</label>
+                      <div class="col-sm-3">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">(区分</span>
+                              <input type="text" class="form-control" id="txt_yaku_shinsei_1" value=""/>
+                              <span class="input-group-addon add-on flat">)</span> 
+                          </div>
+                      </div>
+                      <div class="col-sm-7">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【9.工事種別】</label>
+                      <div class="col-sm-10">
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">新築
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">増築
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">改築
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">移転
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">用途変更
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">大規模の修繕
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">大規模の模様替
+                          </label>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【10.建築面積】</label>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  (申請部分)
+                              </div>
+                              <div class="col-sm-3">
+                                  (申請以外の部分)
+                              </div>
+                              <div class="col-sm-4">
+                                  (合計)
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ｲ.建築面積】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_num_kenchiku_1" value="" onblur="sum_txt_shikichi(0)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_num_kenchiku_2" value="" onblur="sum_txt_shikichi(0)"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_num_kenchiku_goukei" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ﾛ.建蔽率】
+                              </div>
+                              <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_num_kenchiku_kenpeiritsu" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【11.延べ面積】</label>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  (申請部分)
+                              </div>
+                              <div class="col-sm-3">
+                                  (申請以外の部分)
+                              </div>
+                              <div class="col-sm-4">
+                                  (合計)
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-2">
+                                  【ｲ.建築物全体】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_1" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_1" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-12">
+                                  【ﾛ.地階の住宅又は老人ホーム、福祉ホームその他これらに類するものの部分】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_2" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_2" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_2" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-12">
+                                  【ﾊ.エレベーターの昇降路の部分】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_3" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_3" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_3" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-12">
+                                  【ﾆ.共同住宅の共用の廊下等の部分】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_4" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_4" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_4" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-2">
+                                  【ﾎ.自動車車庫等の部分】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_5" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_5" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_5" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-2">
+                                  【ﾍ.備蓄倉庫の部分】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_6" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_6" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_6" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-2">
+                                  【ﾄ.蓄電池の設置部分】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_7" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_7" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_7" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-12">
+                                  【ﾁ.自家発電設備の設置部分】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_8" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_8" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_8" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-2">
+                                  【ﾘ.貯水槽の設置部分】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_9" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_9" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_9" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-2">
+                                  【ﾇ.住宅の部分】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_10" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_10" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_10" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_menseki">
+                              <div class="col-sm-12">
+                                  【ﾙ.老人ホーム、福祉ホームその他これらに類するものの部分】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_11" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_11" value="" onblur="sum_txt_menseki()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_goukei_11" value="" readonly >
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ｦ.延べ面積】
+                              </div>
+                              <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_nobe" value="" onblur="txt_menseki_nobe()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ﾜ.容積率】
+                              </div>
+                              <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_youseki" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">%)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【12.建築物の数】</label>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-3">
+                                  【ｲ.申請に係る建築物の数】
+                              </div>
+                              <div class="col-sm-9">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              </div>
+                              <div class="col-sm-12">
+                              </div>
+                              <div class="col-sm-3">
+                                  【ﾛ.同一敷地内の他の建築物の数】
+                              </div>
+                              <div class="col-sm-9">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【13.建築物の高さ等】</label>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  (申請に係る建築物)
+                              </div>
+                              <div class="col-sm-3">
+                                  (他の建築物)
+                              </div>
+                              <div class="col-sm-4">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ｲ.最高の高さ】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" />
+                                      <span class="input-group-addon add-on flat">m)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_1" value="" />
+                                      <span class="input-group-addon add-on flat">m)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ﾛ.階　　数】
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">地上(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_1" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">地下(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_menseki_igai_1" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-2">
+                                  【ﾊ.構　　造】
+                              </div>
+                              <div class="col-sm-3">
+                                  <select class="form-control">
+                                      <option>鉄骨鉄筋コンクリート造</option>
+                                      <option>鉄筋コンクリート造</option>
+                                      <option>鉄骨造</option>
+                                      <option>補強コンクリートブロック造</option>
+                                      <option>組積造</option>
+                                      <option>木造</option>
+                                  </select>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">一部</span>
+                                      <select class="form-control">
+                                          <option>鉄骨鉄筋コンクリート造</option>
+                                          <option>鉄筋コンクリート造</option>
+                                          <option>鉄骨造</option>
+                                          <option>補強コンクリートブロック造</option>
+                                          <option>組積造</option>
+                                          <option>木造</option>
+                                      </select>
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  【ﾆ.建築基準法第56条第７項の規定による特例の適用の有無】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-3">
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">有
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">無
+                                  </label>
+                              </div>
+                              <div class="col-sm-4">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-12">
+                                  【ﾎ.適用があるときは、特例の区分】
+                              </div>
+                              <div class="col-sm-2">
+                              </div>
+                              <div class="col-sm-10">
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">道路高さ制限不適用
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">隣地高さ制限不適用
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">北側高さ制限不適用
+                                  </label>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【14.許可・認定等】</label>
+                      <div class="col-sm-10">
+                          <textarea class="form-control" rows="3"></textarea>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-3 col-form-label">【15.工事着手予定年月日】</label>
+                      <div class="col-sm-4">
+                          <div class="input-group form-inline panel" id="uketsuke_date_picker">
+                              <span class="input-group-addon">年/月/日</span>
+                              <input type="text" class="form-control date" id="txt_uketsuke_date"/>
+                              <span id="btnDatePickerUketsuke" class="btn btn-default input-group-addon add-on flat">
+                                  <span class="glyphicon glyphicon-calendar"></span>
+                              </span>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-3 col-form-label">【16.工事完了予定年月日】</label>
+                      <div class="col-sm-4">
+                          <div class="input-group form-inline panel" id="uketsuke_date_picker">
+                              <span class="input-group-addon">年/月/日</span>
+                              <input type="text" class="form-control date" id="txt_uketsuke_date"/>
+                              <span id="btnDatePickerUketsuke" class="btn btn-default input-group-addon add-on flat">
+                                  <span class="glyphicon glyphicon-calendar"></span>
+                              </span>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-12 col-form-label">【17.特定工程工事終了予定年月日】</label>
+                      <div class="col-sm-2">
+                      </div>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-3">
+                              </div>
+                              <div class="col-sm-4">
+                              </div>
+                              <div class="col-sm-5">
+                                  （特定工程）
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(第</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_1" value=""/>
+                                      <span class="input-group-addon add-on flat">回)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel" id="uketsuke_date_picker">
+                                      <span class="input-group-addon">年/月/日</span>
+                                      <input type="text" class="form-control date" id="txt_uketsuke_date"/>
+                                      <span id="btnDatePickerUketsuke" class="btn btn-default input-group-addon add-on flat">
+                                          <span class="glyphicon glyphicon-calendar"></span>
+                                      </span>
+                                  </div>
+                              </div>
+                              <div class="col-sm-5">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(第</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_1" value=""/>
+                                      <span class="input-group-addon add-on flat">回)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel" id="uketsuke_date_picker">
+                                      <span class="input-group-addon">年/月/日</span>
+                                      <input type="text" class="form-control date" id="txt_uketsuke_date"/>
+                                      <span id="btnDatePickerUketsuke" class="btn btn-default input-group-addon add-on flat">
+                                          <span class="glyphicon glyphicon-calendar"></span>
+                                      </span>
+                                  </div>
+                              </div>
+                              <div class="col-sm-5">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go">
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(第</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_1" value=""/>
+                                      <span class="input-group-addon add-on flat">回)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel" id="uketsuke_date_picker">
+                                      <span class="input-group-addon">年/月/日</span>
+                                      <input type="text" class="form-control date" id="txt_uketsuke_date"/>
+                                      <span id="btnDatePickerUketsuke" class="btn btn-default input-group-addon add-on flat">
+                                          <span class="glyphicon glyphicon-calendar"></span>
+                                      </span>
+                                  </div>
+                              </div>
+                              <div class="col-sm-5">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go">
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【18.その他必要な事項】</label>
+                      <div class="col-sm-10">
+                          <textarea class="form-control" rows="3"></textarea>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【19.備　考】</label>
+                      <div class="col-sm-10">
+                          <textarea class="form-control" rows="3"></textarea>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- end 第三面 -->
+  <!-- 第四面 -->
+  <div class="row gamen" id="men4" style="display:none">
+      <div class="col-xs-12">
+          <div class="panel panel-primary">
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h5>建築物別概要</h5>
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【1.番　号】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                  </div>
+                  <!-- 【2.用　途】 -->
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【2.用　途】</label>
+                      <div class="col-sm-4">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">(区分</span>
+                              <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              <span class="input-group-addon add-on flat">)</span> 
+                          </div>
+                      </div>
+                      <div class="col-sm-6">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                      <div class="col-sm-4">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">(区分</span>
+                              <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              <span class="input-group-addon add-on flat">)</span> 
+                          </div>
+                      </div>
+                      <div class="col-sm-6">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                      <div class="col-sm-4">
+                          <div class="input-group form-inline panel">
+                              <span class="input-group-addon">(区分</span>
+                              <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              <span class="input-group-addon add-on flat">)</span> 
+                          </div>
+                      </div>
+                      <div class="col-sm-6">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <!-- end【2.用　途】 -->
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【3.工事種別】</label>
+                      <div class="col-sm-10">
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">新築
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">増築
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">改築
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">移転
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">用途変更
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">大規模の修繕
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">大規模の模様替
+                          </label>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【4.構　　造】</label>
+                      <div class="col-sm-4">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <label for="txtTodo" class="col-sm-2 col-form-label">一部</label>
+                      <div class="col-sm-4">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【5.耐火建築物等】</label>
+                      <div class="col-sm-10">
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">耐火建築物
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">準耐火建築物（ｲ-1）
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">準耐火建築物（ｲ-2）
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">準耐火建築物（ﾛ-1）
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">準耐火建築物（ﾛ-2）
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">耐火構造建築物
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">特定避難時間倒壊等防止建築物
+                          </label>
+                          <label class="checkbox-inline">
+                              <input type="checkbox" value="">その他
+                          </label>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【6.階　　数】</label>
+                      <div class="col-sm-10">
+                          【ｲ.地階を除く階数】
+                          <input type="text" class="form-control" id="txtTodo">
+                          【ﾛ.地階の階数】
+                          <input type="text" class="form-control" id="txtTodo">
+                          【ﾊ.昇降機塔等の階の数】
+                          <input type="text" class="form-control" id="txtTodo">
+                          【ﾆ.地階の倉庫等の階の数】
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【7.高　　さ】</label>
+                      <div class="col-sm-10">
+                          【ｲ.最高の高さ】
+                          <input type="text" class="form-control" id="txtTodo">
+                          【ﾛ.最高の軒の高さ】
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【8.建築設備の種類】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【9.確認の特例】</label>
+                      
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <div class="col-sm-8">
+                                  【ｲ.建築基準法第６条の３第１項ただし書又は法１８条第４項ただし書の規定による審査の特例の適用の有無】
+                              </div>
+                              <div class="col-sm-4">
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">有
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">無
+                                  </label>
+                              </div>
+                              <div class="col-sm-8">
+                                  【ﾛ.建築基準法第６条の４第１項の規定による確認の特例の適用の有無】
+                              </div>
+                              <div class="col-sm-4">
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">有
+                                  </label>
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" value="">無
+                                  </label>
+                              </div>
+                              <div class="col-sm-8">
+                                  【ﾊ.建築基準法施行令第１０条各号に掲げる建築物の区分】
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">第</span>
+                                      <input type="text" class="form-control" id="txt_uketsuke_go" />
+                                      <span class="input-group-addon add-on flat">号</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-8">
+                                  【ﾆ.認定型式の認定番号】
+                              </div>
+                              <div class="col-sm-4">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">第</span>
+                                      <input type="text" class="form-control" id="txt_uketsuke_go" />
+                                      <span class="input-group-addon add-on flat">号</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-8">
+                                  【ﾎ.適合する一連の規定の区分】
+                              </div>
+                              <div class="col-sm-4">
+                                  <label>
+                                      <input type="checkbox" value="">建築基準法施行令第136条の2の11第1号イ
+                                  </label>
+                                  <label>
+                                      <input type="checkbox" value="">建築基準法施行令第136条の2の11第1号ロ
+                                  </label>
+                              </div>
+                              <div class="col-sm-8">
+                                  【ﾍ.認証型式部材等認証番号】
+                              </div>
+                              <div class="col-sm-4">
+                                  <input type="text" class="form-control" id="txt_uketsuke_go" />
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <script type="text/javascript">
+
+                      function sum_txt_yaku() {
+                          var row = document.getElementsByClassName("txt_yaku");
+                          var shinsei_sum = 0;
+                          var igai_sum = 0;
+                          var sum = 0;
+                          for(var i=1;i<=row.length;i++){
+                              var shinsei = document.getElementById('txt_yaku_shinsei_' + i).value;
+                              var igai = document.getElementById('txt_yaku_igai_' + i).value;
+                              goukei = +shinsei + +igai;
+
+                              if (goukei > 0) {
+                                  document.getElementById('txt_yaku_goukei_' + i).value =  parseFloat(goukei).toFixed(2);    
+                              }
+                              if (shinsei > 0) {
+                                  document.getElementById('txt_yaku_shinsei_' + i).value =  parseFloat(shinsei).toFixed(2);    
+                              }
+                              if (igai > 0) {
+                                  document.getElementById('txt_yaku_igai_' + i).value =  parseFloat(igai).toFixed(2);
+                              }
+
+                              shinsei_sum += +shinsei;
+                              igai_sum += +igai;
+                              sum += goukei;
+                          }
+
+                          document.getElementById('txt_yaku_shinsei').innerHTML =  parseFloat(shinsei_sum).toFixed(2);
+                          document.getElementById('txt_yaku_igai').innerHTML =  parseFloat(igai_sum).toFixed(2);
+                          document.getElementById('txt_yaku_goukei').innerHTML =  parseFloat(sum).toFixed(2);
+                      }
+                  </script>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【10.床 面 積】</label>
+                      <div class="col-sm-10">
+                          <div class="row">
+                              <label for="txtTodo" class="col-sm-2 col-form-label">【ｲ.階 別】</label>
+                              <div class="col-sm-2"></div>
+                              <div class="col-sm-2">
+                                  (申請部分)
+                              </div>
+                              <div class="col-sm-3">
+                                  (申請以外の部分)
+                              </div>
+                              <div class="col-sm-3">
+                                  (合計)
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_1" value=""/>
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_1" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_1" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_2" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_2" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_2" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_2" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_3" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_3" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_3" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_3" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_4" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_4" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_4" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_4" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_5" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_5" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_5" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_5" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_6" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_6" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_6" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_6" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_7" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_7" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_7" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_7" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_8" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_8" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_8" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_8" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row txt_yaku">
+                              <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_kai_9" value="" />
+                                      <span class="input-group-addon add-on flat">階)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-2">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_shinsei_9" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_igai_9" value="" onblur="sum_txt_yaku()"/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                              <div class="col-sm-3">
+                                  <div class="input-group form-inline panel">
+                                      <span class="input-group-addon">(</span>
+                                      <input type="text" class="form-control" id="txt_yaku_goukei_9" value="" readonly/>
+                                      <span class="input-group-addon add-on flat">m<sup>2</sup>)</span> 
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <label for="txtTodo" class="col-sm-2 col-form-label">【ﾛ.合 計】</label>
+                              <div class="col-sm-2"></div>
+                              <div class="col-sm-2">
+                                  (<span id="txt_yaku_shinsei">0</span> m<sup>2</sup>)
+                              </div>
+                              <div class="col-sm-3">
+                                  (<span id="txt_yaku_igai">0</span> m<sup>2</sup>)
+                              </div>
+                              <div class="col-sm-3">
+                                  (<span id="txt_yaku_goukei">0</span> m<sup>2</sup>)
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【11.屋　　根】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【12.外　　壁】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【13.軒　　裏】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【14.居室の床の高さ】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【15.便所の種類】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【16.その他必要な事項】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                          <input type="text" class="form-control" id="txtTodo">
+
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                      <label for="txtTodo" class="col-sm-2 col-form-label">【17.備　　考】</label>
+                      <div class="col-sm-10">
+                          <input type="text" class="form-control" id="txtTodo">
+                          <input type="text" class="form-control" id="txtTodo">
+                          <input type="text" class="form-control" id="txtTodo">
+                      </div>
+                      <div class="col-sm-12">
+                          <hr>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- end 第四面 -->
+  
+  <script>
+      function openTab(evt, gamen) {
+          var i, x, tablinks;
+          x = document.getElementsByClassName("gamen");
+          for (i = 0; i < x.length; i++) {
+              x[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablink");
+          for (i = 0; i < x.length; i++) {
+              tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+          }
+          document.getElementById(gamen).style.display = "block";
+          evt.currentTarget.className += " w3-red";
+      }
+  </script>
+  <!-- #入力Form -->
+</div>
+
+
+<div class="container" ng-controller="HeaderController as vm">
+    <li ui-sref-active="active" ng-repeat="item in vm.navMenu.items">
+        <a ui-sref="{{item.state}}" ng-bind="item.title"></a>
+    </li>
+</div>
+      

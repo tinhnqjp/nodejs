@@ -1,0 +1,50 @@
+﻿<div id="content1" class="w3-container" style="padding-top:50px;">
+  <a type="button" class="btn btn-success pull-right" id="btnAdd" data-ui-sref="admin.docs.create">
+      <span class="glyphicon glyphicon-plus"></span> 登録
+  </a>
+  <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+  </div>
+  <div>
+      <strong style="font-size:20px;">ドキュメント管理</strong><br/>
+  </div>
+  <div style="font-weight:bold; padding-top:10px;">一覧</div>
+
+  <hr>
+  <div class="table-responsive">
+        <table id="ads_table" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="bg-primary">＃</th>
+                    <th class="bg-primary">名称</th>
+                    <th class="bg-primary">法令マスタ</th>
+                    <th class="bg-primary">項目数</th>
+                    <th class="bg-primary">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="doc in vm.docs | pagination: (vm.currentPage - 1) * vm.pageSize | limitTo: vm.pageSize | orderBy : '-created'">
+                    <td style="text-align:center;" data-ng-bind="doc._id"></td>
+                    <td style="text-align:left;" data-ng-bind="doc.meishou"></td>
+                    <td style="text-align:left;" data-ng-bind="doc.hourei_nasuta"></td>
+                    <td style="text-align:left;" >{{doc.laws.length}}</td>
+                    <td style="text-align:center;">
+                        <button class="btn btn-info btn-sm" data-ui-sref="admin.docs.edit({docId: doc._id})">
+                        <i class="glyphicon glyphicon-pencil"></i> 編集</button>
+                        <button class="btn btn-warning btn-sm"  ng-click="vm.copy(doc)">
+                        <i class="glyphicon glyphicon-copyright-mark"></i> コピー</button>
+                        <button class="btn btn-danger btn-sm" ng-click="vm.remove(doc)">
+                        <i class="glyphicon glyphicon-trash"></i> 削除</button>
+                    </td>
+                </tr>
+                <tr data-ng-if="vm.docs.$resolved && !vm.docs.length">
+                    <td colspan="5">No docs yet, why don't you <a data-ui-sref="admin.docs.create">create one</a>?</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+   
+  <div style="width:100%; text-align:center;">
+      <hr>
+      <ul uib-pagination total-items="vm.docs.length" items-per-page="vm.pageSize" ng-model="vm.currentPage"></ul>
+  </div>
+</div>

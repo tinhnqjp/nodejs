@@ -1,0 +1,79 @@
+<form name="vm.form.lawForm" ng-submit="vm.save(vm.form.lawForm.$valid)" novalidate>
+    <div id="content2" class="w3-container" style="padding-top:50px;">
+        <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+          <span id="myIntro" class="w3-hide">法令管理</span>
+        </div>
+        <div>
+            <strong style="font-size:20px;">法令管理</strong><br/>
+        </div>
+        <button type="submit" class="btn btn-primary pull-right" id="btn_save_add">
+            <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
+        </button>
+        <a type="button" data-ui-sref="admin.laws.list" class="mg15r btn btn-warning pull-right">
+            キャンセル
+        </a>
+        <div style="font-weight:bold; padding-top:10px;">
+            <a data-ui-sref="admin.laws.list">一覧 </a> > 法令登録
+        </div>
+
+        <hr>
+        <!-- #コントロールボタン -->
+        <!-- 入力Form -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">法令登録</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="input-group form-inline panel">
+                                    <span class="input-group-addon mw120">名称</span>
+                                    <input id="txt_law_name" ng-model="vm.law.title" type="text" class="form-control" placeholder="名称" title="名称" autofocu/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a type="button" class="btn btn-success pull-left" >
+                                    <span class="glyphicon glyphicon-plus"></span> 項目追加
+                                </a>
+                            </div>
+                        </div><br/>
+
+                        <div>
+                            <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-primary" style="width:50px;">#</th>
+                                        <th class="bg-primary" style="width:50px;">項目1</th>
+                                        <th class="bg-primary" style="width:50px;">項目2</th>
+                                        <th class="bg-primary" style="width:200px;">法文</th>
+                                        <th class="bg-primary" style="width:150px;">条件</th>
+                                        <th class="bg-primary" style="width:100px;">操作</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody class="ui-sortable" ui-sortable="vm.sortableOptions">
+                                    <tr ng-model="vm.law.laws_titles" data-ng-repeat="lawTitle in vm.law.laws_titles">
+                                        <td style="text-align:center; cursor: move;" class="sortable-item"><i class="glyphicon glyphicon-move"></i></td>
+                                        <td style="text-align:left;" contentEditable="true" ng-model="lawTitle.koumoku1"></td>
+                                        <td style="text-align:left;" contentEditable="true" ng-model="lawTitle.koumoku2"></td>
+                                        <td style="text-align:left;" contentEditable="true" ng-model="lawTitle.houbun"></td>
+                                        <td style="text-align:center;"><button class="btn btn-success btn-sm" id="rule_btn"></i> 条件割当</button></td>
+                                        <td style="text-align:center;">
+                                            <button type="button" ng-click="vm.removeLawsTitle(lawTitle)" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i> 削除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #入力Form -->
+    </div>
+</form>
