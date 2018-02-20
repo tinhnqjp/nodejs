@@ -15,6 +15,7 @@
     vm.authentication = Authentication;
     vm.form = {};
     vm.remove = remove;
+    vm.pushLawsTitles = pushLawsTitles;
     vm.removeLawsTitle = removeLawsTitle;
     vm.save = save;
     vm.laws =
@@ -65,6 +66,19 @@
       },
       helper: fixHelper
     };
+
+    function pushLawsTitles() {
+      var next = parseInt(vm.law.laws_titles.length) +1;
+      vm.law.laws_titles.push({
+        '_id': '' + next,
+        'koumoku1': '',
+        'koumoku2': '',
+        'houbun': '',
+        'sort': next
+      });
+
+      console.log(vm.law.laws_titles);
+    }
 
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
