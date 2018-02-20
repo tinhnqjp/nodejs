@@ -10,10 +10,22 @@
 
   function ArticlesAdminListController(ArticlesService) {
     var vm = this;
-
-    vm.articles = ArticlesService.query();
-    vm.pageSize = 5;
     vm.currentPage = 3;
+    vm.pageSize = 5;
+    getData();
+
+    vm.pageChanged = function () {
+      getData();
+    };
+
+    function getData() {
+      var input = { page: vm.currentPage, limit: vm.pageSize };
+      ArticlesService.get(input, function (output) {
+        vm.articles = output.articles;
+        vm.totalItems = output.total;
+        vm.currentPage = output.current;
+      });
+    }
   }
 
   function ArticlesAdminListFilter($filter) {
