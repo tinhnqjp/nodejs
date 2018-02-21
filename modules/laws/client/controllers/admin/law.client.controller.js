@@ -68,16 +68,25 @@
     };
 
     function pushLawsTitles() {
-      var next = parseInt(vm.law.laws_titles.length) +1;
-      vm.law.laws_titles.push({
-        '_id': '' + next,
-        'koumoku1': '',
-        'koumoku2': '',
-        'houbun': '',
-        'sort': next
-      });
-
-      console.log(vm.law.laws_titles);
+      var next = 1;
+      if (vm.law.laws_titles) {
+        next = parseInt(vm.law.laws_titles.length, 10) + 1;
+        vm.law.laws_titles.push({
+          '_id': '' + next,
+          'koumoku1': '',
+          'koumoku2': '',
+          'houbun': '',
+          'sort': next
+        });
+      } else {
+        vm.law.laws_titles = [{
+          '_id': '' + next,
+          'koumoku1': '',
+          'koumoku2': '',
+          'houbun': '',
+          'sort': next
+        }];
+      }
     }
 
     function remove() {

@@ -83,7 +83,7 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var limit = Number(req.query.limit) || 10;
   var page = Number(req.query.page) || 1;
-  
+
   Article.find()
   .skip((limit * page) - limit)
   .limit(limit)

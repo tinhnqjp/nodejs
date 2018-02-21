@@ -100,7 +100,7 @@ exports.list = function (req, res) {
           total: count
         });
       }
-    });  
+    });
   });
 };
 
