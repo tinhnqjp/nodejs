@@ -22,7 +22,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="doc in vm.docs | pagination: (vm.currentPage - 1) * vm.pageSize | limitTo: vm.pageSize | orderBy : '-created'">
+                <tr data-ng-repeat="doc in vm.docs">
                     <td style="text-align:center;" data-ng-bind="doc._id"></td>
                     <td style="text-align:left;" data-ng-bind="doc.meishou"></td>
                     <td style="text-align:left;" data-ng-bind="doc.hourei_nasuta"></td>
@@ -45,6 +45,9 @@
    
   <div style="width:100%; text-align:center;">
       <hr>
-      <ul uib-pagination total-items="vm.docs.length" items-per-page="vm.pageSize" ng-model="vm.currentPage"></ul>
+      <ul uib-pagination
+        total-items="vm.totalItems"
+        items-per-page="vm.pageSize" 
+        ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
   </div>
 </div>

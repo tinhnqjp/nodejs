@@ -11,18 +11,27 @@
   function LawsAdminListController(LawsService, $scope, $state, $window, Authentication, Notification) {
     var vm = this;
 
-    vm.laws = LawsService.query();
+    vm.currentPage = 1;
     vm.pageSize = 5;
-    vm.currentPage = 3;
+    getData();
 
     vm.authentication = Authentication;
     vm.form = {};
     vm.remove = remove;
     vm.copy = copy;
 
-    vm.setPage = function (pageNo) {
-      vm.currentPage = pageNo;
+    vm.pageChanged = function () {
+      getData();
     };
+
+    function getData() {
+      var input = { page: vm.currentPage, limit: vm.pageSize };
+      LawsService.get(input, function (output) {
+        vm.laws = output.laws;
+        vm.totalItems = output.total;
+        vm.currentPage = output.current;
+      });
+    }
 
     // remove law
     function remove(_law) {

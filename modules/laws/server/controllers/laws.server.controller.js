@@ -81,14 +81,25 @@ exports.delete = function (req, res) {
  * List of Laws
  */
 exports.list = function (req, res) {
-  Law.find().sort('-created').populate('user', 'displayName').exec(function (err, laws) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(laws);
-    }
+  var limit = Number(req.query.limit) || 10;
+  var page = Number(req.query.page) || 1;
+  Law.find()
+  .skip((limit * page) - limit)
+  .limit(limit)
+  .sort('-created').populate('user', 'displayName').exec(function (err, laws) {
+    Law.count().exec(function (err, count) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json({
+          laws: laws,
+          current: page,
+          total: count
+        });
+      }
+    });
   });
 };
 

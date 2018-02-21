@@ -65,7 +65,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="law in vm.laws | pagination: (vm.currentPage - 1) * vm.pageSize | limitTo: vm.pageSize">
+                <tr data-ng-repeat="law in vm.laws">
                     <td style="text-align:left;" data-ng-bind="law.title"></td>
                     <td style="text-align:center;">
                         <button class="btn btn-info btn-sm" data-ui-sref="admin.laws.edit({lawId: law._id})">
@@ -85,6 +85,9 @@
    
     <div style="width:100%; text-align:center;">
         <hr>
-        <ul uib-pagination total-items="vm.laws.length" items-per-page="vm.pageSize" ng-model="vm.currentPage"></ul>
+        <ul uib-pagination
+        total-items="vm.totalItems"
+        items-per-page="vm.pageSize" 
+        ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
     </div>
 </div>

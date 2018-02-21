@@ -82,14 +82,25 @@ exports.delete = function (req, res) {
  * List of Docs
  */
 exports.list = function (req, res) {
-  Doc.find().sort('-created').populate('user', 'displayName').exec(function (err, docs) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(docs);
-    }
+  var limit = Number(req.query.limit) || 10;
+  var page = Number(req.query.page) || 1;
+  Doc.find()
+  .skip((limit * page) - limit)
+  .limit(limit)
+  .sort('-created').populate('user', 'displayName').exec(function (err, docs) {
+    Doc.count().exec(function (err, count) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json({
+          docs: docs,
+          current: page,
+          total: count
+        });
+      }
+    });  
   });
 };
 

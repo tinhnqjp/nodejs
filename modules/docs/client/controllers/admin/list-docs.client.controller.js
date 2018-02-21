@@ -3,7 +3,6 @@
 
   angular
     .module('docs.admin')
-    .filter('pagination', DocsAdminListFilter)
     .controller('DocsAdminListController', DocsAdminListController);
 
   DocsAdminListController.$inject = ['DocsService', '$scope', '$state', '$window', 'Authentication', 'Notification'];
@@ -11,13 +10,26 @@
   function DocsAdminListController(DocsService, $scope, $state, $window, Authentication, Notification) {
     var vm = this;
 
-    vm.docs = DocsService.query();
-    // vm.pageSize = 10;
-
     vm.authentication = Authentication;
     vm.form = {};
     vm.remove = remove;
     vm.copy = copy;
+    vm.currentPage = 1;
+    vm.pageSize = 5;
+    getData();
+
+    vm.pageChanged = function () {
+      getData();
+    };
+
+    function getData() {
+      var input = { page: vm.currentPage, limit: vm.pageSize };
+      DocsService.get(input, function (output) {
+        vm.docs = output.docs;
+        vm.totalItems = output.total;
+        vm.currentPage = output.current;
+      });
+    }
 
     // remove doc
     function remove(_doc) {
@@ -46,11 +58,5 @@
           .catch(errorCallback);
       }
     }
-  }
-
-  function DocsAdminListFilter($filter) {
-    return function (data, start) {
-      return data.slice(start);
-    };
   }
 }());
