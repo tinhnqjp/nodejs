@@ -27,11 +27,20 @@
     });
 
     $stateProvider
+      // .state('home', {
+      //   url: '/',
+      //   templateUrl: '/modules/core/client/views/home.client.view.html',
+      //   controller: 'HomeController',
+      //   controllerAs: 'vm'
+      // })
       .state('home', {
         url: '/',
-        templateUrl: '/modules/core/client/views/home.client.view.html',
-        controller: 'HomeController',
-        controllerAs: 'vm'
+        templateUrl: '/modules/laws/client/views/admin/list-laws.client.view.html',
+        controller: 'LawsAdminListController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin']
+        }
       })
       .state('not-found', {
         url: '/not-found',

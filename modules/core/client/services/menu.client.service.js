@@ -52,6 +52,7 @@
         state: options.state || '',
         type: options.type || 'item',
         class: options.class,
+        parrent_state: options.parrent_state || '',
         roles: ((options.roles === null || typeof options.roles === 'undefined') ? service.defaultRoles : options.roles),
         position: options.position || 0,
         items: [],

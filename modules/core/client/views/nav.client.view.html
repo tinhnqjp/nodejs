@@ -1,9 +1,7 @@
-<a class="w3-bar-item w3-button w3-border-bottom w3-large" ui-sref="home">
-<img src="/modules/core/client/img/brand/logo.png" style="width:80%;"></a>
-<a class="w3-bar-item w3-button w3-hide-large w3-large" href="javascript:void(0)" onclick="w3_close()"><i class="fa fa-remove"></i></a>
-<a class="w3-bar-item w3-button" href="../property/index.html">物件データ管理</a>
-<a class="w3-bar-item w3-button" data-ui-sref="admin.laws.list">法令管理</a>
-<a class="w3-bar-item w3-button w3-teal" data-ui-sref="admin.docs.list">ドキュメント管理</a>
-<a class="w3-bar-item w3-button" href="../account/index.html">アカウント管理</a>
-<a class="w3-bar-item w3-button" href="/" style="color:red">ログアウト</a>
-
+<nav ng-controller="HeaderController as vm" class="w3-sidebar w3-bar-block w3-collapse w3-animate-left w3-card" style="z-index:3;width:250px;" id="mySidebar">
+    <a class="w3-bar-item w3-button w3-border-bottom w3-large" ui-sref="home">
+    <img src="/modules/core/client/img/brand/logo.png" style="width:80%;"></a>
+    <a class="w3-bar-item w3-button w3-hide-large w3-large" href="javascript:void(0)" onclick="w3_close()"><i class="fa fa-remove"></i></a>
+    <a ng-repeat="subitem in vm.navMenu.items" ng-show="vm.authentication.user" ng-class="{ 'w3-teal': $state.includes(subitem.parrent_state) }" class="w3-bar-item w3-button {{item.class}}" ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
+    <a class="w3-bar-item w3-button" ng-show="vm.authentication.user" href="/api/auth/signout" target="_self" style="color:red">ログアウト</a>
+</nav>

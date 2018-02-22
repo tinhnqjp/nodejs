@@ -16,6 +16,7 @@
     vm.menu = menuService.getMenu('topbar');
     vm.navMenu = menuService.getMenu('nav');
 
+    $scope.$state = $state;
     $scope.$on('$stateChangeSuccess', stateChangeSuccess);
 
     function stateChangeSuccess() {

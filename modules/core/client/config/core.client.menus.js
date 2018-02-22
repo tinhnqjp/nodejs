@@ -14,22 +14,26 @@
 
     menuService.addMenuItem('nav', {
       title: '物件データ管理',
-      state: 'property',
+      parrent_state: 'admin.properties',
+      state: 'admin.properties.list',
       roles: ['user']
     });
     menuService.addMenuItem('nav', {
       title: '法令管理',
-      state: 'law',
+      parrent_state: 'admin.laws',
+      state: 'admin.laws.list',
       roles: ['user']
     });
     menuService.addMenuItem('nav', {
       title: 'ドキュメント管理',
-      state: 'docs',
+      parrent_state: 'admin.docs',
+      state: 'admin.docs.list',
       roles: ['user']
     });
     menuService.addMenuItem('nav', {
       title: 'アカウント管理',
-      state: 'account',
+      parrent_state: 'admin.users',
+      state: 'admin.users',
       roles: ['user']
     });
 

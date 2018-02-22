@@ -17,6 +17,7 @@ module.exports = {
         'public/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
         'public/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css',
         'public/lib/clockpicker/dist/bootstrap-clockpicker.min.css',
+        'public/lib/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css',
         // endbower
       ],
       js: [
