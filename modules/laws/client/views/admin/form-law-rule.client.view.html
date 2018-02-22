@@ -1,0 +1,149 @@
+<div id="myTop" class="w3-container w3-top w3-theme w3-large">
+    <span id="myIntro" class="w3-hide">法令管理</span>
+</div>
+<div>
+    <strong style="font-size:20px;">法令管理</strong><br/>
+</div>
+<button type="button" ng-click="vm.saveLawsRule()" class="btn btn-primary pull-right" id="btn_save_add">
+    <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
+</button>
+<a type="button" ng-click="vm.hideLawsRule()" class="mg15r btn btn-warning pull-right">
+    キャンセル
+</a>
+<div style="font-weight:bold; padding-top:10px;">
+    <a data-ui-sref="admin.laws.list">一覧 </a> >
+    <a ng-click="vm.hideLawsRule()">法令登録 </a> > 条件割当
+</div>
+<hr>
+<!-- #コントロールボタン -->
+<!-- 入力Form -->
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">条件割当</div>
+            <div class="panel-body">
+                <div>
+                    <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="bg-primary" style="width:50px;">項目1</th>
+                                <th class="bg-primary" style="width:50px;">項目2</th>
+                                <th class="bg-primary" style="width:200px;">法文</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align:left;" data-ng-bind="vm.formLawsRule.info.koumoku1"></td>
+                                <td style="text-align:left;" data-ng-bind="vm.formLawsRule.info.koumoku2"></td>
+                                <td style="text-align:left;" data-ng-bind="vm.formLawsRule.info.houbun"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <a type="button" class="btn btn-success pull-left" id="rule_add_btn" ng-click="vm.pushLawsRule()">
+                       <span class="glyphicon glyphicon-plus"></span> 条件追加</a>
+                    </a>
+                </div>
+                <br/><br/>
+                <div class="rule_fields" data-ng-repeat="rule in vm.formLawsRule.rules">
+                    <div class="rule_field_1">
+                        <div class="panel-body" style="border:1px solid #999; margin-bottom:10px;">
+                            <div class="row">
+                                <div class="col-sm-12 mg10b">
+                                </div>
+                                <div class="col-sm-12">
+                                    <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="bg-primary">条件名称</th>
+                                                <th class="bg-primary" style="width:100px;">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="text" class="form-control" ng-model="rule.meshou" placeholder="条件１名称" title="条件１名称" /></td>
+                                                <td style="text-align:center;">
+                                                    <button type="button" ng-click="vm.removeLawsRule(rule)" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i> 削除</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button type="button" ng-click="vm.pushLawsRuleField(rule)" class="btn btn-success pull-left">
+                                        <span class="glyphicon glyphicon-plus"></span> 物件データ項目 追加
+                                    </button>
+                                    <br/><br/>
+                                    <div class="input_select_field_1">  
+                                        <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="bg-primary" style="width:80px;">物件項目</th>
+                                                    <th class="bg-primary" >大項目</th>
+                                                    <th class="bg-primary" >小項目</th>
+                                                    <th class="bg-primary" >値</th>
+                                                    <th class="bg-primary" >操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-ng-repeat="rule_field in rule.rule_fields">
+                                                    <td>
+                                                        <select ng-model="rule_field.bukken" class="form-control selectpicker" data-width="fit">
+                                                        　　<optgroup label="物件項目">
+                                                            <option>第三面</option>
+                                                            <option>第四面</option>
+                                                        　　</optgroup>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select ng-model="rule_field.deuta1" class="form-control selectpicker">
+                                                        　　<optgroup label="物件データ 大項目">
+                                                            <option>1.地名地番</option>
+                                                            <option>2.住居表示</option>
+                                                            <option>3.都市計画区域及び準都市計画区域の内外の別等</option>
+                                                            <option>4.防火地域</option>
+                                                            <option>5.その他の区域、地域、地区又は街区</option>
+                                                            <option>6.道路</option>
+                                                            <option>7.敷地面積</option>
+                                                            <option>8.主要用途</option>
+                                                            <option>9.工事種別</option>
+                                                            <option>10.建築面積</option>
+                                                            <option>11.延べ面積</option>
+                                                            <option>12.建築物の数</option>
+                                                            <option>13.建築物の高さ等</option>
+                                                            <option>14.許可・認定等</option>
+                                                        　　</optgroup>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select ng-model="rule_field.deuta2" class="form-control selectpicker" data-width="200px">
+                                                        　　<optgroup label="都市計画区域及び準都市計画区域の内外の別等">
+                                                            <option>都市計画区域内</option>
+                                                            <option>市街化区域</option>
+                                                            <option>市街化調整区域</option>
+                                                            <option>区域区分非設定</option>
+                                                            <option>準都市計画区域内</option>
+                                                            <option>都市計画区域及び準都市計画区域外</option>
+                                                        　　</optgroup>
+                                                        </select>
+
+                                                    </td>
+                                                    <td>
+                                                        <input ng-model="rule_field.atai" type="text" class="form-control" placeholder="値" title="値" />
+                                                    </td>
+                                                    <td style="text-align:center;">
+                                                        <button type="button" ng-click="vm.removeLawsRuleField(rule, rule_field)" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i> 削除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #入力Form -->

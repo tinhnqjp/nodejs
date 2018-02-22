@@ -28,7 +28,13 @@ var LawSchema = new Schema({
       koumoku1: String,
       koumoku2: String,
       houbun: String,
-      sort: Number
+      sort: Number,
+      rules: [
+        {
+          meshou: String,
+          rule_fields: Array
+        }
+      ]
     }
   ]
 });

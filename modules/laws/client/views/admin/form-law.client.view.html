@@ -1,5 +1,5 @@
 <form name="vm.form.lawForm" ng-submit="vm.save(vm.form.lawForm.$valid)" novalidate>
-    <div id="content2" class="w3-container" style="padding-top:50px;">
+    <div id="content2" class="w3-container" ng-hide="vm.isVisibleLawsRule" style="padding-top:50px;">
         <div id="myTop" class="w3-container w3-top w3-theme w3-large">
           <span id="myIntro" class="w3-hide">法令管理</span>
         </div>
@@ -61,7 +61,7 @@
                                         <td style="text-align:left;" contentEditable="true" ng-model="lawTitle.koumoku2"></td>
                                         <td style="text-align:left;" contentEditable="true" ng-model="lawTitle.houbun"></td>
                                         <td style="text-align:center;width:150px;">
-                                            <button class="btn btn-success btn-sm" id="rule_btn"></i> 条件割当</button>
+                                            <button type="button" ng-class="vm.classButtonLawsRule(lawTitle.rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawTitle)"></i> 条件割当</button>
                                         </td>
                                         <td style="text-align:center;width:100px;">
                                             <button type="button" ng-click="vm.removeLawsTitle(lawTitle)" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i> 削除</button>
@@ -78,4 +78,5 @@
         </div>
         <!-- #入力Form -->
     </div>
+    <div id="content3" ng-include="'/modules/laws/client/views/admin/form-law-rule.client.view.html'" class="w3-container" ng-show="vm.isVisibleLawsRule" style="padding-top:50px;"></div>
 </form>

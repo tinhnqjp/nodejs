@@ -14,6 +14,10 @@
     vm.law = law;
     vm.authentication = Authentication;
     vm.form = {};
+    vm.isVisibleLawsRule = false;
+    vm.hideLawsRule = hideLawsRule;
+    vm.showLawsRule = showLawsRule;
+    vm.formLawsRule = {};
     vm.remove = remove;
     vm.pushLawsTitles = pushLawsTitles;
     vm.removeLawsTitle = removeLawsTitle;
@@ -43,9 +47,65 @@
       }
     ];
 
+    function hideLawsRule() {
+      vm.isVisibleLawsRule = false;
+    }
+
+    var _getLawsRule = function () {
+      var _random = Math.floor((Math.random() * 10000) + 1);
+      return { meshou: '' + _random, rule_fields: [] };
+    }
+
+    function showLawsRule(_lawTitle) {
+      vm.formLawsRule.info = _lawTitle;
+      
+      ///
+      var index = vm.law.laws_titles.indexOf(_lawTitle);
+      if (vm.law.laws_titles[index].rules) {
+        vm.formLawsRule.rules = vm.law.laws_titles[index].rules;
+      } else {
+        vm.formLawsRule.rules = [];
+        vm.formLawsRule.rules.push(_getLawsRule());
+      }
+      ///
+      vm.isVisibleLawsRule = true;
+      console.log(vm.formLawsRule);
+    }
+
+    vm.pushLawsRule = function () {
+      vm.formLawsRule.rules.push(_getLawsRule());
+    }
+
+    vm.removeLawsRule = function (_lawsRule) {
+      if ($window.confirm('Are you sure you want to delete?')) {
+        var index = vm.formLawsRule.rules.indexOf(_lawsRule);
+        vm.formLawsRule.rules.splice(index, 1);
+      }
+    }
+
+    vm.saveLawsRule = function () {
+      hideLawsRule();
+      var index = vm.law.laws_titles.indexOf(vm.formLawsRule.info);
+      vm.law.laws_titles[index].rules = vm.formLawsRule.rules;
+      console.log(vm.law);
+    }
+
+    vm.pushLawsRuleField = function (_lawsRule) {
+      var index = vm.formLawsRule.rules.indexOf(_lawsRule);
+      vm.formLawsRule.rules[index].rule_fields.push({});
+      console.log(vm.formLawsRule.rules[index]);
+    }
+
+    vm.removeLawsRuleField = function (_lawsRule, _lawsRuleField) {
+      if ($window.confirm('Are you sure you want to delete?')) {
+        var index = vm.formLawsRule.rules.indexOf(_lawsRule);
+        var indexField = vm.formLawsRule.rules[index].rule_fields.indexOf(_lawsRuleField);
+        vm.formLawsRule.rules[index].rule_fields.splice(indexField, 1);
+      }
+    }
+
     var fixHelper = function (e, ui) {
       ui.children().each(function () {
-        console.log(e);
         $(this).width($(this).width());
       });
       return ui;
@@ -66,6 +126,13 @@
       },
       helper: fixHelper
     };
+
+    vm.classButtonLawsRule = function (rules) {
+      if (rules.length) {
+        return 'btn-success';
+      }
+      return 'btn-default';
+    }
 
     function pushLawsTitles() {
       var next = 1;
