@@ -23,7 +23,7 @@
     };
 
     function getData() {
-      var input = { page: vm.currentPage, limit: vm.pageSize };
+       var input = { page: vm.currentPage, limit: vm.pageSize };
       DocsService.get(input, function (output) {
         vm.docs = output.docs;
         vm.totalItems = output.total;
@@ -35,10 +35,11 @@
     function remove(_doc) {
       if ($window.confirm('Are you sure you want to delete?')) {
         var removeCallback = function () {
-          vm.docs = DocsService.query();
+          getData();
           Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Doc deleted successfully!' });
         };
-        _doc.$remove(removeCallback);
+        var doc = new DocsService({ _id: _doc._id });
+        doc.$remove(removeCallback);
       }
     }
 
@@ -46,14 +47,16 @@
     function copy(_doc) {
       if ($window.confirm('Are you sure you want to copy?')) {
         var successCallback = function (res) {
-          vm.docs = DocsService.query();
+          getData();
           Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Doc copy successfully!' });
         };
         var errorCallback = function (res) {
           Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Doc copy error!' });
         };
-        _doc._id = null;
-        _doc.createOrUpdate()
+
+        var doc = new DocsService(_doc);
+        doc._id = null;
+        doc.createOrUpdate()
           .then(successCallback)
           .catch(errorCallback);
       }

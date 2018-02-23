@@ -25,7 +25,6 @@
     function getData() {
       var input = { page: vm.currentPage, limit: vm.pageSize };
       AdminUsersService.get(input, function (output) {
-        console.log(output);
         vm.users = output.users;
         vm.totalItems = output.total;
         vm.currentPage = output.current;
@@ -35,20 +34,12 @@
     // remove user
     function remove(_user) {
       if ($window.confirm('Are you sure you want to delete?')) {
-        _user.$remove(function () {
-          vm.users = AdminUsersService.query();
+        var user = new AdminUsersService({ _id: _user._id });
+        user.$remove(function () {
+          getData();
           Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> user deleted successfully!' });
         });
       }
-    }
-
-    function successCallback(res) {
-      vm.users = AdminUsersService.query();
-      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> user copy successfully!' });
-    }
-
-    function errorCallback(res) {
-      Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> user copy error!' });
     }
   }
 }());

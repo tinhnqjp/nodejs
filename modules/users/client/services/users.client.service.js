@@ -72,13 +72,13 @@
 
   // TODO this should be Users service
   angular
-    .module('users.admin.services')
+    .module('users.services')
     .factory('AdminUsersService', AdminUsersService);
 
-    AdminUsersService.$inject = ['$resource'];
+    AdminUsersService.$inject = ['$resource', '$log'];
 
   function AdminUsersService($resource) {
-    return $resource('/api/users/:userId', {
+    var User = $resource('/api/users/:userId', {
       userId: '@_id'
     }, {
       update: {
@@ -89,7 +89,7 @@
     angular.extend(User.prototype, {
       createOrUpdate: function () {
         var user = this;
-        return createOrUpdate(law);
+        return createOrUpdate(user);
       }
     });
 

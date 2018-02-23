@@ -36,15 +36,16 @@
     // remove law
     function remove(_law) {
       if ($window.confirm('Are you sure you want to delete?')) {
-        _law.$remove(function () {
-          vm.laws = LawsService.query();
+        var law = new LawsService({ _id: _law._id });
+        law.$remove(function () {
+          getData();
           Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Law deleted successfully!' });
         });
       }
     }
 
     function successCallback(res) {
-      vm.laws = LawsService.query();
+      getData();
       Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Law copy successfully!' });
     }
 
@@ -55,8 +56,9 @@
     // copy law
     function copy(_law) {
       if ($window.confirm('Are you sure you want to copy?')) {
-        _law._id = null;
-        _law.createOrUpdate()
+        var law = new LawsService(_law);
+        law._id = null;
+        law.createOrUpdate()
           .then(successCallback)
           .catch(errorCallback);
       }
