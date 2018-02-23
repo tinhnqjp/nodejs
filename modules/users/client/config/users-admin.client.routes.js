@@ -28,8 +28,20 @@
           pageTitle: '{{ userResolve.displayName }}'
         }
       })
-      .state('admin.user-edit', {
-        url: '/users/:userId/edit',
+      .state('admin.users.create', {
+        url: '/create',
+        templateUrl: '/modules/users/client/views/admin/edit-user.client.view.html',
+        controller: 'UserController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin']
+        },
+        resolve: {
+          userResolve: newUser
+        }
+      })
+      .state('admin.users.edit', {
+        url: '/:userId/edit',
         templateUrl: '/modules/users/client/views/admin/edit-user.client.view.html',
         controller: 'UserController',
         controllerAs: 'vm',
@@ -37,6 +49,7 @@
           userResolve: getUser
         },
         data: {
+          roles: ['admin'],
           pageTitle: '{{ userResolve.displayName }}'
         }
       });
@@ -47,6 +60,12 @@
       return AdminService.get({
         userId: $stateParams.userId
       }).$promise;
+    }
+
+    newUser.$inject = ['AdminUsersService'];
+
+    function newUser(AdminUsersService) {
+      return new AdminUsersService();
     }
   }
 }());

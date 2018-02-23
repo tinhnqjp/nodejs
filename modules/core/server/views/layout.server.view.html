@@ -46,6 +46,7 @@
 </head>
 
 <body class="ng-cloak">
+{{#if isLogin}}
   <header ng-include="'/modules/core/client/views/nav.client.view.html'"></header>
 
   <div id="myTop" class="w3-container w3-top w3-theme w3-large">
@@ -56,7 +57,12 @@
   <div class="w3-main" style="margin-left:250px;">
       {{{block "content"}}}
   </div>
-
+{{else}}
+  <div style="padding-top:8px;" class="w3-container w3-theme">
+      <p>物件データ管理システム（仮）</p>
+  </div>
+  {{{block "content"}}}
+{{/if}}
 
   <!-- トップに戻るボタン -->
   <button class="btn btn-info" id="moveTop"><span class="glyphicon glyphicon-arrow-up"></span></button>

@@ -9,6 +9,7 @@ var validator = require('validator'),
  */
 exports.renderIndex = function (req, res) {
   var safeUserObject = null;
+  var isLogin = false;
   if (req.user) {
     safeUserObject = {
       displayName: validator.escape(req.user.displayName),
@@ -22,9 +23,11 @@ exports.renderIndex = function (req, res) {
       firstName: validator.escape(req.user.firstName),
       additionalProvidersData: req.user.additionalProvidersData
     };
+    isLogin = true;
   }
-
+  
   res.render('modules/core/server/views/index', {
+    isLogin: isLogin,
     user: JSON.stringify(safeUserObject),
     sharedConfig: JSON.stringify(config.shared)
   });

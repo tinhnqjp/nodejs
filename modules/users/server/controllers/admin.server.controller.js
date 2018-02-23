@@ -9,6 +9,26 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
+ * Create an user
+ */
+exports.create = function (req, res) {
+  var user = new User(req.body);
+  user.firstName = req.body.firstName;
+  user.lastName = req.body.lastName;
+  user.displayName = user.firstName + ' ' + user.lastName;
+  user.roles = req.body.roles;
+
+  user.save(function (err) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(user);
+    }
+  });
+};
+/**
  * Show the current user
  */
 exports.read = function (req, res) {
@@ -59,14 +79,25 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-  User.find({}, '-salt -password -providerData').sort('-created').populate('user', 'displayName').exec(function (err, users) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
+  var limit = Number(req.query.limit) || 10;
+  var page = Number(req.query.page) || 1;
+  User.find({}, '-salt -password -providerData')
+    .skip((limit * page) - limit)
+    .limit(limit)
+    .sort('-created').populate('user', 'displayName').exec(function (err, users) {
+      User.count().exec(function (err, count) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+        } else {
+          res.json({
+            users: users,
+            current: page,
+            total: count
+          });
+        }
       });
-    }
-
-    res.json(users);
   });
 };
 

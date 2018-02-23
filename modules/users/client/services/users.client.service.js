@@ -73,11 +73,11 @@
   // TODO this should be Users service
   angular
     .module('users.admin.services')
-    .factory('AdminService', AdminService);
+    .factory('AdminUsersService', AdminUsersService);
 
-  AdminService.$inject = ['$resource'];
+    AdminUsersService.$inject = ['$resource'];
 
-  function AdminService($resource) {
+  function AdminUsersService($resource) {
     return $resource('/api/users/:userId', {
       userId: '@_id'
     }, {
@@ -85,5 +85,39 @@
         method: 'PUT'
       }
     });
+
+    angular.extend(User.prototype, {
+      createOrUpdate: function () {
+        var user = this;
+        return createOrUpdate(law);
+      }
+    });
+
+    return User;
+
+    function createOrUpdate(user) {
+      if (user._id) {
+        return user.$update(onSuccess, onError);
+      } else {
+        return user.$save(onSuccess, onError);
+      }
+
+      // Handle successful response
+      function onSuccess(user) {
+        // Any required internal processing from inside the service, goes here.
+      }
+
+      // Handle error response
+      function onError(errorResponse) {
+        var error = errorResponse.data;
+        // Handle error internally
+        handleError(error);
+      }
+    }
+
+    function handleError(error) {
+      // Log error
+      $log.error(error);
+    }
   }
 }());

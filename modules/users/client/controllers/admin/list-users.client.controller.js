@@ -5,38 +5,50 @@
     .module('users.admin')
     .controller('UserListController', UserListController);
 
-  UserListController.$inject = ['$scope', '$filter', 'AdminService'];
+  UserListController.$inject = ['AdminUsersService', '$scope', '$state', '$window', 'Authentication', 'Notification'];
 
-  function UserListController($scope, $filter, AdminService) {
+  function UserListController(AdminUsersService, $scope, $state, $window, Authentication, Notification) {
     var vm = this;
-    vm.buildPager = buildPager;
-    vm.figureOutItemsToDisplay = figureOutItemsToDisplay;
-    vm.pageChanged = pageChanged;
 
-    AdminService.query(function (data) {
-      vm.users = data;
-      vm.buildPager();
-    });
+    vm.currentPage = 1;
+    vm.pageSize = 5;
+    getData();
 
-    function buildPager() {
-      vm.pagedItems = [];
-      vm.itemsPerPage = 15;
-      vm.currentPage = 1;
-      vm.figureOutItemsToDisplay();
-    }
+    vm.authentication = Authentication;
+    vm.form = {};
+    vm.remove = remove;
 
-    function figureOutItemsToDisplay() {
-      vm.filteredItems = $filter('filter')(vm.users, {
-        $: vm.search
+    vm.pageChanged = function () {
+      getData();
+    };
+
+    function getData() {
+      var input = { page: vm.currentPage, limit: vm.pageSize };
+      AdminUsersService.get(input, function (output) {
+        console.log(output);
+        vm.users = output.users;
+        vm.totalItems = output.total;
+        vm.currentPage = output.current;
       });
-      vm.filterLength = vm.filteredItems.length;
-      var begin = ((vm.currentPage - 1) * vm.itemsPerPage);
-      var end = begin + vm.itemsPerPage;
-      vm.pagedItems = vm.filteredItems.slice(begin, end);
     }
 
-    function pageChanged() {
-      vm.figureOutItemsToDisplay();
+    // remove user
+    function remove(_user) {
+      if ($window.confirm('Are you sure you want to delete?')) {
+        _user.$remove(function () {
+          vm.users = AdminUsersService.query();
+          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> user deleted successfully!' });
+        });
+      }
+    }
+
+    function successCallback(res) {
+      vm.users = AdminUsersService.query();
+      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> user copy successfully!' });
+    }
+
+    function errorCallback(res) {
+      Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> user copy error!' });
     }
   }
 }());
