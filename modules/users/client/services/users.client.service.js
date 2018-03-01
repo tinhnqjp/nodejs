@@ -75,9 +75,9 @@
     .module('users.services')
     .factory('AdminUsersService', AdminUsersService);
 
-    AdminUsersService.$inject = ['$resource', '$log'];
+  AdminUsersService.$inject = ['$resource', '$log'];
 
-  function AdminUsersService($resource) {
+  function AdminUsersService($resource, $log) {
     var User = $resource('/api/users/:userId', {
       userId: '@_id'
     }, {

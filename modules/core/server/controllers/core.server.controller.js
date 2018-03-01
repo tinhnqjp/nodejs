@@ -25,7 +25,7 @@ exports.renderIndex = function (req, res) {
     };
     isLogin = true;
   }
-  
+
   res.render('modules/core/server/views/index', {
     isLogin: isLogin,
     user: JSON.stringify(safeUserObject),

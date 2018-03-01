@@ -86,10 +86,10 @@ exports.list = function (req, res) {
     .limit(limit)
     .sort('-created').populate('user', 'displayName').exec(function (err, users) {
       User.count().exec(function (err, count) {
-      if (err) {
-        return res.status(422).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        if (err) {
+          return res.status(422).send({
+            message: errorHandler.getErrorMessage(err)
+          });
         } else {
           res.json({
             users: users,
@@ -98,7 +98,7 @@ exports.list = function (req, res) {
           });
         }
       });
-  });
+    });
 };
 
 /**

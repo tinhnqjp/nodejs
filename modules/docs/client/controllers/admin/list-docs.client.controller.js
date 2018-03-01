@@ -23,7 +23,7 @@
     };
 
     function getData() {
-       var input = { page: vm.currentPage, limit: vm.pageSize };
+      var input = { page: vm.currentPage, limit: vm.pageSize };
       DocsService.get(input, function (output) {
         vm.docs = output.docs;
         vm.totalItems = output.total;
