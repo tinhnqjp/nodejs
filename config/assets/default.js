@@ -44,7 +44,8 @@ module.exports = {
         'public/lib/checklist-model/checklist-model.js',
         'public/lib/jquery-ui/jquery-ui.min.js',
         'public/lib/angular-ui-sortable/sortable.min.js',
-        'public/scripts/docs.js'
+        'public/scripts/docs.js',
+        'public/lib/underscore/underscore.js'
         // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']

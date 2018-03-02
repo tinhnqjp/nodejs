@@ -60,13 +60,17 @@
         <table id="ads_table" class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th class="bg-primary" style="width:500px;">法令名称</th>
+                    <th class="bg-primary" style="width:60px;">年度</th>
+                    <th class="bg-primary" style="width:400px;">名称</th>
+                    <th class="bg-primary" style="width:100px">最終更新日</th>
                     <th class="bg-primary" style="width:100px;">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="law in vm.laws">
-                    <td style="text-align:left;" data-ng-bind="law.title"></td>
+                    <td style="text-align:center;" data-ng-bind="law.year"></td>
+                    <td style="text-align:left;" data-ng-bind="law.name"></td>
+                    <td style="text-align:center;" data-ng-bind="law.created | date:'yyyy/MM/dd'"></td>
                     <td style="text-align:center;">
                         <button class="btn btn-info btn-sm" data-ui-sref="admin.laws.edit({lawId: law._id})">
                         <i class="glyphicon glyphicon-pencil"></i> 編集</button>

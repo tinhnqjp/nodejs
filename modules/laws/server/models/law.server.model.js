@@ -13,28 +13,81 @@ var mongoose = require('mongoose'),
  * Law Schema
  */
 var LawSchema = new Schema({
+  year: {
+    type: Number,
+    required: 'cannot be blank'
+  },
+  name: {
+    type: String,
+    trim: true,
+    required: 'name cannot be blank'
+  },
   created: {
     type: Date,
     default: Date.now
   },
-  title: {
-    type: String,
-    trim: true,
-    required: 'title cannot be blank'
-  },
-  laws_titles: [
+  law_details: [
     {
-      _id: String,
-      koumoku1: String,
-      koumoku2: String,
-      houbun: String,
-      sort: Number,
-      rules: [
-        {
-          meshou: String,
-          rule_fields: Array
-        }
-      ]
+      type: Schema.ObjectId, ref: 'LawDetail'
+    }
+  ],
+  todoufuken_regulations: [
+    {
+      todoufuken: {
+        type: String,
+        enum: [
+          '北海道',
+          '青森県',
+          '岩手県',
+          '宮城県',
+          '秋田県',
+          '山形県',
+          '福島県',
+          '茨城県',
+          '栃木県',
+          '群馬県',
+          '埼玉県',
+          '千葉県',
+          '東京都',
+          '神奈川県',
+          '新潟県',
+          '富山県',
+          '石川県',
+          '福井県',
+          '山梨県',
+          '長野県',
+          '岐阜県',
+          '静岡県',
+          '愛知県',
+          '三重県',
+          '滋賀県',
+          '京都府',
+          '大阪府',
+          '兵庫県',
+          '奈良県',
+          '和歌山県',
+          '鳥取県',
+          '島根県',
+          '岡山県',
+          '広島県',
+          '山口県',
+          '徳島県',
+          '香川県',
+          '愛媛県',
+          '高知県',
+          '福岡県',
+          '佐賀県',
+          '長崎県',
+          '熊本県',
+          '大分県',
+          '宮崎県',
+          '鹿児島県',
+          '沖縄県'
+        ]
+      },
+      law_regulations: [{
+        type: Schema.ObjectId, ref: 'LawRegulation'
+      }]
     }
   ]
 });
@@ -42,6 +95,7 @@ var LawSchema = new Schema({
 LawSchema.statics.seed = seed;
 
 mongoose.model('Law', LawSchema);
+
 
 /**
 * Seeds the User collection with lawument (Law)

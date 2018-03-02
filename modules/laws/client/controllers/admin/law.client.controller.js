@@ -3,8 +3,7 @@
 
   angular
     .module('laws.admin')
-    .controller('LawsAdminController', LawsAdminController)
-    .directive('contenteditable', ContenteditableDirective);
+    .controller('LawsAdminController', LawsAdminController);
 
   LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve', 'Authentication', 'Notification'];
 
@@ -19,82 +18,51 @@
     vm.showLawsRule = showLawsRule;
     vm.formLawsRule = {};
     vm.remove = remove;
-    vm.pushLawsTitles = pushLawsTitles;
-    vm.removeLawsTitle = removeLawsTitle;
     vm.save = save;
-    vm.laws =
-    [
-      {
-        '_id': '1',
-        'koumoku1': '法第19条',
-        'koumoku2': '法第19条 2',
-        'houbun': '敷地の衛生及び安全',
-        'sort': 1
-      },
-      {
-        '_id': '2',
-        'koumoku1': '法第20条',
-        'koumoku2': '法第19条 2',
-        'houbun': '構造耐力',
-        'sort': 2
-      },
-      {
-        '_id': '3',
-        'koumoku1': '法第28条の2',
-        'koumoku2': '',
-        'houbun': '石綿その他の物質の飛散または発散に対する衛生上の措置',
-        'sort': 3
-      }
+    vm.years = [
+      { id: 2020, name: '2020年' },
+      { id: 2019, name: '2019年' },
+      { id: 2018, name: '2018年' },
+      { id: 2017, name: '2017年' },
+      { id: 2016, name: '2016年' },
+      { id: 2015, name: '2015年' },
+      { id: 2014, name: '2014年' }
     ];
+
+    initData();
+    function initData() {
+      if (law.todoufuken_regulations) {
+        if (vm.law.todoufuken_regulations.length === 0) return;
+        vm.law.todoufuken_regulations.forEach(tr => {
+          tr.tpmList = [];
+          tr.busy = false;
+        });
+      }
+    }
 
     function hideLawsRule() {
       vm.isVisibleLawsRule = false;
     }
 
-    var _getLawsRule = function () {
-      var _random = Math.floor((Math.random() * 10000) + 1);
-      return { meshou: '' + _random, rule_fields: [] };
-    }
-
     function showLawsRule(_lawTitle) {
       vm.formLawsRule.info = _lawTitle;
-      
-      ///
-      var index = vm.law.laws_titles.indexOf(_lawTitle);
-      if (vm.law.laws_titles[index].rules) {
-        vm.formLawsRule.rules = vm.law.laws_titles[index].rules;
+
+      var index = vm.law.law_details.indexOf(_lawTitle);
+      if (vm.law.law_details[index].rules) {
+        vm.formLawsRule.rules = vm.law.law_details[index].rules;
       } else {
         vm.formLawsRule.rules = [];
-        vm.formLawsRule.rules.push(_getLawsRule());
       }
-      ///
+
       vm.isVisibleLawsRule = true;
       console.log(vm.formLawsRule);
-    }
-
-    vm.pushLawsRule = function () {
-      vm.formLawsRule.rules.push(_getLawsRule());
-    }
-
-    vm.removeLawsRule = function (_lawsRule) {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        var index = vm.formLawsRule.rules.indexOf(_lawsRule);
-        vm.formLawsRule.rules.splice(index, 1);
-      }
-    }
-
-    vm.saveLawsRule = function () {
-      hideLawsRule();
-      var index = vm.law.laws_titles.indexOf(vm.formLawsRule.info);
-      vm.law.laws_titles[index].rules = vm.formLawsRule.rules;
-      console.log(vm.law);
     }
 
     vm.pushLawsRuleField = function (_lawsRule) {
       var index = vm.formLawsRule.rules.indexOf(_lawsRule);
       vm.formLawsRule.rules[index].rule_fields.push({});
       console.log(vm.formLawsRule.rules[index]);
-    }
+    };
 
     vm.removeLawsRuleField = function (_lawsRule, _lawsRuleField) {
       if ($window.confirm('Are you sure you want to delete?')) {
@@ -102,59 +70,29 @@
         var indexField = vm.formLawsRule.rules[index].rule_fields.indexOf(_lawsRuleField);
         vm.formLawsRule.rules[index].rule_fields.splice(indexField, 1);
       }
-    }
-
-    var fixHelper = function (e, ui) {
-      ui.children().each(function () {
-        $(this).width($(this).width());
-      });
-      return ui;
-    };
-
-    vm.sortableOptions = {
-      'ui-floating': true,
-      cancel: 'input,textarea,button,select,option,[contenteditable]',
-      stop: function (e, ui) {
-        // this callback has the changed model
-        var index = 0;
-        var updateLaws = vm.law.laws_titles.map(function (lawsTitle) {
-          index++;
-          lawsTitle.sort = index;
-
-          return lawsTitle;
-        });
-      },
-      helper: fixHelper
     };
 
     vm.classButtonLawsRule = function (rules) {
-      if (rules.length) {
-        return 'btn-success';
-      }
+      // console.log(rules);
+      // if (rules.length) {
+      //   return 'btn-success';
+      // }
       return 'btn-default';
-    }
+    };
 
-    function pushLawsTitles() {
-      var next = 1;
-      if (vm.law.laws_titles) {
-        next = parseInt(vm.law.laws_titles.length, 10) + 1;
-        vm.law.laws_titles.push({
-          '_id': '' + next,
-          'koumoku1': '',
-          'koumoku2': '',
-          'houbun': '',
-          'sort': next
-        });
-      } else {
-        vm.law.laws_titles = [{
-          '_id': '' + next,
-          'koumoku1': '',
-          'koumoku2': '',
-          'houbun': '',
-          'sort': next
-        }];
-      }
-    }
+    // TODO
+    vm.openCollapseHourei = function () {
+      vm.law_details_tpm = vm.law.law_details;
+    };
+
+    vm.openCollapse = regulationId => {
+      var rt = _.findWhere(vm.law.todoufuken_regulations, { _id: regulationId });
+
+      if (!rt) return;
+      rt.busy = true;
+      rt.tpmList = rt.law_regulations;
+      rt.busy = false;
+    };
 
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
@@ -165,15 +103,6 @@
       }
     }
 
-    // Remove existing Law
-    function removeLawsTitle(_lawsTitle) {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        var index = vm.law.laws_titles.indexOf(_lawsTitle);
-        vm.law.laws_titles.splice(index, 1);
-        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Laws title deleted successfully!' });
-      }
-    }
-
     // Save Law
     function save(isValid) {
       if (!isValid) {
@@ -181,7 +110,6 @@
         return false;
       }
 
-      console.log(vm.law.laws_titles); // return;
       // Create a new law, or update the current instance
       vm.law.createOrUpdate()
         .then(successCallback)
@@ -196,46 +124,5 @@
         Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
       }
     }
-  }
-
-  function ContenteditableDirective() {
-    return {
-      require: '?ngModel',
-      link: function (scope, element, attrs, ctrl) {
-        // Do nothing if this is not bound to a model
-        if (!ctrl) { return; }
-        // view -> model
-        element.bind('input enterKey', function () {
-          var rerender = false;
-          var html = element.html();
-
-          if (attrs.noLineBreaks) {
-            html = html.replace(/<div>/g, '').replace(/<br>/g, '').replace(/<\/div>/g, '');
-            rerender = true;
-          }
-
-          scope.$apply(function () {
-            ctrl.$setViewValue(html);
-            if (rerender) {
-              ctrl.$render();
-            }
-          });
-        });
-
-        element.keyup(function (e) {
-          if (e.keyCode === 13) {
-            element.trigger('enterKey');
-          }
-        });
-
-        // model -> view
-        ctrl.$render = function () {
-          element.html(ctrl.$viewValue);
-        };
-
-        // load init value from DOM
-        ctrl.$render();
-      }
-    };
   }
 }());
