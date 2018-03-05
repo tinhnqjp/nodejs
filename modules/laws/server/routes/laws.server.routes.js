@@ -8,7 +8,7 @@ var lawsPolicy = require('../policies/laws.server.policy'),
 
 module.exports = function (app) {
   app.route('/api/createLawsData')
-    .get(laws.createData);
+    .post(laws.createData);
 
   // Laws collection routes
   app.route('/api/laws').all(lawsPolicy.isAllowed)

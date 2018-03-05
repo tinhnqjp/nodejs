@@ -30,7 +30,7 @@ var LawRegulationSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  law_id: { type:Schema.ObjectId, ref:"Law", childPath:"law_details" }
+  law_id: { type: Schema.ObjectId, ref: 'Law', childPath: 'law_details' }
   // ,
   // law_rules: [
   //   {

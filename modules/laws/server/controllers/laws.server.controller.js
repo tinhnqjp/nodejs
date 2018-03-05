@@ -12,22 +12,133 @@ var path = require('path'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-/**
- * Create an law
- */
-exports.create = function (req, res) {
-  var law = new Law(req.body);
-  law.user = req.user;
 
-  law.save(function (err) {
+function createDataComon(req, res) {
+  var tdfk = [
+    '北海道',
+    '青森県',
+    '岩手県',
+    '宮城県',
+    '秋田県',
+    '山形県',
+    '福島県',
+    '茨城県',
+    '栃木県',
+    '群馬県',
+    '埼玉県',
+    '千葉県',
+    '東京都',
+    '神奈川県',
+    '新潟県',
+    '富山県',
+    '石川県',
+    '福井県',
+    '山梨県',
+    '長野県',
+    '岐阜県',
+    '静岡県',
+    '愛知県',
+    '三重県',
+    '滋賀県',
+    '京都府',
+    '大阪府',
+    '兵庫県',
+    '奈良県',
+    '和歌山県',
+    '鳥取県',
+    '島根県',
+    '岡山県',
+    '広島県',
+    '山口県',
+    '徳島県',
+    '香川県',
+    '愛媛県',
+    '高知県',
+    '福岡県',
+    '佐賀県',
+    '長崎県',
+    '熊本県',
+    '大分県',
+    '宮崎県',
+    '鹿児島県',
+    '沖縄県'
+  ];
+
+  // console.log(req.body.name); return res;
+  MasterLaw.find().exec(function (err, masterLawList) {
     if (err) {
       return res.status(422).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(law);
     }
+
+    var masterLawDetailList = _.filter(masterLawList, { 'type': 'detail' });
+    var masterLawTdfkList = _.filter(masterLawList, { 'type': 'tdfk' });
+    var lawId = mongoose.Types.ObjectId();
+
+    var law_details = [];
+    masterLawDetailList.forEach((item, index, array) => {
+      var newLawDedail = new LawDetail({
+        id: item.id,
+        item1: item.item1,
+        item2: item.item2,
+        legal_text: item.legal_text,
+        law_id: lawId
+      });
+      newLawDedail.save();
+      law_details[index] = newLawDedail;
+    });
+
+    var todoufuken_regulations = [];
+    tdfk.forEach((_tdfk, _index, array) => {
+      var law_regulations_array = [];
+      masterLawTdfkList.forEach((item, index, array) => {
+        var newLawRegulation = new LawRegulation({
+          id: item.id,
+          item1: item.item1,
+          item2: item.item2,
+          legal_text: item.legal_text,
+          law_id: lawId
+        });
+        newLawRegulation.save();
+        law_regulations_array[index] = newLawRegulation;
+      });
+
+      todoufuken_regulations[_index] = {
+        todoufuken: _tdfk,
+        law_regulations: law_regulations_array
+      };
+    });
+
+    var lawnew = new Law({
+      _id: lawId,
+      year: req.body.year,
+      name: req.body.name,
+      law_details: law_details,
+      todoufuken_regulations: todoufuken_regulations
+    });
+
+    lawnew.save(function (err) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json({
+          _id: lawId,
+          year: req.body.year,
+          name: req.body.name
+        });
+      }
+    });
   });
+}
+
+/**
+ * Create an law
+ */
+exports.create = function (req, res) {
+  createDataComon(req, res);
 };
 
 /**
@@ -82,132 +193,8 @@ exports.delete = function (req, res) {
 };
 
 exports.createData = function (req, res) {
-  var tdfk = [
-    '北海道',
-    '青森県',
-    '岩手県',
-    '宮城県',
-    '秋田県',
-    '山形県',
-    '福島県',
-    '茨城県',
-    '栃木県',
-    '群馬県',
-    '埼玉県',
-    '千葉県',
-    '東京都',
-    '神奈川県',
-    '新潟県',
-    '富山県',
-    '石川県',
-    '福井県',
-    '山梨県',
-    '長野県',
-    '岐阜県',
-    '静岡県',
-    '愛知県',
-    '三重県',
-    '滋賀県',
-    '京都府',
-    '大阪府',
-    '兵庫県',
-    '奈良県',
-    '和歌山県',
-    '鳥取県',
-    '島根県',
-    '岡山県',
-    '広島県',
-    '山口県',
-    '徳島県',
-    '香川県',
-    '愛媛県',
-    '高知県',
-    '福岡県',
-    '佐賀県',
-    '長崎県',
-    '熊本県',
-    '大分県',
-    '宮崎県',
-    '鹿児島県',
-    '沖縄県'
-  ];
-  // var fs = require('fs');
-  // var objData;
-  // fs.readFile('C:/Users/ktc/Desktop/data-detail.json', 'utf8', function (errdata, data) {
-  //   if (errdata) throw errdata;
-  //   objData = JSON.parse(data);
-  // var law = new MasterLawDetail({
-  //   id: '9999',
-  //   item1: '9999',
-  //   item2: '9999',
-  //   legal_text: '9999'
-  // });
 
-  // law.save(function (err) {
-  //   if (err) {
-  //     return res.status(422).send({
-  //       message: errorHandler.getErrorMessage(err)
-  //     });
-  //   } else {
-  //     res.json(law);
-  //   }
-  // });
-
-  MasterLaw.find().exec(function (err, masterLawList) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
-
-    var masterLawDetailList = _.filter(masterLawList, { 'type': 'detail' });
-    var masterLawTdfkList = _.filter(masterLawList, { 'type': 'tdfk' });
-
-    var law_details = [];
-    masterLawDetailList.forEach((item, index, array) => {
-      var newLawDedail = new LawDetail({
-        id: item.id,
-        item1: item.item1,
-        item2: item.item2,
-        legal_text: item.legal_text
-      });
-      newLawDedail.save();
-      law_details[index] = newLawDedail;
-    });
-
-    var todoufuken_regulations = [];
-    tdfk.forEach((_tdfk, _index, array) => {
-      var law_regulations_array = [];
-      masterLawTdfkList.forEach((item, index, array) => {
-        var newLawRegulation = new LawRegulation({
-          id: item.id,
-          item1: item.item1,
-          item2: item.item2,
-          legal_text: item.legal_text
-        });
-        newLawRegulation.save();
-        law_regulations_array[index] = newLawRegulation;
-      });
-
-      todoufuken_regulations[_index] = {
-        todoufuken: _tdfk,
-        law_regulations: law_regulations_array
-      };
-    });
-
-    var lawnew = new Law({
-      year: 2016,
-      name: '平成30年度 建築基準法施行令',
-      law_details: law_details,
-      todoufuken_regulations: todoufuken_regulations
-    });
-    lawnew.save();
-  });
-  res.end();
-
-  return res.status(200).send({
-    message: 'Law created successful'
-  });
+  createDataComon(req, res);
 };
 
 /**

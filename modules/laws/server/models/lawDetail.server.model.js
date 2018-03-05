@@ -30,7 +30,7 @@ var LawDetailSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  law_id: { type:Schema.ObjectId, ref:"Law", childPath:"law_details" }
+  law_id: { type: Schema.ObjectId, ref: 'Law', childPath: 'law_details' }
   // ,
   // law_rules: [
   //   {
@@ -41,5 +41,5 @@ var LawDetailSchema = new Schema({
   // ],
 });
 
-mongoose.model('LawDetail', LawDetailSchema, 'LawDetail');
+mongoose.model('LawDetail', LawDetailSchema, 'lawDetail');
 

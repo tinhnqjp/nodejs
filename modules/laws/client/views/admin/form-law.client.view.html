@@ -27,10 +27,8 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="input-group form-inline panel">
-                                    <span class="input-group-addon mw120">年度 {{ vm.law.year }}</span>
-                                    <select class="form-control" id="law_year" ng-model="vm.law.year" convert-to-number>
-                                        <option ng-repeat="option in vm.years" value="{{option.id}}">{{option.name}}</option>
-                                    </select>
+                                    <span class="input-group-addon mw120">年度</span>
+                                    <select class="form-control" ng-model="vm.law.year" ng-options="p.id as p.name for p in vm.years"></select>
                                     <span class="input-group-addon mw120">名称</span>
                                     <input ng-model="vm.law.name" type="text" class="form-control" value="" placeholder="名称" title="名称" />
                                 </div>
@@ -38,7 +36,7 @@
                         </div>
 
                         <!-- <div ng-include="'/modules/laws/client/views/admin/form-law-template-field.client.view.html'"></div> -->
-                        <uib-accordion close-others="false" class="">
+                        <uib-accordion ng-show="vm.law._id" close-others="false" class="">
                             <uib-accordion-group is-open="status.open0">
                                 <uib-accordion-heading>
                                     <a ng-click="vm.openCollapseHourei()" class="text-muted">

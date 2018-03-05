@@ -93,6 +93,7 @@ var LawSchema = new Schema({
 });
 
 LawSchema.statics.seed = seed;
+LawSchema.statics.removeLawDetail = removeLawDetail;
 
 mongoose.model('Law', LawSchema);
 
@@ -193,5 +194,14 @@ function seed(doc, options) {
         });
       });
     }
+  });
+}
+
+function removeLawDetail(lawId) {
+  return this.findById(lawId).exec(function (err, laws) {
+    if (err || !laws) return;
+    return laws.remove(function (err, laws) {
+
+    });
   });
 }
