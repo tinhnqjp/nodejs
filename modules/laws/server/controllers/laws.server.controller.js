@@ -187,6 +187,16 @@ exports.delete = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      var removeLawDetail = LawDetail.remove({ law_id: law._id }, function(err){
+        if(err) throw err;
+      });
+      removeLawDetail.exec();
+
+      var removeLawRegulation = LawRegulation.remove({ law_id: law._id }, function(err){
+        if(err) throw err;
+      });
+      removeLawRegulation.exec();
+
       res.json(law);
     }
   });
@@ -205,7 +215,6 @@ exports.list = function (req, res) {
   var limit = Number(req.query.limit) || 10;
   var page = Number(req.query.page) || 1;
   Law.find()
-  .populate('law_details')
   .skip((limit * page) - limit)
   .limit(limit)
   .sort('-created').populate('user', 'displayName').exec(function (err, laws) {

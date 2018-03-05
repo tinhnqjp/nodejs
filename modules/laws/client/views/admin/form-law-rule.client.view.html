@@ -26,6 +26,7 @@
                     <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
+                                <th class="bg-primary" style="width:50px;">#</th>
                                 <th class="bg-primary" style="width:50px;">項目1</th>
                                 <th class="bg-primary" style="width:50px;">項目2</th>
                                 <th class="bg-primary" style="width:200px;">法文</th>
@@ -33,9 +34,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="text-align:left;" data-ng-bind="vm.formLawsRule.info.koumoku1"></td>
-                                <td style="text-align:left;" data-ng-bind="vm.formLawsRule.info.koumoku2"></td>
-                                <td style="text-align:left;" data-ng-bind="vm.formLawsRule.info.houbun"></td>
+                                <td style="text-align:center;">{{ vm.formLawsRule.info.id }}</td>
+                                <td style="text-align:left;">{{ vm.formLawsRule.info.item1 }}</td>
+                                <td style="text-align:left;">{{ vm.formLawsRule.info.item2 }}</td>
+                                <td style="text-align:left;">{{ vm.formLawsRule.info.legal_text }}</td>
                             </tr>
                         </tbody>
                     </table>
