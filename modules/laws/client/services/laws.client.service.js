@@ -3,7 +3,7 @@
 
   angular
     .module('laws.services')
-    .factory('LawsService', LawsService);
+    .factory('LawsService', LawsService).factory('LawsApi', LawsApi);
 
   LawsService.$inject = ['$resource', '$log'];
 
@@ -49,5 +49,25 @@
       // Log error
       $log.error(error);
     }
+  }
+
+  LawsApi.$inject = ['$http'];
+  function LawsApi($http) {
+
+    this.requestDetail = lawId => {
+      return $http.post('/api/laws/' + lawId + '/requestDetail', null, { ignoreLoadingBar: true });
+    };
+    this.requestRegulation = lawId => {
+      return $http.post('/api/laws/' + lawId + '/requestRegulation', null, { ignoreLoadingBar: true });
+    };
+    this.requestData = (lawId, lawDataId) => {
+      return $http.post('/api/laws/' + lawId + '/requestData', { id: lawDataId }, { ignoreLoadingBar: true });
+    };
+
+    this.postLawData = (lawId, lawDataId, lawRules) => {
+      return $http.post('/api/laws/' + lawId + '/postLawData', { lawRules: lawRules, lawDataId: lawDataId }, { ignoreLoadingBar: true });
+    };
+
+    return this;
   }
 }());

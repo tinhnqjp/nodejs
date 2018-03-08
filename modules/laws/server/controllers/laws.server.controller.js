@@ -6,12 +6,13 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Law = mongoose.model('Law'),
+  LawData = mongoose.model('LawData'),
+  LawRule = mongoose.model('LawRule'),
   LawDetail = mongoose.model('LawDetail'),
   LawRegulation = mongoose.model('LawRegulation'),
   MasterLaw = mongoose.model('MasterLaw'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
-
 
 function createDataComon(req, res) {
   var tdfk = [
@@ -76,32 +77,39 @@ function createDataComon(req, res) {
     var masterLawTdfkList = _.filter(masterLawList, { 'type': 'tdfk' });
     var lawId = mongoose.Types.ObjectId();
 
+    // save to LawDetail
     var law_details = [];
     masterLawDetailList.forEach((item, index, array) => {
-      var newLawDedail = new LawDetail({
+      var newLawData = new LawData({
         id: item.id,
         item1: item.item1,
         item2: item.item2,
         legal_text: item.legal_text,
         law_id: lawId
       });
-      newLawDedail.save();
-      law_details[index] = newLawDedail;
+      newLawData.save();
+      law_details[index] = newLawData;
     });
+    var newLawDedail = new LawDetail({
+      law_id: lawId,
+      law_details: law_details
+    });
+    newLawDedail.save();
 
+    // save to lawRegulation
     var todoufuken_regulations = [];
     tdfk.forEach((_tdfk, _index, array) => {
       var law_regulations_array = [];
       masterLawTdfkList.forEach((item, index, array) => {
-        var newLawRegulation = new LawRegulation({
+        var newLawDataReg = new LawData({
           id: item.id,
           item1: item.item1,
           item2: item.item2,
           legal_text: item.legal_text,
           law_id: lawId
         });
-        newLawRegulation.save();
-        law_regulations_array[index] = newLawRegulation;
+        newLawDataReg.save();
+        law_regulations_array[index] = newLawDataReg;
       });
 
       todoufuken_regulations[_index] = {
@@ -109,13 +117,19 @@ function createDataComon(req, res) {
         law_regulations: law_regulations_array
       };
     });
+    var newLawRegulation = new LawRegulation({
+      law_id: lawId,
+      todoufuken_regulations: todoufuken_regulations
+    });
+    newLawRegulation.save();
 
+    // save to law
     var lawnew = new Law({
       _id: lawId,
       year: req.body.year,
       name: req.body.name,
-      law_details: law_details,
-      todoufuken_regulations: todoufuken_regulations
+      law_details: newLawDedail,
+      todoufuken_regulations: newLawRegulation
     });
 
     lawnew.save(function (err) {
@@ -124,11 +138,7 @@ function createDataComon(req, res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        res.json({
-          _id: lawId,
-          year: req.body.year,
-          name: req.body.name
-        });
+        res.json(lawnew);
       }
     });
   });
@@ -161,8 +171,8 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var law = req.law;
 
-  law.title = req.body.title;
-  law.laws_titles = req.body.laws_titles;
+  law.year = req.body.year;
+  law.name = req.body.name;
 
   law.save(function (err) {
     if (err) {
@@ -170,7 +180,7 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(law);
+      res.end();
     }
   });
 };
@@ -187,15 +197,20 @@ exports.delete = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      var removeLawDetail = LawDetail.remove({ law_id: law._id }, function(err){
-        if(err) throw err;
+      var removeLawDetail = LawDetail.remove({ law_id: law._id }, function (err) {
+        if (err) throw err;
       });
       removeLawDetail.exec();
 
-      var removeLawRegulation = LawRegulation.remove({ law_id: law._id }, function(err){
-        if(err) throw err;
+      var removeLawRegulation = LawRegulation.remove({ law_id: law._id }, function (err) {
+        if (err) throw err;
       });
       removeLawRegulation.exec();
+
+      var removeLawData = LawData.remove({ law_id: law._id }, function (err) {
+        if (err) throw err;
+      });
+      removeLawData.exec();
 
       res.json(law);
     }
@@ -203,8 +218,74 @@ exports.delete = function (req, res) {
 };
 
 exports.createData = function (req, res) {
+  var _lawDataId = '5a9d120fa7325530b8b5228e';
+  var _lawRules = [
+    {
+      rule_name: 'rule 1',
+      fields: [
+        {
+          bukken: '3',
+          deuta1: '2',
+          deuta2: '3',
+          atai: '1111',
+          type: '1'
+        },
+        {
+          bukken: '4',
+          deuta1: '7',
+          deuta2: '2',
+          atai: '22222',
+          type: '1'
+        }
+      ]
+    },
+    {
+      rule_name: 'rule 2',
+      fields: [
+        {
+          bukken: '3',
+          deuta1: '2',
+          deuta2: '3',
+          atai: '1111',
+          type: '1'
+        }
+      ]
+    }
+  ];
+  console.log(_lawDataId);
+  LawData.findById(_lawDataId)
+    .exec(function (err, law_Data) {
 
-  createDataComon(req, res);
+      var removeLawRule = LawRule.remove({ law_data_id: law_Data._id }, function (err) {
+        if (err) throw err;
+      });
+      removeLawRule.exec();
+
+      var law_rules = [];
+      _lawRules.forEach((item, index, array) => {
+        var fields = [];
+        item.fields.forEach((field, inx) => {
+          console.log(field);
+          var f = {
+            type: field.type,
+            name: field.bukken + ',' + field.deuta1 + ',' + field.deuta2,
+            value: field.atai
+          };
+          fields[inx] = f;
+        });
+        var newRule = new LawRule({
+          rule_name: item.rule_name,
+          law_data_id: law_Data._id,
+          law_id: law_Data.law_id,
+          fields: fields
+        });
+        newRule.save();
+        law_rules[index] = newRule;
+      });
+      law_Data.law_rules = law_rules;
+      law_Data.save();
+    });
+  res.end();
 };
 
 /**
@@ -246,9 +327,7 @@ exports.lawByID = function (req, res, next, id) {
   }
 
   Law.findById(id)
-    .populate('user', 'displayName')
-    .populate('law_details')
-    .populate('todoufuken_regulations.law_regulations')
+    .populate('todoufuken_regulations')
     .exec(function (err, law) {
       if (err) {
         return next(err);
@@ -262,3 +341,103 @@ exports.lawByID = function (req, res, next, id) {
     });
 };
 
+exports.lawDetailById = function (req, res) {
+  LawDetail.findOne({ law_id: req.law._id })
+    .populate('law_details')
+    .exec(function (err, law_details) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+      res.json(law_details);
+    });
+};
+
+exports.lawRegulationById = function (req, res) {
+  LawRegulation.findOne({ law_id: req.law._id })
+    .populate('todoufuken_regulations.law_regulations')
+    .exec(function (err, law_regulations) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+      res.json(law_regulations);
+    });
+};
+
+exports.postLawData = function (req, res) {
+  var _lawRules = req.body.lawRules;
+  var _lawDataId = req.body.lawDataId;
+
+  LawData.findById(_lawDataId)
+    .exec(function (err, law_Data) {
+
+      var removeLawRule = LawRule.remove({ law_data_id: law_Data._id }, function (err) {
+        if (err) {
+          return res.status(422).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        }
+      });
+      removeLawRule.exec();
+
+      var law_rules = [];
+      _lawRules.forEach((item, index, array) => {
+        var fields = [];
+        item.fields.forEach((field, inx) => {
+          var f = {
+            type: field.type,
+            name: field.bukken + ',' + field.deuta1 + ',' + field.deuta2,
+            value: field.atai
+          };
+          fields[inx] = f;
+        });
+        var newRule = new LawRule({
+          rule_name: item.rule_name,
+          law_data_id: law_Data._id,
+          law_id: law_Data.law_id,
+          fields: fields
+        });
+        newRule.save(function (err) {
+          if (err) {
+            return res.status(422).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          }
+        });
+        law_rules[index] = newRule;
+      });
+      law_Data.law_rules = law_rules;
+      law_Data.save(function (err) {
+        if (err) {
+          return res.status(422).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        }
+      });
+    });
+  return res.end();
+};
+
+exports.lawDataById = function (req, res) {
+  var id = req.body.id;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'LawData is invalid'
+    });
+  }
+
+  LawData.findById(id)
+    .populate('law_rules')
+    .exec(function (err, law_datas) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+      res.json(law_datas);
+      
+    });
+};

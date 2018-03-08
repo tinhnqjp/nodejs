@@ -7,8 +7,7 @@ var lawsPolicy = require('../policies/laws.server.policy'),
   laws = require('../controllers/laws.server.controller');
 
 module.exports = function (app) {
-  app.route('/api/createLawsData')
-    .post(laws.createData);
+  app.route('/api/createLawsData').post(laws.createData);
 
   // Laws collection routes
   app.route('/api/laws').all(lawsPolicy.isAllowed)
@@ -20,6 +19,11 @@ module.exports = function (app) {
     .get(laws.read)
     .put(laws.update)
     .delete(laws.delete);
+
+  app.route('/api/laws/:lawId/requestDetail').post(laws.lawDetailById);
+  app.route('/api/laws/:lawId/requestRegulation').post(laws.lawRegulationById);
+  app.route('/api/laws/:lawId/requestData').post(laws.lawDataById);
+  app.route('/api/laws/:lawId/postLawData').post(laws.postLawData);
 
   // Finish by binding the law middleware
   app.param('lawId', laws.lawByID);

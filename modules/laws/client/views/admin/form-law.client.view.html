@@ -1,31 +1,33 @@
-<form name="vm.form.lawForm" ng-submit="vm.save(vm.form.lawForm.$valid)" novalidate>
-    <div id="content2" class="w3-container" ng-hide="vm.isVisibleLawsRule" style="padding-top:50px;">
-        <div id="myTop" class="w3-container w3-top w3-theme w3-large">
-          <span id="myIntro" class="w3-hide">法令管理</span>
-        </div>
-        <div>
-            <strong style="font-size:20px;">法令管理</strong><br/>
-        </div>
-        <button type="submit" class="btn btn-primary pull-right" id="btn_save_add">
-            <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
-        </button>
-        <a type="button" data-ui-sref="admin.laws.list" class="mg15r btn btn-warning pull-right">
-            キャンセル
-        </a>
-        <div style="font-weight:bold; padding-top:10px;">
-            <a data-ui-sref="admin.laws.list">一覧 </a> > 法令登録
-        </div>
 
-        <hr>
-        <!-- #コントロールボタン -->
-        <!-- 入力Form --> 
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">法令登録</div>
-                    <div class="panel-body">
+<div id="content2" class="w3-container" ng-hide="vm.isVisibleLawsRule" style="padding-top:50px;">
+    <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+        <span id="myIntro" class="w3-hide">法令管理</span>
+    </div>
+    <div>
+        <strong style="font-size:20px;">法令管理</strong><br/>
+    </div>
+    <button type="submit" ng-click="vm.save(vm.form.lawForm.$valid)" class="btn btn-primary pull-right" id="btn_save_add">
+        <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
+    </button>
+    <a type="button" data-ui-sref="admin.laws.list" class="mg15r btn btn-warning pull-right">
+        キャンセル
+    </a>
+    <div style="font-weight:bold; padding-top:10px;">
+        <a data-ui-sref="admin.laws.list">一覧 </a> > 法令登録
+    </div>
+
+    <hr>
+    <!-- #コントロールボタン -->
+    <!-- 入力Form --> 
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">法令登録</div>
+                <div class="panel-body">
+                    <form name="vm.form.lawForm" ng-submit="vm.save(vm.form.lawForm.$valid)" novalidate>
                         <div class="row">
                             <div class="col-sm-12">
+                                
                                 <div class="input-group form-inline panel">
                                     <span class="input-group-addon mw120">年度</span>
                                     <select class="form-control" ng-model="vm.law.year" ng-options="p.id as p.name for p in vm.years"></select>
@@ -34,84 +36,83 @@
                                 </div>
                             </div>
                         </div>
+                    </form>
 
-                        <!-- <div ng-include="'/modules/laws/client/views/admin/form-law-template-field.client.view.html'"></div> -->
-                        <uib-accordion ng-show="vm.law._id" close-others="false" class="">
-                            <uib-accordion-group is-open="status.open0">
-                                <uib-accordion-heading>
-                                    <a ng-click="vm.openCollapseHourei()" class="text-muted">
-                                        <i class="glyphicon" ng-class="{'glyphicon-chevron-down': status.open0, 'glyphicon-chevron-right': !status.open0}"></i>
-                                        法令 ({{vm.law.law_details.length}})
-                                        <div ng-show="vm.lawTmp.busy"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
-                                    </a>
-                                </uib-accordion-heading>
-                                <table class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-primary" style="width:50px;">#</th>
-                                            <th class="bg-primary" style="width:50px;">項目1</th>
-                                            <th class="bg-primary" style="width:50px;">項目2</th>
-                                            <th class="bg-primary" style="width:200px;">法文</th>
-                                            <th class="bg-primary" style="width:150px;">条件</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="detail in vm.law_details_tpm">
-                                            <td style="text-align:center;">{{ detail.id }}</td>
-                                            <td style="text-align:left;">{{ detail.item1 }}</td>
-                                            <td style="text-align:left;">{{ detail.item2 }}</td>
-                                            <td style="text-align:left;">{{ detail.legal_text }}</td>
-                                            <td style="text-align:center;width:150px;">
-                                                <button type="button" ng-class="vm.classButtonLawsRule(detail)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(detail)"> 条件割当</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </uib-accordion-group>
-                            <!-- todoufukens -->
-                            <uib-accordion-group ng-repeat="(key, regulation) in vm.law.todoufuken_regulations" is-open="accordionArray[$index]">
-                                <uib-accordion-heading>
-                                    <a ng-click="vm.openCollapse(regulation._id)" class="text-muted">
-                                        <i class="glyphicon" ng-class="{'glyphicon-chevron-down': accordionArray[$index], 'glyphicon-chevron-right': !accordionArray[$index]}"></i>
-                                        {{regulation.todoufuken}} ({{regulation.law_regulations.length}})
-                                        <div ng-show="regulation.busy"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
-                                    </a>
-                                </uib-accordion-heading>
+                    <!-- <div ng-include="'/modules/laws/client/views/admin/form-law-template-field.client.view.html'"></div> -->
+                    <uib-accordion ng-show="vm.law._id" close-others="false" class="">
+                        <uib-accordion-group is-open="status.open0">
+                            <uib-accordion-heading>
+                                <a ng-click="vm.openCollapseHourei()" class="text-muted">
+                                    <i class="glyphicon" ng-class="{'glyphicon-chevron-down': status.open0, 'glyphicon-chevron-right': !status.open0}"></i>
+                                    法令 (148)
+                                    <div ng-show="vm.lawTmp.busy"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
+                                </a>
+                            </uib-accordion-heading>
+                            <table class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawDetails">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-primary" style="width:50px;">#</th>
+                                        <th class="bg-primary" style="width:50px;">項目1</th>
+                                        <th class="bg-primary" style="width:50px;">項目2</th>
+                                        <th class="bg-primary" style="width:200px;">法文</th>
+                                        <th class="bg-primary" style="width:150px;">条件</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="lawData in vm.tmpLawDetails">
+                                        <td style="text-align:center;">{{ lawData.id }}</td>
+                                        <td style="text-align:left;">{{ lawData.item1 }}</td>
+                                        <td style="text-align:left;">{{ lawData.item2 }}</td>
+                                        <td style="text-align:left;">{{ lawData.legal_text }}</td>
+                                        <td style="text-align:center;width:150px;">
+                                            <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData)"> 条件割当</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </uib-accordion-group>
+                        <!-- todoufukens -->
+                        <uib-accordion-group ng-repeat="(key, regulation) in vm.law.todoufuken_regulations.todoufuken_regulations" is-open="accordionArray[$index]">
+                            <uib-accordion-heading>
+                                <a ng-click="vm.openCollapse(regulation._id)" class="text-muted">
+                                    <i class="glyphicon" ng-class="{'glyphicon-chevron-down': accordionArray[$index], 'glyphicon-chevron-right': !accordionArray[$index]}"></i>
+                                    {{regulation.todoufuken}} ({{regulation.law_regulations.length}})
+                                    <div ng-show="regulation.busy"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
+                                </a>
+                            </uib-accordion-heading>
+                            
+                            <table class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawRegulations[regulation._id]">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-primary" style="width:50px;">#</th>
+                                        <th class="bg-primary" style="width:50px;">項目1</th>
+                                        <th class="bg-primary" style="width:50px;">項目2</th>
+                                        <th class="bg-primary" style="width:200px;">法文</th>
+                                        <th class="bg-primary" style="width:150px;">条件</th>
+                                    </tr>
+                                </thead>
                                 
-                                <table class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="bg-primary" style="width:50px;">#</th>
-                                            <th class="bg-primary" style="width:50px;">項目1</th>
-                                            <th class="bg-primary" style="width:50px;">項目2</th>
-                                            <th class="bg-primary" style="width:200px;">法文</th>
-                                            <th class="bg-primary" style="width:150px;">条件</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        <!-- <tr ng-repeat="detail in regulation.law_regulations"> -->
-                                        <tr ng-repeat="detail in regulation.tpmList">
-                                            <td style="text-align:center;">{{ detail.id }}</td>
-                                            <td style="text-align:left;">{{ detail.item1 }}</td>
-                                            <td style="text-align:left;">{{ detail.item2 }}</td>
-                                            <td style="text-align:left;">{{ detail.legal_text }}</td>
-                                            <td style="text-align:center;width:150px;">
-                                                <button type="button" ng-class="vm.classButtonLawsRule(detail)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(detail)"> 条件割当</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </uib-accordion-group>
-                        </uib-accordion>
-                    </div>
+                                <tbody>
+                                    <tr ng-repeat="lawData in vm.tmpLawRegulations[regulation._id]">
+                                        <td style="text-align:center;">{{ lawData.id }}</td>
+                                        <td style="text-align:left;">{{ lawData.item1 }}</td>
+                                        <td style="text-align:left;">{{ lawData.item2 }}</td>
+                                        <td style="text-align:left;">{{ lawData.legal_text }}</td>
+                                        <td style="text-align:center;width:150px;">
+                                            <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData)"> 条件割当</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </uib-accordion-group>
+                    </uib-accordion>
                 </div>
             </div>
         </div>
-        <!-- #入力Form -->
     </div>
-    <div id="content3" ng-include="'/modules/laws/client/views/admin/form-law-rule.client.view.html'" class="w3-container" ng-show="vm.isVisibleLawsRule" style="padding-top:50px;"></div>
-</form>
+    <!-- #入力Form -->
+</div>
+<div id="content3" ng-include="'/modules/laws/client/views/admin/form-law-rule.client.view.html'" class="w3-container" ng-show="vm.isVisibleLawsRule" style="padding-top:50px;"></div>
 <script type="text/ng-template" id="group-template.html">
     <div class="panel {{panelClass || 'panel-default'}}">
       <div class="panel-heading">
