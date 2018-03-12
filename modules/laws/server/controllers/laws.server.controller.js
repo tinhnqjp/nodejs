@@ -11,10 +11,12 @@ var path = require('path'),
   LawDetail = mongoose.model('LawDetail'),
   LawRegulation = mongoose.model('LawRegulation'),
   MasterLaw = mongoose.model('MasterLaw'),
+  MasterProperties = mongoose.model('MasterProperties'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 function createDataComon(req, res) {
+  // TODO
   var tdfk = [
     '北海道',
     '青森県',
@@ -218,6 +220,7 @@ exports.delete = function (req, res) {
 };
 
 exports.createData = function (req, res) {
+  // TODO
   var _lawDataId = '5a9d120fa7325530b8b5228e';
   var _lawRules = [
     {
@@ -440,4 +443,19 @@ exports.lawDataById = function (req, res) {
       res.json(law_datas);
       
     });
+};
+
+/**
+ * List of Laws
+ */
+exports.listMasterProperties = function (req, res) {
+  MasterProperties.find().exec(function (err, masterProperties) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(masterProperties);
+    }
+  });
 };

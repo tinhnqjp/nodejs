@@ -27,4 +27,6 @@ module.exports = function (app) {
 
   // Finish by binding the law middleware
   app.param('lawId', laws.lawByID);
+
+  app.route('/api/listMasterProperties').get(laws.listMasterProperties);
 };

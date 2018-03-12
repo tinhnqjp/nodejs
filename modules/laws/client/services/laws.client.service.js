@@ -67,7 +67,9 @@
     this.postLawData = (lawId, lawDataId, lawRules) => {
       return $http.post('/api/laws/' + lawId + '/postLawData', { lawRules: lawRules, lawDataId: lawDataId }, { ignoreLoadingBar: true });
     };
-
+    this.listMasterProperties = () => {
+      return $http.get('/api/listMasterProperties', null, { ignoreLoadingBar: true });
+    };
     return this;
   }
 }());

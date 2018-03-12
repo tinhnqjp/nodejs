@@ -29,27 +29,6 @@
       { id: 2014, name: '2014年' }
     ];
 
-    vm.bukken = [
-      { id: '3', name: '第三面' },
-      { id: '4', name: '第四面' }
-    ];
-    vm.daikoumoku = [
-      { id: '1', name: '1.地名地番' },
-      { id: '2', name: '2.住居表示' },
-      { id: '3', name: '3.都市計画区域及び準都市計画区域の内外の別等' },
-      { id: '4', name: '4.防火地域' },
-      { id: '5', name: '5.その他の区域、地域、地区又は街区' },
-      { id: '6', name: '6.道路' },
-      { id: '7', name: '7.敷地面積' }
-    ];
-    vm.kokoumoku = [
-      { id: '1', name: '1.都市計画区域内' },
-      { id: '2', name: '2.市街化区域' },
-      { id: '3', name: '3.市街化調整区域' },
-      { id: '4', name: '4.区域区分非設定' },
-      { id: '5', name: '5.準都市計画区域内' },
-      { id: '6', name: '6.都市計画区域及び準都市計画区域外' }
-    ];
     vm.ruleProperties = [
       { type: '1', key: '3,7,5', value: '' },
       { type: '1', key: '3,6,', value: '' },
@@ -57,9 +36,19 @@
     ];
     vm.tmpLawDetails = [];
     vm.tmpLawRegulations = [];
+    vm.listMasterProperties = [];
 
     initData();
     function initData() {
+      LawsApi.listMasterProperties()
+      .then((res) => {
+        vm.listMasterProperties = res.data;
+        vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
+      })
+      .catch((res) => {
+        Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
+      });
+
       if (law._id) {
         LawsApi.requestRegulation(law._id)
         .then((res) => {
@@ -136,6 +125,52 @@
       });
     }
 
+    vm.selectBukken = function (rule_field) {
+      var tmpoptionDai = _.filter(vm.listMasterProperties, function(item) {
+        return item.bukken === rule_field.bukken;
+      });
+      rule_field.optionDai =_.uniq(tmpoptionDai, 'daikoumoku');
+    }
+
+    function createProperties(_propertiesKo) {
+      var _properties = [];
+      _propertiesKo.forEach((property, k) => {
+        if ((property.type === 2 || property.type === 3) && property.list) {
+          property.options = property.list.split(',');
+        }
+        _properties[k] = property;
+      });
+      return _properties;
+    }
+
+    vm.selectDai = function (rule_field) {
+      console.log('select dai', rule_field.bukken, rule_field.deuta1);
+      var tmpPropertiesKo = _.filter(vm.listMasterProperties, function(item) {
+        return item.bukken === rule_field.bukken && item.daikoumoku === rule_field.deuta1;
+      });
+      if (rule_field.deuta1 && tmpPropertiesKo[0].kokoumoku_name) {
+        rule_field.optionKo =_.uniq(tmpPropertiesKo, 'kokoumoku'); 
+        console.log(rule_field.optionKo);
+        rule_field.properties = [];
+      } else {
+        rule_field.deuta2 = null;
+        rule_field.optionKo = null;
+        
+        rule_field.properties = createProperties(tmpPropertiesKo);
+      }
+    }
+
+    vm.selectKo = function (rule_field) {
+      console.log('select dai', rule_field.bukken, rule_field.deuta1, rule_field.deuta2);
+      var tmpPropertiesKo = _.filter(vm.listMasterProperties, function(item) {
+        return item.bukken === rule_field.bukken
+         && item.daikoumoku === rule_field.deuta1
+         && item.kokoumoku === rule_field.deuta2;
+      });
+      console.log(tmpPropertiesKo);
+      rule_field.properties = createProperties(tmpPropertiesKo);
+    }
+
     vm.pushLawsRule = function () {
       vm.formLawsRule.rules.push({
         rule_name: 'rule 1',
@@ -164,6 +199,7 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
         return false;
       }
+      console.log(vm.formLawsRule.rules);
       
       LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
       .then((res) => {

@@ -77,6 +77,7 @@
                                         </button>
                                         <br/><br/>
                                         <div class="input_select_field_1">  
+                                            
                                             <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
                                                 <thead>
                                                     <tr>
@@ -90,23 +91,52 @@
                                                 <tbody>
                                                     <tr data-ng-repeat="rule_field in rule.fields">
                                                         <td>
-                                                            <select ng-model="rule_field.bukken" class="form-control " ng-options="p.id as p.name for p in vm.bukken" ></select>
+                                                            <select ng-model="rule_field.bukken" 
+                                                            class="form-control" ng-change="vm.selectBukken(rule_field)" 
+                                                            ng-options="p.bukken as p.bukken_name for p in vm.bukken" ></select>
                                                         </td>
                                                         <td>
-                                                            <select ng-model="rule_field.deuta1" class="form-control " ng-options="p.id as p.name for p in vm.daikoumoku"></select>
+                                                            <select ng-show="rule_field.bukken" 
+                                                            ng-model="rule_field.deuta1" 
+                                                            ng-change="vm.selectDai(rule_field)" 
+                                                            class="form-control" 
+                                                            ng-options="p.daikoumoku as p.daikoumoku_name for p in rule_field.optionDai"></select>
                                                         </td>
                                                         <td>
-                                                            <select ng-model="rule_field.deuta2" class="form-control " data-width="200px" ng-options="p.id as p.name for p in vm.kokoumoku"></select>
+                                                            <select ng-show="rule_field.deuta1 && rule_field.optionKo" 
+                                                            ng-model="rule_field.deuta2" 
+                                                            ng-change="vm.selectKo(rule_field)" 
+                                                            class="form-control"
+                                                            ng-options="p.kokoumoku as p.kokoumoku_name for p in rule_field.optionKo"></select>
                                                         </td>
-                                                        <td ng-init="rule_field.type = 1">
-                                                            <input ng-model="rule_field.type" type="hidden"/>
-                                                            <input ng-model="rule_field.atai" type="text" class="form-control" placeholder="値" title="値" />
+                                                        <td>
+                                                            <div class="properties" data-ng-repeat="property in rule_field.properties">
+                                                                <div ng-switch on="property.type">
+                                                                    <input ng-model="property.type" type="hidden"/>
+                                                                    <div ng-switch-when="1">
+                                                                        <input ng-model="property.value" class="form-control" type="text"/>
+                                                                    </div>
+                                                                    <div ng-switch-when="2">
+                                                                        <select ng-model="property.value" class="form-control" 
+                                                                        ng-options="o as o for o in property.options"></select>
+                                                                    </div>
+                                                                    <div ng-switch-when="3">
+                                                                        <label ng-repeat="ck in property.options">
+                                                                            <input ng-model="property.value" type="checkbox" checklist-value="ck"> {{ck}}
+                                                                        </label>
+                                                                    </div>
+                                                                    <div ng-switch-when="4">
+                                                                        <input ng-model="property.value" class="form-control" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                         <td style="text-align:center;">
                                                             
                                                             <button type="button" ng-click="vm.removeLawsRuleField(rule, rule_field)" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i> 削除</button>
                                                         </td>
                                                     </tr>
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
