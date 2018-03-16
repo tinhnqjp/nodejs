@@ -54,21 +54,18 @@
                             <div class="panel-body" style="border:1px solid #999; margin-bottom:10px;">
                                 <div class="row">
                                     <div class="col-sm-12 mg10b">
-                                    </div>
+                                        <button type="button" ng-click="vm.removeLawsRule(rule)" class="btn btn-danger btn-sm pull-right"><i class="glyphicon glyphicon-trash"></i> 削除</button>
+                                    </div> 
                                     <div class="col-sm-12">
                                         <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
                                             <thead>
                                                 <tr>
                                                     <th class="bg-primary">条件名称</th>
-                                                    <th class="bg-primary" style="width:100px;">操作</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td><input type="text" class="form-control" ng-model="rule.rule_name" placeholder="条件１名称" title="条件１名称" /></td>
-                                                    <td style="text-align:center;">
-                                                        <button type="button" ng-click="vm.removeLawsRule(rule)" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i> 削除</button>
-                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -77,56 +74,80 @@
                                         </button>
                                         <br/><br/>
                                         <div class="input_select_field_1">  
-                                            
+                                            <style>
+                                                .td-koumoku, .td-daiumoku {
+                                                    width: 20%;
+                                                }
+                                            </style>
                                             <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th class="bg-primary" style="width:80px;">物件項目</th>
-                                                        <th class="bg-primary" >大項目</th>
-                                                        <th class="bg-primary" >小項目</th>
+                                                        <th class="bg-primary" style="width:50px;">#</th>
+                                                        <th class="bg-primary" >物件項目</th>
+                                                        <th class="bg-primary td-daiumoku" >大項目</th>
+                                                        <th class="bg-primary td-koumoku" >小項目</th>
                                                         <th class="bg-primary" >値</th>
                                                         <th class="bg-primary" >操作</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr data-ng-repeat="rule_field in rule.fields">
+                                                        <td style="text-align:center;">{{$index + 1}}</td>
                                                         <td>
                                                             <select ng-model="rule_field.bukken" 
                                                             class="form-control" ng-change="vm.selectBukken(rule_field)" 
-                                                            ng-options="p.bukken as p.bukken_name for p in vm.bukken" ></select>
+                                                            ng-options="p.bukken as p.bukken_name for p in vm.bukken" data-width="fit"></select>
                                                         </td>
                                                         <td>
                                                             <select ng-show="rule_field.bukken" 
                                                             ng-model="rule_field.deuta1" 
                                                             ng-change="vm.selectDai(rule_field)" 
                                                             class="form-control" 
-                                                            ng-options="p.daikoumoku as p.daikoumoku_name for p in rule_field.optionDai"></select>
+                                                            ng-options="p.daikoumoku as p.daikoumoku_name for p in rule_field.optionDai" data-width="fit"></select>
                                                         </td>
                                                         <td>
                                                             <select ng-show="rule_field.deuta1 && rule_field.optionKo" 
                                                             ng-model="rule_field.deuta2" 
                                                             ng-change="vm.selectKo(rule_field)" 
                                                             class="form-control"
-                                                            ng-options="p.kokoumoku as p.kokoumoku_name for p in rule_field.optionKo"></select>
+                                                            ng-options="p.kokoumoku as p.kokoumoku_name for p in rule_field.optionKo" data-width="fit"></select>
                                                         </td>
                                                         <td>
                                                             <div class="properties" data-ng-repeat="property in rule_field.properties">
                                                                 <div ng-switch on="property.type">
                                                                     <input ng-model="property.type" type="hidden"/>
                                                                     <div ng-switch-when="1">
-                                                                        <input ng-model="property.value" class="form-control" type="text"/>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="input-group form-inline panel">
+                                                                                <span ng-if="property.html_label_s" class="input-group-addon">
+                                                                                    <span ng-bind-html="property.html_label_s"></span>
+                                                                                </span>
+                                                                                <input ng-model="property.value" class="form-control" type="text" maxlength="200"/>
+                                                                                <span ng-if="property.html_label_e" class="input-group-addon add-on flat">
+                                                                                    <span ng-bind-html="property.html_label_e"></span>
+                                                                                </span> 
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-switch-when="2">
-                                                                        <select ng-model="property.value" class="form-control" 
-                                                                        ng-options="o as o for o in property.options"></select>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="input-group form-inline panel">
+                                                                                <select ng-model="property.value" class="form-control" 
+                                                                                ng-options="o as o for o in property.options" data-width="fit"></select>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-switch-when="3">
-                                                                        <label ng-repeat="ck in property.options">
-                                                                            <input ng-model="property.value" type="checkbox" checklist-value="ck"> {{ck}}
-                                                                        </label>
+                                                                        <div class="col-sm-12" style="text-align:center;">
+                                                                            <button type="button" class="btn btn-basic" ng-click="vm.openModal(property)">条件設定</button>
+                                                                        </div>
                                                                     </div>
-                                                                    <div ng-switch-when="4">
-                                                                        <input ng-model="property.value" class="form-control" type="text"/>
+                                                                    <div ng-switch-when="5">
+                                                                        <div class="col-sm-12">
+                                                                            <div class="input-group form-inline panel">
+                                                                                <textarea ng-model="property.value" class="form-control" maxlength="200"></textarea>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -151,3 +172,44 @@
     </div>
 </div>
 <!-- #入力Form -->
+<!-- modal template -->
+<script type="text/ng-template" id="myModalContent.html">
+    <div class="modal-header-confirm">
+        <h4 class="modal-title-confirm">条件設定</h4>
+    </div>
+    <div style="margin-top:10px; margin-left:20px; font-weight:bold;">
+        <span>物件データシート ：{{$ctrl.property.bukken_name}}</span><br/>
+        <span>大項目　　　　　  ：{{$ctrl.property.daikoumoku_name}}</span><br/>
+        <span ng-if="$ctrl.property.kokoumoku">小項目　　　　　  ：{{$ctrl.property.kokoumoku_name}}</span><br/>
+    </div>
+    <div class="modal-body text-left" id="modal-body">
+        <div ng-if="$ctrl.property.parent_flag === 'FALSE'" class="row" ng-repeat="ck in $ctrl.property.options">
+            <label class="col-sm-12" style="margin-left:20px;">
+                <input type="checkbox" checklist-model="$ctrl.property.value" checklist-value="ck">
+                {{ ck }}&nbsp;
+            </label>
+            <hr>
+        </div>
+        <div ng-if="$ctrl.property.parent_flag !== 'FALSE'" class="row" ng-repeat="ck in $ctrl.property.options">
+            <label class="col-sm-12" >
+                <input type="checkbox" style="margin-left:20px;" checklist-model="$ctrl.property.value" checklist-value="ck.name">
+                {{ ck.name }}&nbsp;
+            </label>
+            <div ng-if="ck.child" class="row" ng-repeat="ckc in ck.child">
+                <label class="col-sm-12">
+                    <input type="checkbox" ng-change="$ctrl.checkboxselect(ck, ckc, checked)" style="margin-left:70px;" checklist-model="$ctrl.property.value" checklist-value="ckc.name">
+                    {{ ckc.name }}&nbsp;
+                </label>
+            </div>
+            <div class="col-sm-12">
+                <hr/>
+            </div>
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">閉じる</button>
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok($ctrl.property.value)">決定</button>
+    </div>
+</script>
+<!-- #modal template -->

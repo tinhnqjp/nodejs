@@ -214,6 +214,11 @@ exports.delete = function (req, res) {
       });
       removeLawData.exec();
 
+      var removeLawRule = LawRule.remove({ law_id: law._id }, function (err) {
+        if (err) throw err;
+      });
+      removeLawRule.exec();
+
       res.json(law);
     }
   });
@@ -393,7 +398,7 @@ exports.postLawData = function (req, res) {
           var f = {
             type: field.type,
             name: field.bukken + ',' + field.deuta1 + ',' + field.deuta2,
-            value: field.atai
+            properties: field.properties
           };
           fields[inx] = f;
         });
@@ -441,7 +446,6 @@ exports.lawDataById = function (req, res) {
         });
       }
       res.json(law_datas);
-      
     });
 };
 
@@ -449,7 +453,7 @@ exports.lawDataById = function (req, res) {
  * List of Laws
  */
 exports.listMasterProperties = function (req, res) {
-  MasterProperties.find().exec(function (err, masterProperties) {
+  MasterProperties.find({ use_flag: 'TRUE' }).exec(function (err, masterProperties) {
     if (err) {
       return res.status(422).send({
         message: errorHandler.getErrorMessage(err)

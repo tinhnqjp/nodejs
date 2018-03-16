@@ -5,9 +5,11 @@
     .module('laws.admin')
     .controller('LawsAdminController', LawsAdminController);
 
-  LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve', 'Authentication', 'Notification', 'LawsService', 'LawsApi'];
+  LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve',
+    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce'];
 
-  function LawsAdminController($scope, $state, $window, law, Authentication, Notification, LawsService, LawsApi) {
+  function LawsAdminController($scope, $state, $window, law, Authentication,
+    Notification, LawsService, LawsApi, $uibModal, $sce) {
     var vm = this;
 
     vm.law = law;
@@ -29,16 +31,13 @@
       { id: 2014, name: '2014年' }
     ];
 
-    vm.ruleProperties = [
-      { type: '1', key: '3,7,5', value: '' },
-      { type: '1', key: '3,6,', value: '' },
-      { type: '1', key: '3,3,', value: '' }
-    ];
     vm.tmpLawDetails = [];
     vm.tmpLawRegulations = [];
     vm.listMasterProperties = [];
 
     initData();
+
+    /** init method */
     function initData() {
       LawsApi.listMasterProperties()
       .then((res) => {
@@ -63,37 +62,19 @@
           Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
         });
       }
-
-      var law_id = '5a9e5e6de3fcbf1558c1e6e5';
-      var _lawDataId = '5a9e5e6de3fcbf1558c1e6e6';
-      LawsApi.requestData(law_id, _lawDataId)
-      .then((res) => {
-        var rules = res.data.law_rules;
-        var _rules = [];
-        rules.forEach((rule, key) => {
-          var _fields  = [];
-          rule.fields.forEach((field, k) => {
-            var _dataField = field.name.split(',');
-            _fields[k] = {
-              bukken: _dataField[0],
-              deuta1: _dataField[1],
-              deuta2: _dataField[2],
-              atai: field.value,
-              type: field.type,
-            };
-          });
-          rule.fields =_fields;
-        });
-      })
-      .catch((res) => {
-        Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
-      });
     }
 
+    /**
+     * hide form law rule
+     */
     function hideLawsRule() {
       vm.isVisibleLawsRule = false;
     }
 
+    /**
+     * show form law rule
+     * @param {*} _lawData lawdata
+     */
     function showLawsRule(_lawData) {
       var _lawDataId = _lawData._id;
       vm.formLawsRule.info = _lawData;
@@ -104,20 +85,33 @@
         var rules = res.data.law_rules;
         var _rules = [];
         rules.forEach((rule, key) => {
-          var _fields  = [];
+          var _fields = [];
           rule.fields.forEach((field, k) => {
+            // in database has format ("name" : "4,15,null")
             var _dataField = field.name.split(',');
             _fields[k] = {
-              bukken: _dataField[0],
-              deuta1: _dataField[1],
-              deuta2: _dataField[2],
-              atai: field.value,
-              type: field.type,
+              bukken: parseInt(_dataField[0], 10),
+              deuta1: parseInt(_dataField[1], 10),
+              deuta2: _dataField[2] ? parseInt(_dataField[2], 10) : ''
             };
-          });
-          rule.fields =_fields;
-        });
+            _fields[k].optionDai = createProperties(_fields[k], 1);
+            var _properties = null;
+            if (_fields[k].deuta2) {
+              // has kokoumoku
+              var _optionKo = createProperties(_fields[k], 2);
+              _fields[k].optionKo = _.uniq(_optionKo, 'kokoumoku');
+              _properties = createProperties(_fields[k], 3);
+              _fields[k].properties = createListProperties(_properties, field.properties);
 
+            } else {
+              // none kokoumoku
+              _fields[k].optionKo = null;
+              _properties = createProperties(_fields[k], 2);
+              _fields[k].properties = createListProperties(_properties, field.properties);
+            }
+          });
+          rule.fields = _fields;
+        });
         vm.formLawsRule.rules = rules;
       })
       .catch((res) => {
@@ -125,55 +119,102 @@
       });
     }
 
-    vm.selectBukken = function (rule_field) {
-      var tmpoptionDai = _.filter(vm.listMasterProperties, function(item) {
-        return item.bukken === rule_field.bukken;
-      });
-      rule_field.optionDai =_.uniq(tmpoptionDai, 'daikoumoku');
-    }
-
-    function createProperties(_propertiesKo) {
-      var _properties = [];
-      _propertiesKo.forEach((property, k) => {
-        if ((property.type === 2 || property.type === 3) && property.list) {
-          property.options = property.list.split(',');
+    /**
+     * create properties rule after select daikomoku or kokomoku
+     * @param {*} _properties list properties
+     * @param {*} listValue value from database
+     */
+    function createListProperties(_properties, listValue) {
+      var _newProperties = [];
+      _properties.forEach((property, k) => {
+        if ((property.type === 2 || property.type === 3) && property.json) {
+          property.options = JSON.parse(property.json);
+        } else if (property.type === 1) {
+          property.html_label_s = $sce.trustAsHtml(property.label_s);
+          property.html_label_e = $sce.trustAsHtml(property.label_e);
         }
-        _properties[k] = property;
+
+        property.value = '';
+        if (property.type === 3 && !_.isEmpty(listValue)) {
+          property.value = listValue[k].value.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+        } else {
+          if (listValue && !_.isEmpty(listValue[k])) {
+            property.value = listValue[k].value ? listValue[k].value : '';
+          }
+        }
+        _newProperties[k] = property;
       });
-      return _properties;
+      return _newProperties;
     }
 
-    vm.selectDai = function (rule_field) {
-      console.log('select dai', rule_field.bukken, rule_field.deuta1);
-      var tmpPropertiesKo = _.filter(vm.listMasterProperties, function(item) {
-        return item.bukken === rule_field.bukken && item.daikoumoku === rule_field.deuta1;
-      });
-      if (rule_field.deuta1 && tmpPropertiesKo[0].kokoumoku_name) {
-        rule_field.optionKo =_.uniq(tmpPropertiesKo, 'kokoumoku'); 
-        console.log(rule_field.optionKo);
-        rule_field.properties = [];
+    /**
+     * get list properties of pulldown rule
+     * @param {*} rule_field rule field
+     * @param {*} select 1 bukken 2 daikoumoku 3 kokoumoku
+     */
+    function createProperties(rule_field, select) {
+      if (select === 1) {
+        // bukken
+        var tmpoptionDai = _.filter(vm.listMasterProperties, function (item) {
+          return item.bukken === rule_field.bukken;
+        });
+        return _.uniq(tmpoptionDai, 'daikoumoku');
+      } else if (select === 2) {
+        // daikoumoku
+        return _.filter(vm.listMasterProperties, function (item) {
+          return item.bukken === rule_field.bukken && item.daikoumoku === rule_field.deuta1;
+        });
       } else {
-        rule_field.deuta2 = null;
-        rule_field.optionKo = null;
-        
-        rule_field.properties = createProperties(tmpPropertiesKo);
+        // kokoumoku
+        var tmpPropertiesKo = _.filter(vm.listMasterProperties, function (item) {
+          return item.bukken === rule_field.bukken
+           && item.daikoumoku === rule_field.deuta1
+           && item.kokoumoku === rule_field.deuta2;
+        });
+        return createListProperties(tmpPropertiesKo);
       }
     }
 
+    /**
+     * when select bukken pulldown
+     * Get options of daikoumoku pulldown
+     * @param {*} rule_field
+     */
+    vm.selectBukken = function (rule_field) {
+      rule_field.optionDai = createProperties(rule_field, 1);
+    };
+
+    /**
+     * when select daikoumoku pulldown
+     * Get options of kokoumoku pulldown or properties
+     * @param {*} rule_field
+     */
+    vm.selectDai = function (rule_field) {
+      var tmpPropertiesKo = createProperties(rule_field, 2);
+      if (rule_field.deuta1 && tmpPropertiesKo[0].kokoumoku_name) {
+        // has kokoumoku
+        rule_field.optionKo = _.uniq(tmpPropertiesKo, 'kokoumoku');
+        rule_field.properties = [];
+      } else {
+        // none kokoumoku
+        rule_field.deuta2 = null;
+        rule_field.optionKo = null;
+        rule_field.properties = createListProperties(tmpPropertiesKo);
+      }
+    };
+
+    /**
+     * when select kokoumoku pulldown
+     * Get properties
+     * @param {*} rule_field
+     */
     vm.selectKo = function (rule_field) {
-      console.log('select dai', rule_field.bukken, rule_field.deuta1, rule_field.deuta2);
-      var tmpPropertiesKo = _.filter(vm.listMasterProperties, function(item) {
-        return item.bukken === rule_field.bukken
-         && item.daikoumoku === rule_field.deuta1
-         && item.kokoumoku === rule_field.deuta2;
-      });
-      console.log(tmpPropertiesKo);
-      rule_field.properties = createProperties(tmpPropertiesKo);
-    }
+      rule_field.properties = createProperties(rule_field, 3);
+    };
 
     vm.pushLawsRule = function () {
       vm.formLawsRule.rules.push({
-        rule_name: 'rule 1',
+        rule_name: '',
         fields: []
       });
     };
@@ -200,7 +241,6 @@
         return false;
       }
       console.log(vm.formLawsRule.rules);
-      
       LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
       .then((res) => {
         Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Rule saved successfully!' });
@@ -210,6 +250,10 @@
       });
     };
 
+    /**
+     * check law has rule -> change color of button 条件割当
+     * @param {*} law_rules rule
+     */
     vm.classButtonLawsRule = function (law_rules) {
       if (law_rules.length) {
         return 'btn-success';
@@ -217,7 +261,9 @@
       return 'btn-default';
     };
 
-    // TODO
+    /**
+     * when click open collapse detail 法令
+    */
     vm.openCollapseHourei = function () {
       if (vm.tmpLawDetails.length === 0) {
         LawsApi.requestDetail(law._id)
@@ -230,12 +276,18 @@
       }
     };
 
+    /**
+     * when click open collapse toudofuken 北海道...
+    */
     vm.openCollapse = regulationId => {
       var tr = _.findWhere(vm.todoufuken_regulations, { _id: regulationId });
       if (!tr || vm.tmpLawRegulations[tr._id].length > 0) return;
       vm.tmpLawRegulations[tr._id] = tr.law_regulations;
     };
 
+    /**
+     * click button 削除 in 法令管理 / 一覧
+    */
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.law.$remove(function () {
@@ -267,5 +319,65 @@
         Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
       }
     }
+
+    /**
+     * display list checkbox
+     * @param {*} property property of rule
+     * @param {*} size default
+     */
+    vm.openModal = function (property, size) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        ariaLabelledBy: 'modal-title',
+        ariaDescribedBy: 'modal-body',
+        templateUrl: 'myModalContent.html',
+        controller: 'ModalInstanceCtrl',
+        controllerAs: '$ctrl',
+        size: size,
+        resolve: {
+          property: function () {
+            return property;
+          }
+        }
+      });
+    };
+
   }
+
+  /**
+   * controller display modal
+   */
+  angular.module('laws.admin').controller('ModalInstanceCtrl', function ($uibModalInstance, property) {
+    var $ctrl = this;
+    $ctrl.property = property;
+
+    /**
+     * when click button 決定 in modal
+     * @param {*} selectedItems selected
+     */
+    $ctrl.ok = function (selectedItems) {
+      $uibModalInstance.close(selectedItems);
+    };
+
+    /**
+     * when click button 閉じる in modal
+    */
+    $ctrl.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+
+    /**
+     * when click checked at checkbox child -> checkbox parent auto checked
+     * @param {*} property_p parent
+     * @param {*} property_c child
+     * @param {*} checked status checked
+     */
+    $ctrl.checkboxSelectChild = function (property_p, property_c, checked) {
+      var idx = $ctrl.property.value.indexOf(property_p.name);
+      if (idx < 0 && checked) {
+        $ctrl.property.value.push(property_p.name);
+        $ctrl.property.value.push(property_c.name);
+      }
+    };
+  });
 }());

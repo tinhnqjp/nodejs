@@ -30,10 +30,14 @@ var LawRuleSchema = new Schema({
         type: String,
         trim: true
       },
-      value: {
-        type: String,
-        trim: true
-      }
+      properties: [
+        {
+          value: {
+            type: String,
+            trim: true
+          }
+        }
+      ]
     }
   ]
 });

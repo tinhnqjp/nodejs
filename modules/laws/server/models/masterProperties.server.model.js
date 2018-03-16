@@ -19,7 +19,7 @@ var MasterPropertiesSchema = new Schema({
   type: { type: Number },
   label_s: { type: String, trim: true },
   value: { type: String, trim: true },
-  list: { type: String, trim: true },
+  list: { type: String, trim: true }
 });
 
 mongoose.model('MasterProperties', MasterPropertiesSchema, 'masterProperties');
