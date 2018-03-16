@@ -18,6 +18,7 @@ module.exports = {
         'public/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css',
         'public/lib/clockpicker/dist/bootstrap-clockpicker.min.css',
         'public/lib/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css',
+        'public/lib/angular-loading-bar/src/loading-bar.css',
         // endbower
       ],
       js: [
@@ -45,7 +46,8 @@ module.exports = {
         'public/lib/jquery-ui/jquery-ui.min.js',
         'public/lib/angular-ui-sortable/sortable.min.js',
         'public/scripts/docs.js',
-        'public/lib/underscore/underscore.js'
+        'public/lib/underscore/underscore.js',
+        'public/lib/angular-loading-bar/src/loading-bar.js',
         // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']

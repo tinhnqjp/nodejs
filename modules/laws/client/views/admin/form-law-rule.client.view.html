@@ -113,7 +113,7 @@
                                                             ng-options="p.kokoumoku as p.kokoumoku_name for p in rule_field.optionKo" data-width="fit"></select>
                                                         </td>
                                                         <td>
-                                                            <div class="properties" data-ng-repeat="property in rule_field.properties">
+                                                            <div class="properties" data-ng-repeat="property in rule_field.properties" >
                                                                 <div ng-switch on="property.type">
                                                                     <input ng-model="property.type" type="hidden"/>
                                                                     <div ng-switch-when="1">
@@ -197,7 +197,7 @@
             </label>
             <div ng-if="ck.child" class="row" ng-repeat="ckc in ck.child">
                 <label class="col-sm-12">
-                    <input type="checkbox" ng-change="$ctrl.checkboxselect(ck, ckc, checked)" style="margin-left:70px;" checklist-model="$ctrl.property.value" checklist-value="ckc.name">
+                    <input type="checkbox" ng-change="$ctrl.checkboxSelectChild(ck, ckc, checked)" style="margin-left:70px;" checklist-model="$ctrl.property.value" checklist-value="ckc.name">
                     {{ ckc.name }}&nbsp;
                 </label>
             </div>

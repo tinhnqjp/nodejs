@@ -6,7 +6,9 @@
   var service = {
     applicationEnvironment: window.env,
     applicationModuleName: applicationModuleName,
-    applicationModuleVendorDependencies: ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ngFileUpload', 'ui-notification', 'checklist-model', 'ui.sortable'],
+    applicationModuleVendorDependencies: ['ngResource', 'ngAnimate', 'ngMessages',
+      'ui.router', 'ui.bootstrap', 'ngFileUpload', 'ui-notification',
+      'checklist-model', 'ui.sortable', 'angular-loading-bar'],
     registerModule: registerModule
   };
 
@@ -33,4 +35,10 @@
       positionY: 'bottom'
     });
   });
+
+  angular.module('myApp', ['angular-loading-bar'])
+    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+      cfpLoadingBarProvider.latencyThreshold = 1000;
+    }]);
+
 }(window));

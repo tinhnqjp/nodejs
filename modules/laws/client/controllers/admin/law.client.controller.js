@@ -34,11 +34,12 @@
     vm.tmpLawDetails = [];
     vm.tmpLawRegulations = [];
     vm.listMasterProperties = [];
-
     initData();
+    vm.busy = false;
 
     /** init method */
     function initData() {
+      vm.busy = true;
       LawsApi.listMasterProperties()
       .then((res) => {
         vm.listMasterProperties = res.data;
@@ -62,6 +63,7 @@
           Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
         });
       }
+      vm.busy = false;
     }
 
     /**
@@ -128,7 +130,12 @@
       var _newProperties = [];
       _properties.forEach((property, k) => {
         if ((property.type === 2 || property.type === 3) && property.json) {
-          property.options = JSON.parse(property.json);
+          try {
+            property.options = JSON.parse(property.json);
+          } catch (error) {
+            console.log('Error: Format json of property.' + error);
+          }
+          
         } else if (property.type === 1) {
           property.html_label_s = $sce.trustAsHtml(property.label_s);
           property.html_label_e = $sce.trustAsHtml(property.label_e);
@@ -142,7 +149,7 @@
             property.value = listValue[k].value ? listValue[k].value : '';
           }
         }
-        _newProperties[k] = property;
+        _newProperties[k] = _.clone(property);
       });
       return _newProperties;
     }
@@ -212,6 +219,9 @@
       rule_field.properties = createProperties(rule_field, 3);
     };
 
+    /**
+     * pull new rule 条件追加
+    */
     vm.pushLawsRule = function () {
       vm.formLawsRule.rules.push({
         rule_name: '',
@@ -219,28 +229,44 @@
       });
     };
 
+    /**
+     * remove a rule
+     * @param {*} _rule current rule
+     */
     vm.removeLawsRule = function (_rule) {
       var index = vm.formLawsRule.rules.indexOf(_rule);
       vm.formLawsRule.rules.splice(index, 1);
     };
 
+    /**
+     * pull new field 物件データ項目 追加
+     * @param {*} _rule current rule
+     */
     vm.pushLawsRuleField = function (_rule) {
       var index = vm.formLawsRule.rules.indexOf(_rule);
       vm.formLawsRule.rules[index].fields.push({});
     };
 
+    /**
+     * remove a field
+     * @param {*} _rule current rule
+     * @param {*} _ruleField current field
+     */
     vm.removeLawsRuleField = function (_rule, _ruleField) {
       var index = vm.formLawsRule.rules.indexOf(_rule);
       var indexField = vm.formLawsRule.rules[index].fields.indexOf(_ruleField);
       vm.formLawsRule.rules[index].fields.splice(indexField, 1);
     };
 
+    /**
+     * save to database rules
+     * @param {*} isValid check validation
+     */
     vm.saveRules = function (isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
         return false;
       }
-      console.log(vm.formLawsRule.rules);
       LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
       .then((res) => {
         Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Rule saved successfully!' });
@@ -266,9 +292,11 @@
     */
     vm.openCollapseHourei = function () {
       if (vm.tmpLawDetails.length === 0) {
+        vm.busy = true;
         LawsApi.requestDetail(law._id)
         .then((res) => {
           vm.tmpLawDetails = res.data.law_details;
+          vm.busy = false;
         })
         .catch((res) => {
           Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
@@ -280,9 +308,12 @@
      * when click open collapse toudofuken 北海道...
     */
     vm.openCollapse = regulationId => {
+      if (vm.tmpLawRegulations[regulationId].length > 0) return;
+      vm.busy = true;
       var tr = _.findWhere(vm.todoufuken_regulations, { _id: regulationId });
       if (!tr || vm.tmpLawRegulations[tr._id].length > 0) return;
       vm.tmpLawRegulations[tr._id] = tr.law_regulations;
+      vm.busy = false;
     };
 
     /**
@@ -380,4 +411,5 @@
       }
     };
   });
+
 }());
