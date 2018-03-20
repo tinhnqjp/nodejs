@@ -24,6 +24,7 @@ module.exports = function (app) {
   app.route('/api/laws/:lawId/requestRegulation').post(laws.lawRegulationById);
   app.route('/api/laws/:lawId/requestData').post(laws.lawDataById);
   app.route('/api/laws/:lawId/postLawData').post(laws.postLawData);
+  app.route('/api/laws/:lawId/copyLaw').post(laws.copy);
 
   // Finish by binding the law middleware
   app.param('lawId', laws.lawByID);

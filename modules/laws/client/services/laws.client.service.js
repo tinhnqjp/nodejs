@@ -64,6 +64,9 @@
       return $http.post('/api/laws/' + lawId + '/requestData', { id: lawDataId }, { ignoreLoadingBar: true });
     };
 
+    this.copyLaw = (lawId) => {
+      return $http.post('/api/laws/' + lawId + '/copyLaw', null, { ignoreLoadingBar: true });
+    };
     this.postLawData = (lawId, lawDataId, lawRules) => {
       return $http.post('/api/laws/' + lawId + '/postLawData', { lawRules: lawRules, lawDataId: lawDataId }, { ignoreLoadingBar: true });
     };

@@ -15,6 +15,10 @@ var path = require('path'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
+function getNewId() {
+  return mongoose.Types.ObjectId();
+}
+
 function createDataComon(req, res) {
   // TODO
   var tdfk = [
@@ -77,7 +81,7 @@ function createDataComon(req, res) {
 
     var masterLawDetailList = _.filter(masterLawList, { 'type': 'detail' });
     var masterLawTdfkList = _.filter(masterLawList, { 'type': 'tdfk' });
-    var lawId = mongoose.Types.ObjectId();
+    var lawId = getNewId();
 
     // save to LawDetail
     var law_details = [];
@@ -165,6 +169,155 @@ exports.read = function (req, res) {
   law.isCurrentUserOwner = !!(req.user && law.user && law.user._id.toString() === req.user._id.toString());
 
   res.json(law);
+};
+
+/**
+ * copy new law data
+ * @param {*} oldLawDataList list old
+ * @param {*} lawId law id new
+ */
+function copyNewLawData(oldLawDataList, lawId) {
+  var law_details = [];
+  oldLawDataList.forEach((itemData, index, array) => {
+    var newLawData = new LawData({
+      _id: getNewId(),
+      id: itemData.id,
+      item1: itemData.item1,
+      item2: itemData.item2,
+      legal_text: itemData.legal_text,
+      law_id: lawId
+    });
+
+    var law_rules = [];
+    itemData.law_rules.forEach((itemRule, r) => {
+      // create rule
+      var newFields = [];
+      itemRule.fields.forEach((iField, i) => {
+        var newProperties = [];
+        if (iField.properties) {
+          iField.properties.forEach((iProperties, k) => {
+            newProperties[k] = { value: iProperties.value };
+          });
+        }
+        newFields[i] = {
+          name: iField.name,
+          properties: newProperties
+        };
+      });
+      var newRule = new LawRule({
+        rule_name: itemRule.rule_name,
+        law_data_id: newLawData._id,
+        law_id: lawId,
+        fields: newFields
+      });
+      newRule.save();
+      law_rules[r] = newRule;
+    });
+
+    newLawData.law_rules = law_rules;
+    newLawData.save();
+    law_details[index] = newLawData;
+  });
+
+  return law_details;
+}
+/**
+ * copy law
+ */
+exports.copy = function (req, res) {
+  var _law = req.law;
+  var lawId = getNewId();
+  Law.findById(_law._id)
+  .populate({
+    path: 'law_details',
+    model: 'LawDetail',
+    populate: {
+      path: 'law_details',
+      model: 'LawData',
+      populate: {
+        path: 'law_rules',
+        model: 'LawRule'
+      }
+    }
+  })
+  .populate({
+    path: 'todoufuken_regulations',
+    model: 'LawRegulation',
+    populate: {
+      path: 'todoufuken_regulations.law_regulations',
+      model: 'LawData',
+      populate: {
+        path: 'law_rules',
+        model: 'LawRule'
+      }
+    }
+  })
+  .exec(function (err, law) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else if (!law) {
+      return res.status(404).send({
+        message: 'No law with that identifier has been found'
+      });
+    }
+
+    var newLaw = new Law({
+      _id: lawId,
+      year: law.year,
+      name: law.name
+    });
+
+    // copy law_details
+    var oldDetailLawDataList = law.law_details.law_details;
+    var law_details = copyNewLawData(oldDetailLawDataList, lawId);
+    var newLawDedail = new LawDetail({
+      law_id: lawId,
+      law_details: law_details
+    });
+    newLawDedail.save(function (err) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+    });
+    newLaw.law_details = newLawDedail;
+
+    // copy todoufuken_regulations
+    var oldRegulationDataList = law.todoufuken_regulations.todoufuken_regulations;
+    var todoufuken_regulations = [];
+    oldRegulationDataList.forEach((itemReg, _index) => {
+      var law_regulations = copyNewLawData(itemReg.law_regulations, lawId);
+
+      todoufuken_regulations[_index] = {
+        todoufuken: itemReg.todoufuken,
+        law_regulations: law_regulations
+      };
+    });
+    var newLawRegulation = new LawRegulation({
+      law_id: lawId,
+      todoufuken_regulations: todoufuken_regulations
+    });
+    newLawRegulation.save(function (err) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+    });
+    newLaw.todoufuken_regulations = newLawRegulation;
+
+    newLaw.save(function (err) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+    });
+    return res.end();
+  });
 };
 
 /**

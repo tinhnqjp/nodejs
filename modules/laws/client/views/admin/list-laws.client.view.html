@@ -63,7 +63,7 @@
                     <th class="bg-primary" style="width:60px;">年度</th>
                     <th class="bg-primary" style="width:400px;">名称</th>
                     <th class="bg-primary" style="width:100px">最終更新日</th>
-                    <th class="bg-primary" style="width:100px;">操作</th>
+                    <th class="bg-primary" style="width:100px;">操作<div ng-show="vm.busy" id="showbusy"></div></th>
                 </tr>
             </thead>
             <tbody>
@@ -78,6 +78,7 @@
                         <i class="glyphicon glyphicon-copyright-mark"></i> コピー</button>
                         <button class="btn btn-danger btn-sm" ng-click="vm.remove(law)">
                         <i class="glyphicon glyphicon-trash"></i> 削除</button>
+                        
                     </td>
                 </tr>
                 <tr data-ng-if="vm.laws.$resolved && !vm.laws.length">

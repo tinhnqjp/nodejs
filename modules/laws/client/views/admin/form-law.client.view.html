@@ -35,9 +35,6 @@
                             </div>
                         </div>
                     </form>
-                    <div ng-show="vm.busy" class="form-group text-center">
-                        <img ng-src="/modules/core/client/img/loaders/loader.gif" height="50" width="50" alt="Loading image...">
-                    </div>
                     <!-- <div ng-include="'/modules/laws/client/views/admin/form-law-template-field.client.view.html'"></div> -->
                     <uib-accordion ng-show="vm.law._id" close-others="false" class="">
                         <uib-accordion-group is-open="status.open0">
@@ -125,3 +122,5 @@
       </div>
     </div>
   </script>
+<div ng-show="vm.busy" id="showbusy"></div>
+<div ng-include="'/modules/laws/client/views/admin/modal-confirm.client.view.html'"></div>

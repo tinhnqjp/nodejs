@@ -6,9 +6,9 @@
     .filter('pagination', LawsAdminListFilter)
     .controller('LawsAdminListController', LawsAdminListController);
 
-  LawsAdminListController.$inject = ['LawsService', '$scope', '$state', '$window', 'Authentication', 'Notification'];
+  LawsAdminListController.$inject = ['LawsService', '$scope', '$state', '$window', 'Authentication', 'Notification', 'LawsApi'];
 
-  function LawsAdminListController(LawsService, $scope, $state, $window, Authentication, Notification) {
+  function LawsAdminListController(LawsService, $scope, $state, $window, Authentication, Notification, LawsApi) {
     var vm = this;
 
     vm.currentPage = 1;
@@ -19,6 +19,7 @@
     vm.form = {};
     vm.remove = remove;
     vm.copy = copy;
+    vm.busy = false;
 
     vm.pageChanged = function () {
       getData();
@@ -36,9 +37,11 @@
     // remove law
     function remove(_law) {
       if ($window.confirm('Are you sure you want to delete?')) {
+        vm.busy = true;
         var law = new LawsService({ _id: _law._id });
         law.$remove(function () {
           getData();
+          vm.busy = false;
           Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Law deleted successfully!' });
         });
       }
@@ -56,11 +59,16 @@
     // copy law
     function copy(_law) {
       if ($window.confirm('Are you sure you want to copy?')) {
-        var law = new LawsService(_law);
-        law._id = null;
-        law.createOrUpdate()
-          .then(successCallback)
-          .catch(errorCallback);
+        vm.busy = true;
+        LawsApi.copyLaw(_law._id)
+          .then((res) => {
+            vm.busy = false;
+            successCallback(res);
+          })
+          .catch((res) => {
+            vm.busy = false;
+            errorCallback(res);
+          });
       }
     }
   }

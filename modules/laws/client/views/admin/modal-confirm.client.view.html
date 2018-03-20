@@ -1,0 +1,14 @@
+<!-- modal template -->
+<script type="text/ng-template" id="modalConfirm.html">
+    <div class="modal-header-confirm">
+        <h4 class="modal-title-confirm">条件設定</h4>
+    </div>
+    <div class="modal-body text-left" id="modal-body">
+        $ctrl.message
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">閉じる</button>
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok($ctrl.property.value)">決定</button>
+    </div>
+</script>
+<!-- #modal template -->

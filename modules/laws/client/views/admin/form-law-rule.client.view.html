@@ -54,6 +54,7 @@
                             <div class="panel-body" style="border:1px solid #999; margin-bottom:10px;">
                                 <div class="row">
                                     <div class="col-sm-12 mg10b">
+                                        <span class="pull-left">条件グループ{{$index + 1}}</span>
                                         <button type="button" ng-click="vm.removeLawsRule(rule)" class="btn btn-danger btn-sm pull-right"><i class="glyphicon glyphicon-trash"></i> 削除</button>
                                     </div> 
                                     <div class="col-sm-12">
@@ -65,7 +66,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td><input type="text" class="form-control" ng-model="rule.rule_name" placeholder="条件１名称" title="条件１名称" /></td>
+                                                    <td><input type="text" class="form-control" ng-model="rule.rule_name" placeholder="条件{{$index + 1}}名称" title="条件{{$index + 1}}名称" /></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -117,7 +118,7 @@
                                                                 <div ng-switch on="property.type">
                                                                     <input ng-model="property.type" type="hidden"/>
                                                                     <div ng-switch-when="1">
-                                                                        <div class="col-sm-6">
+                                                                        <div ng-class="vm.classProperties(rule_field.properties)">
                                                                             <div class="input-group form-inline panel">
                                                                                 <span ng-if="property.html_label_s" class="input-group-addon">
                                                                                     <span ng-bind-html="property.html_label_s"></span>
@@ -130,16 +131,31 @@
                                                                         </div>
                                                                     </div>
                                                                     <div ng-switch-when="2">
-                                                                        <div class="col-sm-6">
+                                                                        <div ng-class="vm.classProperties(rule_field.properties)" ng-if="property.parent_flag === 0">
                                                                             <div class="input-group form-inline panel">
                                                                                 <select ng-model="property.value" class="form-control" 
                                                                                 ng-options="o as o for o in property.options" data-width="fit"></select>
                                                                             </div>
                                                                         </div>
+                                                                        <div ng-class="vm.classProperties(rule_field.properties)" ng-if="property.parent_flag === 2">
+                                                                            <div class="input-group form-inline panel">
+                                                                                <select ng-model="property.value" class="form-control" 
+                                                                                ng-change="vm.selectPropertyParent(property.value, rule_field.properties)" 
+                                                                                ng-options="o.name as o.name for o in property.options" data-width="fit"></select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div ng-class="vm.classProperties(rule_field.properties)" ng-if="property.parent_flag === 3">
+                                                                            <div class="input-group form-inline panel" ng-show="property.child_options">
+                                                                                <select ng-model="property.value" class="form-control" 
+                                                                                ng-options="o as o for o in property.child_options" data-width="fit"></select>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-switch-when="3">
-                                                                        <div class="col-sm-12" style="text-align:center;">
-                                                                            <button type="button" class="btn btn-basic" ng-click="vm.openModal(property)">条件設定</button>
+                                                                        <div ng-class="vm.classProperties(rule_field.properties)">
+                                                                            <div class="input-group form-inline panel">
+                                                                                <button type="button" class="btn btn-basic" ng-click="vm.openModal(property)">条件設定</button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                     <div ng-switch-when="5">
@@ -183,14 +199,14 @@
         <span ng-if="$ctrl.property.kokoumoku">小項目　　　　　  ：{{$ctrl.property.kokoumoku_name}}</span><br/>
     </div>
     <div class="modal-body text-left" id="modal-body">
-        <div ng-if="$ctrl.property.parent_flag === 'FALSE'" class="row" ng-repeat="ck in $ctrl.property.options">
+        <div ng-if="$ctrl.property.parent_flag === 0" class="row" ng-repeat="ck in $ctrl.property.options">
             <label class="col-sm-12" style="margin-left:20px;">
                 <input type="checkbox" checklist-model="$ctrl.property.value" checklist-value="ck">
                 {{ ck }}&nbsp;
             </label>
             <hr>
         </div>
-        <div ng-if="$ctrl.property.parent_flag !== 'FALSE'" class="row" ng-repeat="ck in $ctrl.property.options">
+        <div ng-if="$ctrl.property.parent_flag === 1" class="row" ng-repeat="ck in $ctrl.property.options">
             <label class="col-sm-12" >
                 <input type="checkbox" style="margin-left:20px;" checklist-model="$ctrl.property.value" checklist-value="ck.name">
                 {{ ck.name }}&nbsp;
@@ -205,7 +221,15 @@
                 <hr/>
             </div>
         </div>
-        
+        <div ng-if="$ctrl.property.parent_flag === 3" class="row" ng-repeat="ck in $ctrl.property.child_options">
+            <label class="col-sm-12" >
+                <input type="checkbox" style="margin-left:20px;" checklist-model="$ctrl.property.value" checklist-value="ck">
+                {{ ck }}&nbsp;
+            </label>
+            <div class="col-sm-12">
+                <hr/>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">閉じる</button>

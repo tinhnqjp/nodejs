@@ -37,7 +37,7 @@
   });
 
   angular.module('myApp', ['angular-loading-bar'])
-    .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
       cfpLoadingBarProvider.latencyThreshold = 1000;
     }]);
 

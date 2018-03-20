@@ -36,6 +36,7 @@
     vm.listMasterProperties = [];
     initData();
     vm.busy = false;
+    vm.scrollTopValue = 0;
 
     /** init method */
     function initData() {
@@ -71,6 +72,7 @@
      */
     function hideLawsRule() {
       vm.isVisibleLawsRule = false;
+      setTimeout(function() { $(window).scrollTop(vm.scrollTopValue); }, 0);
     }
 
     /**
@@ -78,6 +80,10 @@
      * @param {*} _lawData lawdata
      */
     function showLawsRule(_lawData) {
+      var windowEl = angular.element($window);
+      vm.scrollTopValue = windowEl.scrollTop();
+      console.log(vm.scrollTopValue);
+
       var _lawDataId = _lawData._id;
       vm.formLawsRule.info = _lawData;
       vm.isVisibleLawsRule = true;
@@ -121,6 +127,13 @@
       });
     }
 
+    vm.classProperties = function (properties) {
+      if (properties.length > 1) {
+        return 'col-sm-6';
+      }
+      return 'col-sm-12';
+    };
+
     /**
      * create properties rule after select daikomoku or kokomoku
      * @param {*} _properties list properties
@@ -131,16 +144,18 @@
       _properties.forEach((property, k) => {
         if ((property.type === 2 || property.type === 3) && property.json) {
           try {
-            property.options = JSON.parse(property.json);
+            var json = property.json.replace(/'/g, '"');
+            property.options = JSON.parse(json);
           } catch (error) {
             console.log('Error: Format json of property.' + error);
           }
-          
+
         } else if (property.type === 1) {
           property.html_label_s = $sce.trustAsHtml(property.label_s);
           property.html_label_e = $sce.trustAsHtml(property.label_e);
         }
 
+        // process value from dabase set to control
         property.value = '';
         if (property.type === 3 && !_.isEmpty(listValue)) {
           property.value = listValue[k].value.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
@@ -149,7 +164,18 @@
             property.value = listValue[k].value ? listValue[k].value : '';
           }
         }
+
         _newProperties[k] = _.clone(property);
+
+        /*
+        * spec for master property:
+        * display child group checkbox (parent_flag = 3) when parent_flag selectbox has value
+        */
+        if (property.parent_flag === 3 && property.value.length > 0) {
+          var parent_property = _.find(_properties, { parent_flag: 2 });
+          var options = _.find(property.options, { name: parent_property.value });
+          _newProperties[k].child_options = options.child;
+        }
       });
       return _newProperties;
     }
@@ -217,6 +243,20 @@
      */
     vm.selectKo = function (rule_field) {
       rule_field.properties = createProperties(rule_field, 3);
+    };
+
+    /**
+     * spec for master property:
+     * when change parent select (parent_flag = 2)
+     * then change value of child group checkbox (parent_flag = 3)
+     * Get properties
+     * @param {*} selected
+     */
+    vm.selectPropertyParent = function (selected, properties) {
+      var property = _.find(properties, { parent_flag: 3 });
+      var options = _.find(property.options, { name: selected });
+      property.child_options = options.child;
+      property.value = [];
     };
 
     /**
@@ -334,7 +374,7 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lawForm');
         return false;
       }
-
+      vm.busy = true;
       // Create a new law, or update the current instance
       var rs_law = new LawsService({ _id: vm.law._id, year: vm.law.year, name: vm.law.name });
       rs_law.createOrUpdate()
@@ -342,21 +382,43 @@
         .catch(errorCallback);
 
       function successCallback(res) {
+        vm.busy = false;
         $state.go('admin.laws.list');
         Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Law saved successfully!' });
       }
 
       function errorCallback(res) {
+        vm.busy = false;
         Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
       }
     }
 
     /**
+     * display modal confirm
+     * @param {*} message message confirm
+     */
+    vm.openModal = function (message) {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        ariaLabelledBy: 'modal-title',
+        ariaDescribedBy: 'modal-body',
+        templateUrl: 'modalConfirm.html',
+        controller: 'ModalConfirmCtrl',
+        controllerAs: '$ctrl',
+        resolve: {
+          property: function () {
+            return message;
+          }
+        }
+      });
+
+    };
+    
+    /**
      * display list checkbox
      * @param {*} property property of rule
-     * @param {*} size default
      */
-    vm.openModal = function (property, size) {
+    vm.openModal = function (property) {
       var modalInstance = $uibModal.open({
         animation: true,
         ariaLabelledBy: 'modal-title',
@@ -364,7 +426,6 @@
         templateUrl: 'myModalContent.html',
         controller: 'ModalInstanceCtrl',
         controllerAs: '$ctrl',
-        size: size,
         resolve: {
           property: function () {
             return property;
@@ -372,7 +433,6 @@
         }
       });
     };
-
   }
 
   /**
@@ -398,17 +458,44 @@
     };
 
     /**
+     * spec for master property (parent_flag = 1):
      * when click checked at checkbox child -> checkbox parent auto checked
      * @param {*} property_p parent
      * @param {*} property_c child
      * @param {*} checked status checked
      */
     $ctrl.checkboxSelectChild = function (property_p, property_c, checked) {
+      if (!$ctrl.property.value) {
+        $ctrl.property.value = [];
+      }
       var idx = $ctrl.property.value.indexOf(property_p.name);
       if (idx < 0 && checked) {
         $ctrl.property.value.push(property_p.name);
         $ctrl.property.value.push(property_c.name);
       }
+    };
+  });
+
+    /**
+   * controller display modal confirm
+   */
+  angular.module('laws.admin').controller('ModalConfirmCtrl', function ($uibModalInstance, message) {
+    var $ctrl = this;
+    $ctrl.message = message;
+
+    /**
+     * when click button 決定 in modal
+     * @param {*} selectedItems selected
+     */
+    $ctrl.ok = function (selectedItems) {
+      $uibModalInstance.close(selectedItems);
+    };
+
+    /**
+     * when click button 閉じる in modal
+    */
+    $ctrl.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
     };
   });
 
