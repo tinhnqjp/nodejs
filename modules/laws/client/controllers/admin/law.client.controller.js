@@ -6,10 +6,10 @@
     .controller('LawsAdminController', LawsAdminController);
 
   LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve',
-    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce'];
+    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce', 'modalService', 'notifyService'];
 
   function LawsAdminController($scope, $state, $window, law, Authentication,
-    Notification, LawsService, LawsApi, $uibModal, $sce) {
+    Notification, LawsService, LawsApi, $uibModal, $sce, modalService, notifyService) {
     var vm = this;
 
     vm.law = law;
@@ -19,7 +19,6 @@
     vm.hideLawsRule = hideLawsRule;
     vm.showLawsRule = showLawsRule;
     vm.formLawsRule = {};
-    vm.remove = remove;
     vm.save = save;
     vm.years = [
       { id: 2020, name: '2020年' },
@@ -47,7 +46,7 @@
         vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
       })
       .catch((res) => {
-        Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
+        notifyService.error('マスターデータのロードが失敗しました。');
       });
 
       if (law._id) {
@@ -61,7 +60,7 @@
 
         })
         .catch((res) => {
-          Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
+          notifyService.error('マスターデータのロードが失敗しました。');
         });
       }
       vm.busy = false;
@@ -72,7 +71,7 @@
      */
     function hideLawsRule() {
       vm.isVisibleLawsRule = false;
-      setTimeout(function() { $(window).scrollTop(vm.scrollTopValue); }, 0);
+      setTimeout(function () { $(window).scrollTop(vm.scrollTopValue); }, 0);
     }
 
     /**
@@ -82,7 +81,6 @@
     function showLawsRule(_lawData) {
       var windowEl = angular.element($window);
       vm.scrollTopValue = windowEl.scrollTop();
-      console.log(vm.scrollTopValue);
 
       var _lawDataId = _lawData._id;
       vm.formLawsRule.info = _lawData;
@@ -123,7 +121,7 @@
         vm.formLawsRule.rules = rules;
       })
       .catch((res) => {
-        Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
+        notifyService.error('法令データのロードが失敗しました。' + res.data.message);
       });
     }
 
@@ -275,7 +273,10 @@
      */
     vm.removeLawsRule = function (_rule) {
       var index = vm.formLawsRule.rules.indexOf(_rule);
-      vm.formLawsRule.rules.splice(index, 1);
+      var number = index + 1;
+      modalService.openModal('条件グループ' + number +'を削除します。よろしいですか？').result.then(function (result) {
+        vm.formLawsRule.rules.splice(index, 1);
+      });
     };
 
     /**
@@ -293,9 +294,11 @@
      * @param {*} _ruleField current field
      */
     vm.removeLawsRuleField = function (_rule, _ruleField) {
-      var index = vm.formLawsRule.rules.indexOf(_rule);
-      var indexField = vm.formLawsRule.rules[index].fields.indexOf(_ruleField);
-      vm.formLawsRule.rules[index].fields.splice(indexField, 1);
+      modalService.openModal('この条件項目を削除します。よろしいですか？').result.then(function (result) {
+        var index = vm.formLawsRule.rules.indexOf(_rule);
+        var indexField = vm.formLawsRule.rules[index].fields.indexOf(_ruleField);
+        vm.formLawsRule.rules[index].fields.splice(indexField, 1);
+      });
     };
 
     /**
@@ -303,16 +306,18 @@
      * @param {*} isValid check validation
      */
     vm.saveRules = function (isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
-        return false;
-      }
-      LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
-      .then((res) => {
-        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Rule saved successfully!' });
-      })
-      .catch((res) => {
-        Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
+      modalService.openModal('保存します。よろしいですか？').result.then(function (result) {
+        if (!isValid) {
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
+          return false;
+        }
+        LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
+        .then((res) => {
+          notifyService.success('条件データの保存が完了しました。');
+        })
+        .catch((res) => {
+          notifyService.error('条件データの保存が失敗しました。' + res.data.message);
+        });
       });
     };
 
@@ -339,7 +344,7 @@
           vm.busy = false;
         })
         .catch((res) => {
-          Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
+          notifyService.error('法令データのロードが失敗しました。' + res.data.message);
         });
       }
     };
@@ -356,64 +361,27 @@
       vm.busy = false;
     };
 
-    /**
-     * click button 削除 in 法令管理 / 一覧
-    */
-    function remove() {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        vm.law.$remove(function () {
-          $state.go('admin.laws.list');
-          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Law deleted successfully!' });
-        });
-      }
-    }
-
     // Save Law
     function save(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.lawForm');
-        return false;
-      }
-      vm.busy = true;
-      // Create a new law, or update the current instance
-      var rs_law = new LawsService({ _id: vm.law._id, year: vm.law.year, name: vm.law.name });
-      rs_law.createOrUpdate()
-        .then(successCallback)
-        .catch(errorCallback);
-
-      function successCallback(res) {
-        vm.busy = false;
-        $state.go('admin.laws.list');
-        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Law saved successfully!' });
-      }
-
-      function errorCallback(res) {
-        vm.busy = false;
-        Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Law save error!' });
-      }
-    }
-
-    /**
-     * display modal confirm
-     * @param {*} message message confirm
-     */
-    vm.openModal = function (message) {
-      var modalInstance = $uibModal.open({
-        animation: true,
-        ariaLabelledBy: 'modal-title',
-        ariaDescribedBy: 'modal-body',
-        templateUrl: 'modalConfirm.html',
-        controller: 'ModalConfirmCtrl',
-        controllerAs: '$ctrl',
-        resolve: {
-          property: function () {
-            return message;
-          }
+      modalService.openModal('保存します。よろしいですか？').result.then(function (result) {
+        if (!isValid) {
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.lawForm');
+          return false;
         }
+        vm.busy = true;
+        // Create a new law, or update the current instance
+        var rs_law = new LawsService({ _id: vm.law._id, year: vm.law.year, name: vm.law.name });
+        rs_law.createOrUpdate()
+          .then((res) => {
+            vm.busy = false;
+            notifyService.success('法令データの保存が完了しました。');
+          })
+          .catch((res) => {
+            vm.busy = false;
+            notifyService.error('法令データの保存が失敗しました。' + res.data.message);
+          });
       });
-
-    };
-    
+    }
     /**
      * display list checkbox
      * @param {*} property property of rule
@@ -476,27 +444,5 @@
     };
   });
 
-    /**
-   * controller display modal confirm
-   */
-  angular.module('laws.admin').controller('ModalConfirmCtrl', function ($uibModalInstance, message) {
-    var $ctrl = this;
-    $ctrl.message = message;
-
-    /**
-     * when click button 決定 in modal
-     * @param {*} selectedItems selected
-     */
-    $ctrl.ok = function (selectedItems) {
-      $uibModalInstance.close(selectedItems);
-    };
-
-    /**
-     * when click button 閉じる in modal
-    */
-    $ctrl.cancel = function () {
-      $uibModalInstance.dismiss('cancel');
-    };
-  });
 
 }());

@@ -11,10 +11,10 @@ module.exports = {
     promise: global.Promise
   },
   port: process.env.PORT || 3000,
-  host: process.env.HOST || '192.168.2.131',
+  host: process.env.HOST || '0.0.0.0',
   // DOMAIN config should be set to the fully qualified application accessible
   // URL. For example: https://www.myapp.com (including port if required).
-  domain: process.env.DOMAIN,
+  domain: process.env.DOMAIN || 'jaic.techlog.bz',
   // Session Cookie settings
   sessionCookie: {
     // session expiration is set by default to 24 hours

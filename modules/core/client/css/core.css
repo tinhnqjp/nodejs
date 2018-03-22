@@ -46,24 +46,40 @@ a:hover .header-profile-image {
   background-color: #506e9b;
 }
 
-#showbusy {
-  position: absolute;
-  left: 70%;
-  top: 20%;
-  z-index: 1;
-  margin: -35px 0 0 -35px;
-  border: 10px solid #eee;
-  border-radius: 50%;
-  border-top: 10px solid rgb(52, 152, 219);
-  width: 30px;
-  height: 30px;
-  -webkit-animation: spin 1s linear infinite;
+.animate-bottom {
+  animation-name: animatebottom;
+  animation-duration: 1s;
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -moz-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+}
+
+.show-busy {
   animation: spin 1s linear infinite;
+  border: 6px solid #eee;
+  border-radius: 50%;
+  border-top: 6px solid rgb(52, 152, 219);
+  left: 70%;
+  height: 30px;
+  margin: -35px 0 0 -35px;
+  position: absolute;
+  top: 20%;
+  width: 30px;
+  z-index: 1;
+  -webkit-animation: spin 1s linear infinite;
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
@@ -71,18 +87,9 @@ a:hover .header-profile-image {
   100% { transform: rotate(360deg); }
 }
 
-/* Add animation to "page content" */
-.animate-bottom {
-  position: relative;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 1s;
-  animation-name: animatebottom;
-  animation-duration: 1s
-}
-
 @-webkit-keyframes animatebottom {
   from { bottom:-100px; opacity:0 } 
-  to { bottom:0px; opacity:1 }
+  to { bottom:0; opacity:1 }
 }
 
 @keyframes animatebottom { 
@@ -92,4 +99,8 @@ a:hover .header-profile-image {
 
 .modal-open {
   overflow: unset;
+}
+
+.w3-top {
+  z-index: 9;
 }

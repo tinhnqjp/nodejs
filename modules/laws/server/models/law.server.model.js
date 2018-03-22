@@ -15,12 +15,12 @@ var mongoose = require('mongoose'),
 var LawSchema = new Schema({
   year: {
     type: Number,
-    required: 'cannot be blank'
+    required: '年度が選択されていません。'
   },
   name: {
     type: String,
     trim: true,
-    required: 'name cannot be blank'
+    required: '名称が入力されていません。'
   },
   created: {
     type: Date,

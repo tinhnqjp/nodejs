@@ -63,7 +63,7 @@
                     <th class="bg-primary" style="width:60px;">年度</th>
                     <th class="bg-primary" style="width:400px;">名称</th>
                     <th class="bg-primary" style="width:100px">最終更新日</th>
-                    <th class="bg-primary" style="width:100px;">操作<div ng-show="vm.busy" id="showbusy"></div></th>
+                    <th class="bg-primary" style="width:100px;">操作<div ng-show="vm.busy" class="show-busy"></div></th>
                 </tr>
             </thead>
             <tbody>
@@ -96,3 +96,4 @@
         ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
     </div>
 </div>
+<div ng-include="'/modules/laws/client/views/admin/modal-confirm.client.view.html'"></div>
