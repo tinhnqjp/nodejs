@@ -23,14 +23,22 @@
                 <div class="panel-heading">法令登録</div>
                 <div class="panel-body">
                     <form name="vm.form.lawForm" ng-submit="vm.save(vm.form.lawForm.$valid)" novalidate>
+                        <div class="row" ng-if="vm.submitted && vm.form.lawForm.$error">
+                            <div class="col-sm-12" style="margin-bottom: 15px">
+                                <lu  class="alert-danger">
+                                    <li ng-if="vm.submitted && vm.form.lawForm.years.$error.required">年度が選択されていません。</li>
+                                    <li ng-if="vm.submitted && vm.form.lawForm.name.$error.required">名称が入力されていません。</li>
+                                </lu>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-sm-12">
-                                
                                 <div class="input-group form-inline panel">
                                     <span class="input-group-addon mw120">年度</span>
-                                    <select class="form-control" ng-model="vm.law.year" ng-options="p.id as p.name for p in vm.years"></select>
+                                    <select class="form-control" name="years" ng-model="vm.law.year" ng-options="p.id as p.name for p in vm.years" required></select>
                                     <span class="input-group-addon mw120">名称</span>
-                                    <input ng-model="vm.law.name" type="text" class="form-control" value="" placeholder="名称" title="名称" />
+                                    <input ng-model="vm.law.name" name="name" type="text" class="form-control" placeholder="名称" title="名称" required/>        
                                 </div>
                             </div>
                         </div>
@@ -61,7 +69,7 @@
                                         <td style="text-align:left;">{{ lawData.item2 }}</td>
                                         <td style="text-align:left;">{{ lawData.legal_text }}</td>
                                         <td style="text-align:center;width:150px;">
-                                            <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData)"> 条件割当</button>
+                                            <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData, '法令')"> 条件割当</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -95,7 +103,7 @@
                                         <td style="text-align:left;">{{ lawData.item2 }}</td>
                                         <td style="text-align:left;">{{ lawData.legal_text }}</td>
                                         <td style="text-align:center;width:150px;">
-                                            <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData)"> 条件割当</button>
+                                            <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData, regulation.todoufuken)"> 条件割当</button>
                                         </td>
                                     </tr>
                                 </tbody>

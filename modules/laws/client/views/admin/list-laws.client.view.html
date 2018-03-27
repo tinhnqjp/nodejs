@@ -17,44 +17,6 @@
                 font-weight:bold;
                 text-align:center;
             }
-
-            #jquery-ui-sortable {
-              list-style-type: none;
-              margin: 0;
-              padding: 0;
-              width: 70%;
-            }
-            #jquery-ui-sortable li {
-              margin: 0 3px 3px 3px;
-              padding: 0.3em;
-              padding-left: 1em;
-              font-size: 15px;
-              font-weight: bold;
-              cursor: move;
-            }
-
-            * {
-              font-family: Consolas;
-            }
-
-            .editableTable {
-              border: solid 1px;
-              width: 100%;
-            }
-
-            .editableTable td {
-              border: solid 1px;
-            }
-
-            .editableTable .cellEditing {
-              padding: 0;
-            }
-
-            .editableTable .cellEditing input[type=text] {
-              width: 100%;
-              border: 0;
-              background-color: rgb(255,253,210);
-            }
         </style>
 
         <table id="ads_table" class="table table-striped table-bordered table-hover">
@@ -93,6 +55,8 @@
         <ul uib-pagination
         total-items="vm.totalItems"
         items-per-page="vm.pageSize" 
+        previous-text="前"
+        next-text="次"
         ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
     </div>
 </div>

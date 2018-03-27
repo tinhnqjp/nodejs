@@ -1,0 +1,52 @@
+﻿<div id="content1" class="w3-container" style="padding-top:50px;">
+  <a type="button" class="btn btn-success pull-right" id="btnAdd" data-ui-sref="admin.properties.create">
+      <span class="glyphicon glyphicon-plus"></span> 登録
+  </a>
+  <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+  </div>
+  <div>
+      <strong style="font-size:20px;">物件データ管理</strong><br/>
+  </div>
+  <div style="font-weight:bold; padding-top:10px;">一覧</div>
+
+  <hr>
+  <div class="table-responsive">
+        <div class="pull-right" style="padding:10px;">
+            <button class="btn btn-info btn-sm"><i class="glyphicon glyphicon-allow-down"></i> NICEインポート</button>
+        </div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="bg-primary">＃</th>
+                    <th class="bg-primary">名称</th>
+                    <th class="bg-primary">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="property in vm.properties">
+                    <td style="text-align:center;">{{ $index+1 }}</td>
+                    <td style="text-align:left;" data-ng-bind="property.men11"></td>
+                    <td style="text-align:center;">
+                        <button class="btn btn-info btn-sm" data-ui-sref="admin.properties.edit({propertyId: property._id})">
+                        <i class="glyphicon glyphicon-pencil"></i> 編集</button>
+                        <button class="btn btn-danger btn-sm" ng-click="vm.remove(property)">
+                        <i class="glyphicon glyphicon-trash"></i> 削除</button>
+                    </td>
+                </tr>
+                <tr data-ng-if="vm.properties.$resolved && !vm.properties.length">
+                    <td colspan="5">No properties yet, why don't you <a data-ui-sref="admin.properties.create">create one</a>?</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+   
+  <div style="width:100%; text-align:center;">
+      <hr>
+      <ul uib-pagination
+        total-items="vm.totalItems"
+        items-per-page="vm.pageSize"
+        previous-text="前"
+        next-text="次"
+        ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
+  </div>
+</div>

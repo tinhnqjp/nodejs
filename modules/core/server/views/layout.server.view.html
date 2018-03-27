@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-strict-di>
+<html lang="en" ng-strict-di ng-controller="AppController">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -57,6 +57,7 @@
   <div class="w3-main" style="margin-left:250px;">
       {{{block "content"}}}
   </div>
+  <div ng-include="'/modules/core/client/views/modal-confirm.client.view.html'"></div>
 {{else}}
   <div style="padding-top:8px;" class="w3-container w3-theme">
       <p>物件データ管理システム（仮）</p>

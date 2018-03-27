@@ -19,12 +19,15 @@ module.exports = {
         'public/lib/clockpicker/dist/bootstrap-clockpicker.min.css',
         'public/lib/font-awesome/web-fonts-with-css/css/fontawesome-all.min.css',
         'public/lib/angular-loading-bar/src/loading-bar.css',
+        'public/lib//ng-dialog/css/ngDialog.min.css',
+        'public/lib//ng-dialog/css/ngDialog-theme-default.min.css',
         // endbower
       ],
       js: [
         // bower:js
         'public/lib/jquery/dist/jquery.min.js',
         'public/lib/angular/angular.js',
+        'public/lib/angular-i18n/angular-locale_ja-jp.js',
         'public/lib/angular-animate/angular-animate.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/ng-file-upload/ng-file-upload.js',
@@ -48,6 +51,7 @@ module.exports = {
         'public/scripts/docs.js',
         'public/lib/underscore/underscore.js',
         'public/lib/angular-loading-bar/src/loading-bar.js',
+        'public/lib/ng-dialog/js/ngDialog.min.js'
         // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']

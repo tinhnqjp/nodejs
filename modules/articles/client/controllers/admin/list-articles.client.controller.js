@@ -6,9 +6,9 @@
     .controller('ArticlesAdminListController', ArticlesAdminListController)
     .filter('pagination', ArticlesAdminListFilter);
 
-  ArticlesAdminListController.$inject = ['ArticlesService'];
+  ArticlesAdminListController.$inject = ['$scope', 'ArticlesService'];
 
-  function ArticlesAdminListController(ArticlesService) {
+  function ArticlesAdminListController($scope, ArticlesService) {
     var vm = this;
     vm.currentPage = 3;
     vm.pageSize = 5;

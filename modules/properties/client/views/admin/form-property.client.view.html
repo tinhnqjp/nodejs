@@ -1,0 +1,145 @@
+<div id="content2" class="w3-container" ng-hide="vm.isVisiblePropertiesRule" style="padding-top:50px;">
+    <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+        <span id="myIntro" class="w3-hide">物件データ管理</span>
+    </div>
+    <div>
+        <strong style="font-size:20px;">物件データ管理</strong><br/>
+    </div>
+    <button type="submit" ng-click="vm.save(vm.form.propertyForm.$valid)" class="btn btn-primary pull-right" id="btn_save_add">
+        <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
+    </button>
+    <a type="button" data-ui-sref="admin.properties.list" class="mg15r btn btn-warning pull-right">
+        キャンセル
+    </a>
+    <div style="font-weight:bold; padding-top:10px;">
+        <a data-ui-sref="admin.properties.list">一覧 </a> > 物件登録
+    </div>
+    <hr>
+    <!-- #コントロールボタン -->
+    <!-- 入力Form --> 
+    <style>
+        .nav-tabs > li > a {
+            color: #fff;
+            border-radius:unset;
+        }
+        .nav-tabs > li.active > a {
+            border-color: #ccc;
+            border-bottom-color: transparent;
+        }
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+            color: #000;
+        }
+        .nav > li > a:hover, .nav > li > a:focus {
+            color: #000;
+        }
+        .nav-tabs {
+            background-color: #506e9b;
+            border-color: #ccc;
+            padding: 5px 5px 0px 5px;
+        }
+        .panel-primary {
+            border-color: #ccc;
+            border-top-color: transparent;
+        }
+        .title_label {
+            font-weight:bold;
+            font-size:20px;
+        }
+        .sub_title_label {
+            font-weight:bold;
+        }
+        .space {
+            margin:10px;
+        }
+        .help-block {
+            display: inline;
+            font-size: small
+        }
+    </style>
+    <form name="vm.form.propertyForm" ng-submit="vm.save(vm.form.propertyForm.$valid)" autocomplete="on" novalidate>
+    <uib-tabset type="tabs" class="w3-bar">
+        <uib-tab heading="物件概要" class="tablink">
+            <div class="row gamen" id="men1">
+                <div class="col-xs-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-body">
+                            <div class="row" ng-class="vm.classError(vm.form.propertyForm.men10.$invalid)">
+                                <div class="col-md-4">
+                                    <label class="title_label">受付欄
+                                        <ng-messages for="vm.form.propertyForm.men10.$error" ng-if="vm.submitted">
+                                            <span class="help-block">
+                                                <ng-message when="date">DATE FORMAT</ng-message>
+                                                <ng-message when="required">受付欄が入力されていません</ng-message>
+                                            </span>
+                                        </ng-messages>
+                                    </label>
+                                    <div class="input-group form-inline panel">
+                                        <span class="input-group-addon">年/月/日</span>
+                                        <input type="date" class="form-control" ng-model="vm.property.men10" ng-required="true"
+                                         autocomplete="men10" name="men10"/>
+                                        <span class="input-group-addon add-on flat">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-class="vm.classError(vm.form.propertyForm.men11.$invalid)">
+                                <div class="col-md-4">
+                                    <label class="title_label">１．建築主の概要
+                                        <ng-messages for="vm.form.propertyForm.men11.$error" ng-if="vm.submitted">
+                                            <span class="help-block">
+                                                <ng-message when="required">建築主の概要が入力されていません</ng-message>
+                                            </span>
+                                        </ng-messages>
+                                    </label>
+                                    <div class="input-group form-inline panel">
+                                        <span class="input-group-addon">氏名</span>
+                                        <input type="text" class="form-control" ng-model="vm.property.men11" name="men11" ng-required="true" autocomplete="men11" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-class="vm.classError(vm.form.propertyForm.men12.$invalid)">
+                                <div class="col-md-4">
+                                    <label class="title_label">２．代表者
+                                        <ng-messages for="vm.form.propertyForm.men12.$error" ng-if="vm.submitted">
+                                            <span class="help-block">
+                                                <ng-message when="required">代表者が入力されていません</ng-message>
+                                            </span>
+                                        </ng-messages>
+                                    </label>
+                                    <div class="input-group form-inline panel">
+                                        <span class="input-group-addon">氏名</span>
+                                        <input type="text" class="form-control" ng-model="vm.property.men12" name="men12" ng-required="true" autocomplete="men12" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-class="vm.classError(vm.form.propertyForm.men13.$invalid)">
+                                <div class="col-md-4">
+                                    <label class="title_label">３．設計者
+                                        <ng-messages for="vm.form.propertyForm.men13.$error" ng-if="vm.submitted">
+                                            <span class="help-block">
+                                                <ng-message when="required">設計者が入力されていません</ng-message>
+                                            </span>
+                                        </ng-messages>
+                                    </label>
+                                    <div class="input-group form-inline panel">
+                                        <span class="input-group-addon">氏名</span>
+                                        <input type="text" class="form-control" ng-model="vm.property.men13" name="men13" ng-required="true" autocomplete="men13" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </uib-tab>
+        <uib-tab heading="第三面" class="tablink">
+            <div class="row gamen" ng-include="'/modules/properties/client/views/admin/form-3.client.view.html'"></div>
+        </uib-tab>
+        <uib-tab heading="第四面" class="tablink">
+            <div class="row gamen" ng-include="'/modules/properties/client/views/admin/form-4.client.view.html'"></div>
+        </uib-tab>
+    </uib-tabset>
+    </form>
+    <!-- #入力Form -->
+</div>

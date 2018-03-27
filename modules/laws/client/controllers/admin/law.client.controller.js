@@ -6,10 +6,10 @@
     .controller('LawsAdminController', LawsAdminController);
 
   LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve',
-    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce', 'modalService', 'notifyService'];
+    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce'];
 
   function LawsAdminController($scope, $state, $window, law, Authentication,
-    Notification, LawsService, LawsApi, $uibModal, $sce, modalService, notifyService) {
+    Notification, LawsService, LawsApi, $uibModal, $sce) {
     var vm = this;
 
     vm.law = law;
@@ -46,7 +46,7 @@
         vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
       })
       .catch((res) => {
-        notifyService.error('マスターデータのロードが失敗しました。');
+        $scope.nofityError('マスターデータのロードが失敗しました。');
       });
 
       if (law._id) {
@@ -60,7 +60,7 @@
 
         })
         .catch((res) => {
-          notifyService.error('マスターデータのロードが失敗しました。');
+          $scope.nofityError('マスターデータのロードが失敗しました。');
         });
       }
       vm.busy = false;
@@ -77,13 +77,15 @@
     /**
      * show form law rule
      * @param {*} _lawData lawdata
+     * @param {*} _title title
      */
-    function showLawsRule(_lawData) {
+    function showLawsRule(_lawData, _title) {
       var windowEl = angular.element($window);
       vm.scrollTopValue = windowEl.scrollTop();
 
       var _lawDataId = _lawData._id;
       vm.formLawsRule.info = _lawData;
+      vm.formLawsRule.info.title = _title;
       vm.isVisibleLawsRule = true;
 
       LawsApi.requestData(_lawData.law_id, _lawDataId)
@@ -121,7 +123,7 @@
         vm.formLawsRule.rules = rules;
       })
       .catch((res) => {
-        notifyService.error('法令データのロードが失敗しました。' + res.data.message);
+        $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
       });
     }
 
@@ -274,7 +276,7 @@
     vm.removeLawsRule = function (_rule) {
       var index = vm.formLawsRule.rules.indexOf(_rule);
       var number = index + 1;
-      modalService.openModal('条件グループ' + number +'を削除します。よろしいですか？').result.then(function (result) {
+      $scope.handleShowConfirm({ message: '条件グループ' + number +'を削除します。よろしいですか？' }, () => {
         vm.formLawsRule.rules.splice(index, 1);
       });
     };
@@ -294,7 +296,7 @@
      * @param {*} _ruleField current field
      */
     vm.removeLawsRuleField = function (_rule, _ruleField) {
-      modalService.openModal('この条件項目を削除します。よろしいですか？').result.then(function (result) {
+      $scope.handleShowConfirm({ message: 'この条件項目を削除します。よろしいですか？' }, () => {
         var index = vm.formLawsRule.rules.indexOf(_rule);
         var indexField = vm.formLawsRule.rules[index].fields.indexOf(_ruleField);
         vm.formLawsRule.rules[index].fields.splice(indexField, 1);
@@ -306,17 +308,17 @@
      * @param {*} isValid check validation
      */
     vm.saveRules = function (isValid) {
-      modalService.openModal('保存します。よろしいですか？').result.then(function (result) {
+      $scope.handleShowConfirm({ message: '保存します。よろしいですか？' }, () => {
         if (!isValid) {
           $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
           return false;
         }
         LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
         .then((res) => {
-          notifyService.success('条件データの保存が完了しました。');
+          $scope.nofitySuccess('条件データの保存が完了しました。');
         })
         .catch((res) => {
-          notifyService.error('条件データの保存が失敗しました。' + res.data.message);
+          $scope.nofityError('条件データの保存が失敗しました。' + res.data.message);
         });
       });
     };
@@ -344,7 +346,7 @@
           vm.busy = false;
         })
         .catch((res) => {
-          notifyService.error('法令データのロードが失敗しました。' + res.data.message);
+          $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
         });
       }
     };
@@ -361,24 +363,26 @@
       vm.busy = false;
     };
 
+    vm.submitted = false;
     // Save Law
     function save(isValid) {
-      modalService.openModal('保存します。よろしいですか？').result.then(function (result) {
-        if (!isValid) {
-          $scope.$broadcast('show-errors-check-validity', 'vm.form.lawForm');
-          return false;
-        }
+      if (!isValid) {
+        vm.submitted = true;
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.lawForm');
+        return false;
+      }
+      $scope.handleShowConfirm({ message: '保存します。よろしいですか？' }, () => {
         vm.busy = true;
         // Create a new law, or update the current instance
         var rs_law = new LawsService({ _id: vm.law._id, year: vm.law.year, name: vm.law.name });
         rs_law.createOrUpdate()
           .then((res) => {
             vm.busy = false;
-            notifyService.success('法令データの保存が完了しました。');
+            $scope.nofitySuccess('法令データの保存が完了しました。');
           })
           .catch((res) => {
             vm.busy = false;
-            notifyService.error('法令データの保存が失敗しました。' + res.data.message);
+            $scope.nofityError('法令データの保存が失敗しました。' + res.data.message);
           });
       });
     }

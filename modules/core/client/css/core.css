@@ -104,3 +104,8 @@ a:hover .header-profile-image {
 .w3-top {
   z-index: 9;
 }
+
+.ngdialog.ngdialog-theme-default .ngdialog-content {
+  padding: 0;
+  width: 550px;
+}
