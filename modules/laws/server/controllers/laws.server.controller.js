@@ -36,10 +36,7 @@ function createDataComon(req, res) {
     var masterLawDetailList = _.filter(masterLawList, { 'type': 'detail' });
     var masterLawTdfkList = _.filter(masterLawList, { 'type': 'tdfk' });
     var lawId = getNewId();
-    console.log(lawId);
-    console.log(masterLawDetailList.length);
-    console.log(masterLawTdfkList.length);
-   // return;
+
     // save to LawDetail
     var law_details = [];
     masterLawDetailList.forEach((item, index, array) => {

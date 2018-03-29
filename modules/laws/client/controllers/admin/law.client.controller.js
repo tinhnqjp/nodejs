@@ -48,7 +48,7 @@
       .catch((res) => {
         $scope.nofityError('マスターデータのロードが失敗しました。');
       });
-      console.log(vm.law);
+
       if (law._id) {
         LawsApi.requestRegulation(law._id)
         .then((res) => {
