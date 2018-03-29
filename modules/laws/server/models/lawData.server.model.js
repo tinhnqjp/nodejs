@@ -26,6 +26,9 @@ var LawDataSchema = new Schema({
     type: String,
     trim: true
   },
+  rowspan: {
+    type: Number
+  },
   created: {
     type: Date,
     default: Date.now

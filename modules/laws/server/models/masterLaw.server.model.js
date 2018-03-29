@@ -26,6 +26,9 @@ var MasterLawSchema = new Schema({
     type: String,
     trim: true
   },
+  rowspan: {
+    type: Number
+  },
   type: {
     type: String,
     enum: [
