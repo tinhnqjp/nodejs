@@ -448,6 +448,7 @@ exports.lawByID = function (req, res, next, id) {
   }
 
   Law.findById(id)
+    .populate('law_details')
     .populate('todoufuken_regulations')
     .exec(function (err, law) {
       if (err) {

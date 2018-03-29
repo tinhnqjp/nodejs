@@ -49,7 +49,7 @@
                             <uib-accordion-heading>
                                 <a ng-click="vm.openCollapseHourei()" class="text-muted">
                                     <i class="glyphicon" ng-class="{'glyphicon-chevron-down': status.open0, 'glyphicon-chevron-right': !status.open0}"></i>
-                                    法令 (163)
+                                    法令 ({{vm.law.law_details.law_details.length}})
                                 </a>
                             </uib-accordion-heading>
                             <table class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawDetails">
