@@ -17,29 +17,12 @@ var DocSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  meishou: {
-    type: String,
-    default: '',
-    trim: true,
-    required: 'Meishou cannot be blank'
-  },
-  hourei_nasuta: {
-    type: String,
-    default: '',
-    trim: true,
-    required: 'meishou cannot be blank'
-  },
-  laws: [
-    {
-      _id: String,
-      koumaku1: String,
-      koumaku2: String,
-      houbun: String
-    }
-  ],
-  user: {
+  form1_ro: [],
+  form1_ha: [],
+  form1_item: [],
+  property: {
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'Property'
   }
 });
 

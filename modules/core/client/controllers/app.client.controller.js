@@ -10,6 +10,15 @@ function AppController($scope, Authentication, ngDialog, notifyService) {
   $scope.nofitySuccess = nofitySuccess;
   $scope.nofityError = nofityError;
 
+  $scope.range = function (min, max, step) {
+    step = step || 1;
+    var input = [];
+    for (var i = min; i <= max; i += step) {
+      input.push(i);
+    }
+    return input;
+  };
+
   // Hiển thị confirm xác nhận
   function handleShowConfirm(content, resolve, reject) {
     $scope.dialog = content;

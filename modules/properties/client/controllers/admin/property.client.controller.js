@@ -9,25 +9,28 @@
 
   function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification, PropertiesService) {
     var vm = this;
-    
+
     vm.property = property;
     vm.authentication = Authentication;
     vm.form = {};
     vm.save = save;
     vm.submitted = false;
     initData();
-    function initData () {
+
+    function initData() {
       vm.property.men10 = new Date(vm.property.men10);
     }
 
     // Save Property
     function save(isValid) {
+      console.log(isValid);
+      console.log(vm.form.propertyForm);
       if (!isValid) {
-        console.log(vm.form.propertyForm);
         vm.submitted = true;
         $scope.$broadcast('show-errors-check-validity', 'vm.form.propertyForm');
         return false;
       }
+     // return null;
       vm.property.createOrUpdate()
         .then((res) => {
           vm.busy = false;
@@ -40,17 +43,31 @@
         });
     }
 
+    // show class error or success in form
     vm.classError = (property) => {
       if (vm.submitted) {
         if (property) {
           return 'has-error';
-        } {
+        } else {
           return 'has-success';
         }
       }
+
+      return '';
+    };
+
+    // show class error or success in form
+    vm.classError = (property1, property2) => {
+      if (vm.submitted) {
+        if (property1 || property2) {
+          return 'has-error';
+        } else {
+          return 'has-success';
+        }
+      }
+
       return '';
     };
   // end controller
   }
 }());
-

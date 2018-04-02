@@ -5,6 +5,7 @@
  */
 var path = require('path'),
   mongoose = require('mongoose'),
+  Doc = mongoose.model('Doc'),
   Property = mongoose.model('Property'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
@@ -13,9 +14,10 @@ var path = require('path'),
  * Create an property
  */
 exports.create = function (req, res) {
-  console.log(req.body);
+  var doc = new Doc();
+  doc.save();
   var property = new Property(req.body);
-  property.user = req.user;
+  property.doc = doc;
 
   property.save(function (err) {
     if (err) {
@@ -23,6 +25,7 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+
       res.json(property);
     }
   });

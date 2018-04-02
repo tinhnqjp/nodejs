@@ -23,26 +23,35 @@
           roles: ['admin']
         }
       })
-      .state('admin.docs.create', {
-        url: '/create',
-        templateUrl: '/modules/docs/client/views/admin/form-doc.client.view.html',
+      .state('admin.docs.form1', {
+        url: '/:docId/form1',
+        templateUrl: '/modules/docs/client/views/admin/form-1.client.view.html',
         controller: 'DocsAdminController',
         controllerAs: 'vm',
         data: {
           roles: ['admin']
         },
         resolve: {
-          docResolve: newDoc
+          docResolve: getDoc
         }
-      })
-      .state('admin.docs.edit', {
-        url: '/:docId/edit',
-        templateUrl: '/modules/docs/client/views/admin/form-doc.client.view.html',
+      }).state('admin.docs.form4', {
+        url: '/:docId/form4',
+        templateUrl: '/modules/docs/client/views/admin/form-4.client.view.html',
         controller: 'DocsAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin'],
-          pageTitle: '{{ docResolve.meishou }}'
+          roles: ['admin']
+        },
+        resolve: {
+          docResolve: getDoc
+        }
+      }).state('admin.docs.form7', {
+        url: '/:docId/form7',
+        templateUrl: '/modules/docs/client/views/admin/form-7.client.view.html',
+        controller: 'DocsAdminController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin']
         },
         resolve: {
           docResolve: getDoc
@@ -50,9 +59,9 @@
       });
   }
 
-  getDoc.$inject = ['$stateParams', 'DocsService'];
+  getDoc.$inject = ['$stateParams', 'DocsService', 'PropertiesService'];
 
-  function getDoc($stateParams, DocsService) {
+  function getDoc($stateParams, DocsService, PropertiesService) {
     return DocsService.get({
       docId: $stateParams.docId
     }).$promise;

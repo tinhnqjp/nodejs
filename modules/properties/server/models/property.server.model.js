@@ -17,6 +17,10 @@ var PropertySchema = new Schema({
     type: Date,
     default: Date.now
   },
+  doc: {
+    type: Schema.ObjectId,
+    ref: 'Doc'
+  },
   men10: {
     type: Date,
     required: '受付欄が入力されていません。'
@@ -35,7 +39,9 @@ var PropertySchema = new Schema({
     type: String,
     trim: true,
     required: '設計者の概要が入力されていません。'
-  }
+  },
+  men36i: { type: Number },
+  men36ro: { type: Number }
 });
 
 mongoose.model('Property', PropertySchema);

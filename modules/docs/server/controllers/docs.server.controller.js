@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Doc = mongoose.model('Doc'),
+  _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -45,10 +46,7 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var doc = req.doc;
-
-  doc.meishou = req.body.meishou;
-  doc.hourei_nasuta = req.body.hourei_nasuta;
-  doc.laws = req.body.laws;
+  _.extend(doc, req.body);
 
   doc.save(function (err) {
     if (err) {

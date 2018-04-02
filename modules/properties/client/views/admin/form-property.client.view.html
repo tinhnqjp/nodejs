@@ -57,13 +57,13 @@
         }
     </style>
     <form name="vm.form.propertyForm" ng-submit="vm.save(vm.form.propertyForm.$valid)" autocomplete="on" novalidate>
-    <uib-tabset type="tabs" class="w3-bar">
-        <uib-tab heading="物件概要" class="tablink">
+    <uib-tabset type="tabs" class="w3-bar"  active="1">
+        <uib-tab index="0" heading="物件概要" class="tablink">
             <div class="row gamen" id="men1">
                 <div class="col-xs-12">
                     <div class="panel panel-primary">
                         <div class="panel-body">
-                            <div class="row" ng-class="vm.classError(vm.form.propertyForm.men10.$invalid)">
+                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="title_label">受付欄
                                         <ng-messages for="vm.form.propertyForm.men10.$error" ng-if="vm.submitted">
@@ -133,10 +133,10 @@
                 </div>
             </div>
         </uib-tab>
-        <uib-tab heading="第三面" class="tablink">
+        <uib-tab index="1" heading="第三面" class="tablink" active="true">
             <div class="row gamen" ng-include="'/modules/properties/client/views/admin/form-3.client.view.html'"></div>
         </uib-tab>
-        <uib-tab heading="第四面" class="tablink">
+        <uib-tab index="2" heading="第四面" class="tablink">
             <div class="row gamen" ng-include="'/modules/properties/client/views/admin/form-4.client.view.html'"></div>
         </uib-tab>
     </uib-tabset>

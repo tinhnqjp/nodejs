@@ -14,30 +14,31 @@
         <table id="ads_table" class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th class="bg-primary">＃</th>
+                    <th class="bg-primary" style="width:50px;">＃</th>
                     <th class="bg-primary">名称</th>
-                    <th class="bg-primary">法令マスタ</th>
-                    <th class="bg-primary">項目数</th>
-                    <th class="bg-primary">操作</th>
+                    <th class="bg-primary">年度</th>
+                    <th class="bg-primary">更新日時</th>
+                    <th class="bg-primary" colspan="4">チェックシート</th>
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="doc in vm.docs">
-                    <td style="text-align:center;" data-ng-bind="doc._id"></td>
-                    <td style="text-align:left;" data-ng-bind="doc.meishou"></td>
-                    <td style="text-align:left;" data-ng-bind="doc.hourei_nasuta"></td>
-                    <td style="text-align:left;" >{{doc.laws.length}}</td>
-                    <td style="text-align:center;">
-                        <button class="btn btn-info btn-sm" data-ui-sref="admin.docs.edit({docId: doc._id})">
-                        <i class="glyphicon glyphicon-pencil"></i> 編集</button>
-                        <button class="btn btn-warning btn-sm"  ng-click="vm.copy(doc)">
-                        <i class="glyphicon glyphicon-copyright-mark"></i> コピー</button>
-                        <button class="btn btn-danger btn-sm" ng-click="vm.remove(doc)">
-                        <i class="glyphicon glyphicon-trash"></i> 削除</button>
+                <tr data-ng-repeat="property in vm.properties">
+                    <td style="text-align:center;">{{$index+1}}</td>
+                    <td class="status_ok" data-ng-bind="property.men11"></td>
+                    <td style="text-align:center;" data-ng-bind="property.men10 | date:'yyyy'"></td>
+                    <td style="text-align:center" data-ng-bind="property.created | date:'yyyy/MM/dd'"></td>
+                    <td style="text-align:center; width:100px;">
+                        <button name="1_doc_btn" class="btn btn-primary btn-sm" data-ui-sref="admin.docs.form1({docId: property.doc})">第一号様式</button>
                     </td>
-                </tr>
-                <tr data-ng-if="vm.docs.$resolved && !vm.docs.length">
-                    <td colspan="5">No docs yet, why don't you <a data-ui-sref="admin.docs.create">create one</a>?</td>
+                    <td style="text-align:center; width:100px;">
+                        <button name="4_doc_btn" class="btn btn-primary btn-sm" data-ui-sref="admin.docs.form4({docId: property.doc})">第四号様式</button>
+                    </td>
+                    <td style="text-align:center; width:100px;">
+                        <button name="7_doc_btn" class="btn btn-primary btn-sm" data-ui-sref="admin.docs.form7({docId: property.doc})">第七号様式</button>
+                    </td>
+                    <td style="text-align:center; width:100px;">
+                        <button name="7_doc_btn" class="btn btn-primary btn-sm">特記様式</button>
+                    </td>
                 </tr>
             </tbody>
         </table>

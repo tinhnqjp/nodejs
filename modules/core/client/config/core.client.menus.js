@@ -25,7 +25,7 @@
       roles: ['user']
     });
     menuService.addMenuItem('nav', {
-      title: 'ドキュメント管理',
+      title: 'チェックシート管理',
       parrent_state: 'admin.docs',
       state: 'admin.docs.list',
       roles: ['user']

@@ -5,69 +5,81 @@
     .module('docs.admin')
     .controller('DocsAdminController', DocsAdminController);
 
-  DocsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'Authentication', 'Notification'];
+  DocsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'Authentication', 'Notification', 'Excel', '$timeout', 'LawsApi'];
 
-  function DocsAdminController($scope, $state, $window, doc, Authentication, Notification) {
+  function DocsAdminController($scope, $state, $window, doc, Authentication, Notification, Excel, $timeout, LawsApi) {
     var vm = this;
 
     vm.doc = doc;
     vm.authentication = Authentication;
+    vm.listMasterLaw = [];
     vm.form = {};
-    vm.remove = remove;
-    vm.save = save;
-    vm.laws =
-    [
-      {
-        '_id': '1',
-        'koumaku1': '法第19条',
-        'koumaku2': '法第19条 2',
-        'houbun': '敷地の衛生及び安全'
-      },
-      {
-        '_id': '2',
-        'koumaku1': '法第20条',
-        'koumaku2': '法第19条 2',
-        'houbun': '構造耐力'
-      },
-      {
-        '_id': '3',
-        'koumaku1': '法第28条の2',
-        'koumaku2': '',
-        'houbun': '石綿その他の物質の飛散または発散に対する衛生上の措置'
-      }
-    ];
+    initData();
 
-    // Remove existing Doc
-    function remove() {
-      if ($window.confirm('Are you sure you want to delete?')) {
-        vm.doc.$remove(function () {
-          $state.go('admin.docs.list');
-          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Doc deleted successfully!' });
+    function initData() {
+
+      LawsApi.listMasterLaw()
+      .then((res) => {
+        vm.listMasterLaw = res.data;
+        // console.log(vm.listMasterLaw);
+      })
+      .catch((res) => {
+        $scope.nofityError('マスターデータのロードが失敗しました。');
+      });
+    }
+
+    /**
+     * save to database rules
+     * @param {*} isValid check validation
+     */
+    vm.save = function (isValid) {
+      $scope.handleShowConfirm({ message: '保存します。よろしいですか？' }, () => {
+        if (!isValid) {
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
+          return false;
+        }
+        vm.doc.createOrUpdate()
+        .then((res) => {
+          $scope.nofitySuccess('第一号様式データの保存が完了しました。');
+        })
+        .catch((res) => {
+          $scope.nofityError('第一号様式データの保存が失敗しました。' + res.data.message);
         });
-      }
-    }
+      });
+    };
 
-    // Save Doc
-    function save(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.docForm');
-        return false;
-      }
+    vm.download = function (mendou) {
+      $timeout(function () {}, 1000);
+      var tableId = '#tableToExport';
+      // tableId
+      var exportHref = Excel.tableToExcel(tableId, 'チェックシート');
+      $timeout(function () { location.href = exportHref; }, 100); // trigger download
+    };
 
-      console.log(vm.doc); // return;
-      // Create a new doc, or update the current instance
-      vm.doc.createOrUpdate()
-        .then(successCallback)
-        .catch(errorCallback);
-
-      function successCallback(res) {
-        $state.go('admin.docs.list'); // should we send the User to the list or the updated Doc's view?
-        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Doc saved successfully!' });
-      }
-
-      function errorCallback(res) {
-        Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Doc save error!' });
-      }
-    }
   }
+
+  angular.module('docs.admin').filter('contains', function () {
+    return function (array, needle) {
+      return array.indexOf(needle) >= 0;
+    };
+  });
+
+  angular.module('docs.admin').factory('Excel', function ($window) {
+    var uri = 'data:application/vnd.ms-excel;base64,',
+      template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"'
+      + ' xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>'
+      + '<x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>'
+      + '</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table>'
+      + '</body></html>',
+      base64 = function (s) { return $window.btoa(unescape(encodeURIComponent(s))); },
+      format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }); };
+    return {
+      tableToExcel: function (tableId, worksheetName) {
+        var table = $(tableId),
+          ctx = { worksheet: worksheetName, table: table.html() },
+          href = uri + base64(format(template, ctx));
+        return href;
+      }
+    };
+  });
 }());

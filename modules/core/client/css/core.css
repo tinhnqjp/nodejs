@@ -109,3 +109,12 @@ a:hover .header-profile-image {
   padding: 0;
   width: 550px;
 }
+
+.table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  vertical-align: top;
+  text-align: left;
+}
+
+.table > tbody > tr > td > span.checked.ng-scope {
+  display: none;
+}
