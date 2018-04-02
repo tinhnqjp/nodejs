@@ -49,6 +49,7 @@
       // Log error
       $log.error(error);
     }
+
   }
 
   LawsApi.$inject = ['$http'];
@@ -72,6 +73,9 @@
     };
     this.listMasterProperties = () => {
       return $http.get('/api/listMasterProperties', null, { ignoreLoadingBar: true });
+    };
+    this.listMasterLaw = () => {
+      return $http.get('/api/listMasterLaw', null, { ignoreLoadingBar: true });
     };
     return this;
   }

@@ -276,7 +276,7 @@
     vm.removeLawsRule = function (_rule) {
       var index = vm.formLawsRule.rules.indexOf(_rule);
       var number = index + 1;
-      $scope.handleShowConfirm({ message: '条件グループ' + number +'を削除します。よろしいですか？' }, () => {
+      $scope.handleShowConfirm({ message: '条件グループ' + number + 'を削除します。よろしいですか？' }, () => {
         vm.formLawsRule.rules.splice(index, 1);
       });
     };

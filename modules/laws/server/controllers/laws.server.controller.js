@@ -15,15 +15,13 @@ var path = require('path'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-function getNewId() {
-  return mongoose.Types.ObjectId();
-}
-
 function createDataComon(req, res) {
   // TODO
   var tdfk = [
     '東京都'
   ];
+
+  var lawnew = new Law();
 
   // console.log(req.body.name); return res;
   MasterLaw.find().exec(function (err, masterLawList) {
@@ -35,7 +33,7 @@ function createDataComon(req, res) {
 
     var masterLawDetailList = _.filter(masterLawList, { 'type': 'detail' });
     var masterLawTdfkList = _.filter(masterLawList, { 'type': 'tdfk' });
-    var lawId = getNewId();
+    var lawId = lawnew._id;
 
     // save to LawDetail
     var law_details = [];
@@ -86,15 +84,14 @@ function createDataComon(req, res) {
     newLawRegulation.save();
 
     // save to law
-    var lawnew = new Law({
-      _id: lawId,
+    _.extend(lawnew, {
       year: req.body.year,
       name: req.body.name,
       law_details: newLawDedail,
       todoufuken_regulations: newLawRegulation
     });
 
-    lawnew.save(function (err) {
+    lawnew.save(function (err, law) {
       if (err) {
         return res.status(422).send({
           message: errorHandler.getErrorMessage(err)
@@ -136,7 +133,6 @@ function copyNewLawData(oldLawDataList, lawId) {
   var law_details = [];
   oldLawDataList.forEach((itemData, index, array) => {
     var newLawData = new LawData({
-      _id: getNewId(),
       id: itemData.id,
       item1: itemData.item1,
       item2: itemData.item2,
@@ -183,7 +179,8 @@ function copyNewLawData(oldLawDataList, lawId) {
  */
 exports.copy = function (req, res) {
   var _law = req.law;
-  var lawId = getNewId();
+  var newLaw = new Law();
+  var lawId = newLaw._id;
   Law.findById(_law._id)
   .populate({
     path: 'law_details',
@@ -220,8 +217,7 @@ exports.copy = function (req, res) {
       });
     }
 
-    var newLaw = new Law({
-      _id: lawId,
+    _.extend(newLaw, {
       year: law.year,
       name: law.name + ' - コピー'
     });
@@ -572,5 +568,19 @@ exports.listMasterProperties = function (req, res) {
     } else {
       res.json(masterProperties);
     }
+  });
+};
+
+exports.listMasterLaw = function (req, res) {
+  // console.log(req.body.name); return res;
+  MasterLaw.find().exec(function (err, masterLawList) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    var masterLawDetailList = _.filter(masterLawList, { 'type': 'detail' });
+    res.json(masterLawDetailList);
   });
 };

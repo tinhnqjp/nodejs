@@ -38,8 +38,9 @@
                         <tbody>
                             <tr>
                                 <td style="text-align:center;">{{ vm.formLawsRule.info.id }}</td>
-                                <td style="text-align:left;">{{ vm.formLawsRule.info.item1 }}</td>
-                                <td style="text-align:left;">{{ vm.formLawsRule.info.item2 }}</td>
+                                <td ng-if="!vm.formLawsRule.info.item2" colspan="2">{{ vm.formLawsRule.info.item1 }}</td>
+                                <td ng-if="vm.formLawsRule.info.item2">{{ vm.formLawsRule.info.item1 }}</td>
+                                <td ng-if="vm.formLawsRule.info.item2">{{ vm.formLawsRule.info.item2 }}</td>
                                 <td style="text-align:left;">{{ vm.formLawsRule.info.legal_text }}</td>
                             </tr>
                         </tbody>

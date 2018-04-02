@@ -52,12 +52,13 @@
                                     法令 ({{vm.law.law_details.law_details.length}})
                                 </a>
                             </uib-accordion-heading>
+
                             <table class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawDetails">
                                 <thead>
                                     <tr>
                                         <th class="bg-primary" style="width:50px;">#</th>
-                                        <th class="bg-primary" style="width:50px;">項目1</th>
-                                        <th class="bg-primary" style="width:50px;">項目2</th>
+                                        <th class="bg-primary" style="width:100px;">項目1</th>
+                                        <th class="bg-primary" style="width:100px;">項目2</th>
                                         <th class="bg-primary" style="width:200px;">法文</th>
                                         <th class="bg-primary" style="width:150px;">条件</th>
                                     </tr>
@@ -65,10 +66,13 @@
                                 <tbody>
                                     <tr ng-repeat="lawData in vm.tmpLawDetails">
                                         <td style="text-align:center;">{{ lawData.id }}</td>
-                                        <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}" style="text-align:left;">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan === 0" style="text-align:left;">{{ lawData.item1 }}</td>
-                                        <td style="text-align:left;">{{ lawData.item2 }}</td>
-                                        <td style="text-align:left;">{{ lawData.legal_text }}</td>
+                                        <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}">{{ lawData.item1 }}</td>
+                                        <td ng-if="lawData.rowspan > 0">{{ lawData.item2 }}</td>
+                                        <td ng-if="lawData.rowspan === 0 && !lawData.item2" colspan="2">{{ lawData.item1 }}</td>
+                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item1 }}</td>
+                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item2 }}</td>
+                                        <td ng-if="lawData.rowspan < 0">{{ lawData.item2 }}</td>
+                                        <td>{{ lawData.legal_text }}</td>
                                         <td style="text-align:center;width:150px;">
                                             <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData, '法令')"> 条件割当</button>
                                         </td>
@@ -90,8 +94,8 @@
                                 <thead>
                                     <tr>
                                         <th class="bg-primary" style="width:50px;">#</th>
-                                        <th class="bg-primary" style="width:50px;">項目1</th>
-                                        <th class="bg-primary" style="width:50px;">項目2</th>
+                                        <th class="bg-primary" style="width:100px;">項目1</th>
+                                        <th class="bg-primary" style="width:100px;">項目2</th>
                                         <th class="bg-primary" style="width:200px;">法文</th>
                                         <th class="bg-primary" style="width:150px;">条件</th>
                                     </tr>
@@ -100,10 +104,13 @@
                                 <tbody>
                                     <tr ng-repeat="lawData in vm.tmpLawRegulations[regulation._id]">
                                         <td style="text-align:center;">{{ lawData.id }}</td>
-                                        <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}" style="text-align:left;">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan === 0" style="text-align:left;">{{ lawData.item1 }}</td>
-                                        <td style="text-align:left;">{{ lawData.item2 }}</td>
-                                        <td style="text-align:left;">{{ lawData.legal_text }}</td>
+                                        <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}">{{ lawData.item1 }}</td>
+                                        <td ng-if="lawData.rowspan > 0">{{ lawData.item2 }}</td>
+                                        <td ng-if="lawData.rowspan === 0 && !lawData.item2" colspan="2">{{ lawData.item1 }}</td>
+                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item1 }}</td>
+                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item2 }}</td>
+                                        <td ng-if="lawData.rowspan < 0">{{ lawData.item2 }}</td>
+                                        <td>{{ lawData.legal_text }}</td>
                                         <td style="text-align:center;width:150px;">
                                             <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData, regulation.todoufuken)"> 条件割当</button>
                                         </td>
