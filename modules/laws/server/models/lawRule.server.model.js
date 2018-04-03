@@ -23,19 +23,23 @@ var LawRuleSchema = new Schema({
   },
   fields: [
     {
-      type: {
-        type: Number
-      },
       name: {
         type: String,
         trim: true
       },
       properties: [
         {
+          type: {
+            type: Number
+          },
           value: {
             type: String,
             trim: true
-          }
+          },
+          value1: { type: Number },
+          compare1: { type: String },
+          value2: { type: Number },
+          compare2: { type: String }
         }
       ]
     }

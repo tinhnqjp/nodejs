@@ -65,14 +65,14 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="lawData in vm.tmpLawDetails">
-                                        <td style="text-align:center;">{{ lawData.id }}</td>
-                                        <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan > 0">{{ lawData.item2 }}</td>
-                                        <td ng-if="lawData.rowspan === 0 && !lawData.item2" colspan="2">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item2 }}</td>
-                                        <td ng-if="lawData.rowspan < 0">{{ lawData.item2 }}</td>
-                                        <td>{{ lawData.legal_text }}</td>
+                                        <td style="text-align:center;">{{ lawData.master_law.id }}</td>
+                                        <td ng-if="lawData.master_law.rowspan > 0" rowspan="{{ lawData.master_law.rowspan }}">{{ lawData.master_law.item1 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan > 0">{{ lawData.master_law.item2 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan === 0 && !lawData.master_law.item2" colspan="2">{{ lawData.master_law.item1 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan === 0 && lawData.master_law.item2">{{ lawData.master_law.item1 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan === 0 && lawData.master_law.item2">{{ lawData.master_law.item2 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan < 0">{{ lawData.master_law.item2 }}</td>
+                                        <td>{{ lawData.master_law.legal_text }}</td>
                                         <td style="text-align:center;width:150px;">
                                             <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData, '法令')"> 条件割当</button>
                                         </td>
@@ -103,14 +103,14 @@
                                 
                                 <tbody>
                                     <tr ng-repeat="lawData in vm.tmpLawRegulations[regulation._id]">
-                                        <td style="text-align:center;">{{ lawData.id }}</td>
-                                        <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan > 0">{{ lawData.item2 }}</td>
-                                        <td ng-if="lawData.rowspan === 0 && !lawData.item2" colspan="2">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item1 }}</td>
-                                        <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item2 }}</td>
-                                        <td ng-if="lawData.rowspan < 0">{{ lawData.item2 }}</td>
-                                        <td>{{ lawData.legal_text }}</td>
+                                        <td style="text-align:center;">{{ lawData.master_law.id }}</td>
+                                        <td ng-if="lawData.master_law.rowspan > 0" rowspan="{{ lawData.master_law.rowspan }}">{{ lawData.master_law.item1 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan > 0">{{ lawData.master_law.item2 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan === 0 && !lawData.master_law.item2" colspan="2">{{ lawData.master_law.item1 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan === 0 && lawData.master_law.item2">{{ lawData.master_law.item1 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan === 0 && lawData.master_law.item2">{{ lawData.master_law.item2 }}</td>
+                                        <td ng-if="lawData.master_law.rowspan < 0">{{ lawData.master_law.item2 }}</td>
+                                        <td>{{ lawData.master_law.legal_text }}</td>
                                         <td style="text-align:center;width:150px;">
                                             <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData, regulation.todoufuken)"> 条件割当</button>
                                         </td>

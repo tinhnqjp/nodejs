@@ -10,25 +10,8 @@ var mongoose = require('mongoose'),
   chalk = require('chalk');
 
 var LawDataSchema = new Schema({
-  id: {
-    type: String,
-    trim: true
-  },
-  item1: {
-    type: String,
-    trim: true
-  },
-  item2: {
-    type: String,
-    trim: true
-  },
-  legal_text: {
-    type: String,
-    trim: true
-  },
-  rowspan: {
-    type: Number,
-    default: 0
+  master_law: {
+    type: Schema.ObjectId, ref: 'MasterLaw'
   },
   created: {
     type: Date,

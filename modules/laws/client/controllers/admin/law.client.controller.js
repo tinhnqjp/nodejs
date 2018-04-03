@@ -29,6 +29,13 @@
       { id: 2015, name: '2015年' },
       { id: 2014, name: '2014年' }
     ];
+    vm.typeValidation = [
+      { id: '==', name: '等しい' },
+      { id: '>=', name: '以上' },
+      { id: '<=', name: '以下' },
+      { id: '<', name: '未満' },
+      { id: '>', name: '超過' }
+    ];
 
     vm.tmpLawDetails = [];
     vm.tmpLawRegulations = [];
@@ -91,17 +98,18 @@
       LawsApi.requestData(_lawData.law_id, _lawDataId)
       .then((res) => {
         var rules = res.data.law_rules;
+        
         var _rules = [];
         rules.forEach((rule, key) => {
           var _fields = [];
           rule.fields.forEach((field, k) => {
-            // in database has format ("name" : "4,15,null")
-            var _dataField = field.name.split(',');
+            // in database has format ("name" : "4_15_null")
+            var _dataField = field.name.split('_');
             _fields[k] = {
               bukken: parseInt(_dataField[0], 10),
               deuta1: parseInt(_dataField[1], 10),
-              deuta2: _dataField[2] ? parseInt(_dataField[2], 10) : ''
-            };
+              deuta2: _dataField[2] ? parseInt(_dataField[2], 10) : '',
+            }
             _fields[k].optionDai = createProperties(_fields[k], 1);
             var _properties = null;
             if (_fields[k].deuta2) {
@@ -159,12 +167,13 @@
         property.value = '';
         if (property.type === 3 && !_.isEmpty(listValue)) {
           property.value = listValue[k].value.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+        } else if (property.type === 4 && !_.isEmpty(listValue)) {
+          property = listValue[0];
         } else {
           if (listValue && !_.isEmpty(listValue[k])) {
             property.value = listValue[k].value ? listValue[k].value : '';
           }
         }
-
         _newProperties[k] = _.clone(property);
 
         /*
@@ -177,6 +186,7 @@
           _newProperties[k].child_options = options.child;
         }
       });
+      
       return _newProperties;
     }
 
