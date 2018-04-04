@@ -195,14 +195,14 @@ exports.update = function (req, res) {
  */
 exports.delete = function (req, res) {
   var _lawId = req.law._id;
-  
+
   removeLaw(_lawId)
   .then(function () {
     return Promise.all([
       removeLawDetail(_lawId),
       removeLawRegulation(_lawId),
       removeLawData(_lawId),
-      removeLawRuleByLawId(_lawId),
+      removeLawRuleByLawId(_lawId)
     ]);
   })
   .then(function () {
@@ -422,6 +422,20 @@ exports.lawDataById = function (req, res) {
   }
 
   LawData.findById(id)
+    .populate('law_rules')
+    .exec(function (err, law_datas) {
+      if (err) {
+        return res.status(422).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      }
+      res.json(law_datas);
+    });
+};
+
+exports.lawDataByLawId = function (req, res) {
+  var _lawId = req.law._id;
+  LawData.find({ law_id: _lawId })
     .populate('law_rules')
     .exec(function (err, law_datas) {
       if (err) {

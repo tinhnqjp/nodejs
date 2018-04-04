@@ -118,3 +118,7 @@ a:hover .header-profile-image {
 .table > tbody > tr > td > span.checked.ng-scope {
   display: none;
 }
+
+.used-excel-export {
+  display: none;
+}

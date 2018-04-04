@@ -136,11 +136,12 @@ exports.docByID = function (req, res, next, id) {
 
 exports.autoChecked = function (req, res) {
   var _docId = req.doc._id;
-  var property, laws, listMasterLawDetail;
+  var property = null,
+    laws = null,
+    listMasterLawDetail = null;
   // 1 get property
   getPropertyByDocId(_docId)
     .then(function (_property) {
-      
       property = _property;
       var _year = property.men10.getFullYear();
       // 2 get law by year
@@ -164,7 +165,7 @@ exports.autoChecked = function (req, res) {
           console.log(index, lawData, isValid);
         });
       });
-      //return getLawDatasByLawId();
+      // return getLawDatasByLawId();
       res.json(laws);
     })
     .catch(function (err) {
@@ -179,8 +180,8 @@ function filterLawData(master_law, _laws) {
     'master_law': master_law._id
   });
   var lawData2 = _.filter(lawData, function (_lawData) {
-    return _lawData.law_rules.length > 0 
-  })
+    return _lawData.law_rules.length > 0;
+  });
   return lawData2;
 }
 
@@ -188,7 +189,7 @@ function checkValidateRule(_lawRules) {
   var isValid = false;
   _lawRules.forEach((_lawRule) => {
     if (_lawRule.fields.length > 0) {
-
+      // TODO
     }
   });
 
@@ -199,7 +200,7 @@ function checkValidateFields(_fields) {
   var isValid = false;
   _fields.forEach((_field) => {
     if (_field.properties.length > 0) {
-
+      // TODO
     }
   });
 
@@ -209,40 +210,40 @@ function checkValidateFields(_fields) {
 function getPropertyByDocId(_docId) {
   return new Promise(function (resolve, reject) {
     Property.findOne({
-        doc: _docId
-      })
-      .exec(function (err, property) {
-        if (err) {
-          reject(err);
-        }
-        resolve(property);
-      });
+      doc: _docId
+    })
+    .exec(function (err, property) {
+      if (err) {
+        reject(err);
+      }
+      resolve(property);
+    });
   });
 }
 
 function getLawsByYear(_year) {
   return new Promise(function (resolve, reject) {
     Law.find({
-        year: _year
-      })
-      .populate({
+      year: _year
+    })
+    .populate({
+      path: 'law_details',
+      model: 'LawDetail',
+      populate: {
         path: 'law_details',
-        model: 'LawDetail',
+        model: 'LawData',
         populate: {
-          path: 'law_details',
-          model: 'LawData',
-          populate: {
-            path: 'law_rules',
-            model: 'LawRule'
-          }
+          path: 'law_rules',
+          model: 'LawRule'
         }
-      })
-      .exec(function (err, laws) {
-        if (err) {
-          reject(err);
-        }
-        resolve(laws);
-      });
+      }
+    })
+    .exec(function (err, laws) {
+      if (err) {
+        reject(err);
+      }
+      resolve(laws);
+    });
   });
 }
 
@@ -261,5 +262,3 @@ function getMasterLawDetail() {
       });
   });
 }
-
-

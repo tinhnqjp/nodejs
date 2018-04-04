@@ -5,10 +5,10 @@
     .module('docs.admin')
     .controller('DocsAdminController', DocsAdminController);
 
-  DocsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 
+  DocsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
     'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi'];
 
-  function DocsAdminController($scope, $state, $window, doc, Authentication, 
+  function DocsAdminController($scope, $state, $window, doc, Authentication,
     Notification, Excel, $timeout, DocsApi, LawsApi) {
     var vm = this;
 
@@ -59,14 +59,14 @@
     };
 
     vm.autoChecked = function (mendou) {
-      //vm.doc.property
+      // vm.doc.property
       // get properties with docid
-      console.log("autoChecked");
+      // console.log("autoChecked");
       DocsApi.autoChecked(vm.doc._id)
       .then((res) => {
         console.log(res.data);
-        //vm.listMasterProperties = res.data;
-        //vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
+        // vm.listMasterProperties = res.data;
+        // vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
       })
       .catch((res) => {
         $scope.nofityError('マスターデータのロードが失敗しました。');

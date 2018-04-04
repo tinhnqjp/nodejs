@@ -6,10 +6,10 @@
     .controller('LawsAdminController', LawsAdminController);
 
   LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve',
-    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce'];
+    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce', '$timeout', 'Excel'];
 
   function LawsAdminController($scope, $state, $window, law, Authentication,
-    Notification, LawsService, LawsApi, $uibModal, $sce) {
+    Notification, LawsService, LawsApi, $uibModal, $sce, $timeout, Excel) {
     var vm = this;
 
     vm.law = law;
@@ -20,21 +20,55 @@
     vm.showLawsRule = showLawsRule;
     vm.formLawsRule = {};
     vm.save = save;
-    vm.years = [
-      { id: 2020, name: '2020年' },
-      { id: 2019, name: '2019年' },
-      { id: 2018, name: '2018年' },
-      { id: 2017, name: '2017年' },
-      { id: 2016, name: '2016年' },
-      { id: 2015, name: '2015年' },
-      { id: 2014, name: '2014年' }
+    vm.years = [{
+      id: 2020,
+      name: '2020年'
+    },
+    {
+      id: 2019,
+      name: '2019年'
+    },
+    {
+      id: 2018,
+      name: '2018年'
+    },
+    {
+      id: 2017,
+      name: '2017年'
+    },
+    {
+      id: 2016,
+      name: '2016年'
+    },
+    {
+      id: 2015,
+      name: '2015年'
+    },
+    {
+      id: 2014,
+      name: '2014年'
+    }
     ];
-    vm.typeValidation = [
-      { id: '==', name: '等しい' },
-      { id: '>=', name: '以上' },
-      { id: '<=', name: '以下' },
-      { id: '<', name: '未満' },
-      { id: '>', name: '超過' }
+    vm.typeValidation = [{
+      id: '==',
+      name: '等しい'
+    },
+    {
+      id: '>=',
+      name: '以上'
+    },
+    {
+      id: '<=',
+      name: '以下'
+    },
+    {
+      id: '<',
+      name: '未満'
+    },
+    {
+      id: '>',
+      name: '超過'
+    }
     ];
 
     vm.tmpLawDetails = [];
@@ -48,27 +82,35 @@
     function initData() {
       vm.busy = true;
       LawsApi.listMasterProperties()
-      .then((res) => {
-        vm.listMasterProperties = res.data;
-        vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
-      })
-      .catch((res) => {
-        $scope.nofityError('マスターデータのロードが失敗しました。');
-      });
-
-      if (law._id) {
-        LawsApi.requestRegulation(law._id)
         .then((res) => {
-          vm.todoufuken_regulations = res.data.todoufuken_regulations;
-          if (vm.todoufuken_regulations.length === 0) return;
-          vm.todoufuken_regulations.forEach((tr, key) => {
-            vm.tmpLawRegulations[tr._id] = [];
-          });
-
+          vm.listMasterProperties = res.data;
+          vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
         })
         .catch((res) => {
           $scope.nofityError('マスターデータのロードが失敗しました。');
         });
+
+      if (law._id) {
+        LawsApi.requestRegulation(law._id)
+          .then((res) => {
+            vm.todoufuken_regulations = res.data.todoufuken_regulations;
+            if (vm.todoufuken_regulations.length === 0) return;
+            vm.todoufuken_regulations.forEach((tr, key) => {
+              vm.tmpLawRegulations[tr._id] = [];
+            });
+
+          })
+          .catch((res) => {
+            $scope.nofityError('マスターデータのロードが失敗しました。');
+          });
+
+        LawsApi.requestDetail(law._id)
+          .then((res) => {
+            vm.tmpLawDetails = res.data.law_details;
+          })
+          .catch((res) => {
+            $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
+          });
       }
       vm.busy = false;
     }
@@ -78,7 +120,9 @@
      */
     function hideLawsRule() {
       vm.isVisibleLawsRule = false;
-      setTimeout(function () { $(window).scrollTop(vm.scrollTopValue); }, 0);
+      setTimeout(function () {
+        $(window).scrollTop(vm.scrollTopValue);
+      }, 0);
     }
 
     /**
@@ -96,43 +140,43 @@
       vm.isVisibleLawsRule = true;
 
       LawsApi.requestData(_lawData.law_id, _lawDataId)
-      .then((res) => {
-        var rules = res.data.law_rules;
-        
-        var _rules = [];
-        rules.forEach((rule, key) => {
-          var _fields = [];
-          rule.fields.forEach((field, k) => {
-            // in database has format ("name" : "4_15_null")
-            var _dataField = field.name.split('_');
-            _fields[k] = {
-              bukken: parseInt(_dataField[0], 10),
-              deuta1: parseInt(_dataField[1], 10),
-              deuta2: _dataField[2] ? parseInt(_dataField[2], 10) : '',
-            }
-            _fields[k].optionDai = createProperties(_fields[k], 1);
-            var _properties = null;
-            if (_fields[k].deuta2) {
-              // has kokoumoku
-              var _optionKo = createProperties(_fields[k], 2);
-              _fields[k].optionKo = _.uniq(_optionKo, 'kokoumoku');
-              _properties = createProperties(_fields[k], 3);
-              _fields[k].properties = createListProperties(_properties, field.properties);
+        .then((res) => {
+          var rules = res.data.law_rules;
 
-            } else {
-              // none kokoumoku
-              _fields[k].optionKo = null;
-              _properties = createProperties(_fields[k], 2);
-              _fields[k].properties = createListProperties(_properties, field.properties);
-            }
+          var _rules = [];
+          rules.forEach((rule, key) => {
+            var _fields = [];
+            rule.fields.forEach((field, k) => {
+              // in database has format ("name" : "4_15_null")
+              var _dataField = field.name.split('_');
+              _fields[k] = {
+                bukken: parseInt(_dataField[0], 10),
+                deuta1: parseInt(_dataField[1], 10),
+                deuta2: _dataField[2] ? parseInt(_dataField[2], 10) : ''
+              };
+              _fields[k].optionDai = createProperties(_fields[k], 1);
+              var _properties = null;
+              if (_fields[k].deuta2) {
+                // has kokoumoku
+                var _optionKo = createProperties(_fields[k], 2);
+                _fields[k].optionKo = _.uniq(_optionKo, 'kokoumoku');
+                _properties = createProperties(_fields[k], 3);
+                _fields[k].properties = createListProperties(_properties, field.properties);
+
+              } else {
+                // none kokoumoku
+                _fields[k].optionKo = null;
+                _properties = createProperties(_fields[k], 2);
+                _fields[k].properties = createListProperties(_properties, field.properties);
+              }
+            });
+            rule.fields = _fields;
           });
-          rule.fields = _fields;
+          vm.formLawsRule.rules = rules;
+        })
+        .catch((res) => {
+          $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
         });
-        vm.formLawsRule.rules = rules;
-      })
-      .catch((res) => {
-        $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
-      });
     }
 
     vm.classProperties = function (properties) {
@@ -177,16 +221,20 @@
         _newProperties[k] = _.clone(property);
 
         /*
-        * spec for master property:
-        * display child group checkbox (parent_flag = 3) when parent_flag selectbox has value
-        */
+         * spec for master property:
+         * display child group checkbox (parent_flag = 3) when parent_flag selectbox has value
+         */
         if (property.parent_flag === 3 && property.value.length > 0) {
-          var parent_property = _.find(_properties, { parent_flag: 2 });
-          var options = _.find(property.options, { name: parent_property.value });
+          var parent_property = _.find(_properties, {
+            parent_flag: 2
+          });
+          var options = _.find(property.options, {
+            name: parent_property.value
+          });
           _newProperties[k].child_options = options.child;
         }
       });
-      
+
       return _newProperties;
     }
 
@@ -210,9 +258,9 @@
       } else {
         // kokoumoku
         var tmpPropertiesKo = _.filter(vm.listMasterProperties, function (item) {
-          return item.bukken === rule_field.bukken
-           && item.daikoumoku === rule_field.deuta1
-           && item.kokoumoku === rule_field.deuta2;
+          return item.bukken === rule_field.bukken &&
+            item.daikoumoku === rule_field.deuta1 &&
+            item.kokoumoku === rule_field.deuta2;
         });
         return createListProperties(tmpPropertiesKo);
       }
@@ -263,15 +311,19 @@
      * @param {*} selected
      */
     vm.selectPropertyParent = function (selected, properties) {
-      var property = _.find(properties, { parent_flag: 3 });
-      var options = _.find(property.options, { name: selected });
+      var property = _.find(properties, {
+        parent_flag: 3
+      });
+      var options = _.find(property.options, {
+        name: selected
+      });
       property.child_options = options.child;
       property.value = [];
     };
 
     /**
      * pull new rule 条件追加
-    */
+     */
     vm.pushLawsRule = function () {
       vm.formLawsRule.rules.push({
         rule_name: '',
@@ -286,7 +338,9 @@
     vm.removeLawsRule = function (_rule) {
       var index = vm.formLawsRule.rules.indexOf(_rule);
       var number = index + 1;
-      $scope.handleShowConfirm({ message: '条件グループ' + number + 'を削除します。よろしいですか？' }, () => {
+      $scope.handleShowConfirm({
+        message: '条件グループ' + number + 'を削除します。よろしいですか？'
+      }, () => {
         vm.formLawsRule.rules.splice(index, 1);
       });
     };
@@ -306,7 +360,9 @@
      * @param {*} _ruleField current field
      */
     vm.removeLawsRuleField = function (_rule, _ruleField) {
-      $scope.handleShowConfirm({ message: 'この条件項目を削除します。よろしいですか？' }, () => {
+      $scope.handleShowConfirm({
+        message: 'この条件項目を削除します。よろしいですか？'
+      }, () => {
         var index = vm.formLawsRule.rules.indexOf(_rule);
         var indexField = vm.formLawsRule.rules[index].fields.indexOf(_ruleField);
         vm.formLawsRule.rules[index].fields.splice(indexField, 1);
@@ -318,18 +374,20 @@
      * @param {*} isValid check validation
      */
     vm.saveRules = function (isValid) {
-      $scope.handleShowConfirm({ message: '保存します。よろしいですか？' }, () => {
+      $scope.handleShowConfirm({
+        message: '保存します。よろしいですか？'
+      }, () => {
         if (!isValid) {
           $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
           return false;
         }
         LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
-        .then((res) => {
-          $scope.nofitySuccess('条件データの保存が完了しました。');
-        })
-        .catch((res) => {
-          $scope.nofityError('条件データの保存が失敗しました。' + res.data.message);
-        });
+          .then((res) => {
+            $scope.nofitySuccess('条件データの保存が完了しました。');
+          })
+          .catch((res) => {
+            $scope.nofityError('条件データの保存が失敗しました。' + res.data.message);
+          });
       });
     };
 
@@ -346,28 +404,30 @@
 
     /**
      * when click open collapse detail 法令
-    */
+     */
     vm.openCollapseHourei = function () {
       if (vm.tmpLawDetails.length === 0) {
         vm.busy = true;
         LawsApi.requestDetail(law._id)
-        .then((res) => {
-          vm.tmpLawDetails = res.data.law_details;
-          vm.busy = false;
-        })
-        .catch((res) => {
-          $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
-        });
+          .then((res) => {
+            vm.tmpLawDetails = res.data.law_details;
+            vm.busy = false;
+          })
+          .catch((res) => {
+            $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
+          });
       }
     };
 
     /**
      * when click open collapse toudofuken 北海道...
-    */
+     */
     vm.openCollapse = regulationId => {
       if (vm.tmpLawRegulations[regulationId].length > 0) return;
       vm.busy = true;
-      var tr = _.findWhere(vm.todoufuken_regulations, { _id: regulationId });
+      var tr = _.findWhere(vm.todoufuken_regulations, {
+        _id: regulationId
+      });
       if (!tr || vm.tmpLawRegulations[tr._id].length > 0) return;
       vm.tmpLawRegulations[tr._id] = tr.law_regulations;
       vm.busy = false;
@@ -381,10 +441,16 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.lawForm');
         return false;
       }
-      $scope.handleShowConfirm({ message: '保存します。よろしいですか？' }, () => {
+      $scope.handleShowConfirm({
+        message: '保存します。よろしいですか？'
+      }, () => {
         vm.busy = true;
         // Create a new law, or update the current instance
-        var rs_law = new LawsService({ _id: vm.law._id, year: vm.law.year, name: vm.law.name });
+        var rs_law = new LawsService({
+          _id: vm.law._id,
+          year: vm.law.year,
+          name: vm.law.name
+        });
         rs_law.createOrUpdate()
           .then((res) => {
             vm.busy = false;
@@ -415,7 +481,136 @@
         }
       });
     };
+
+    vm.lawDataUpdate = [];
+    vm.maxColumnRules = 1;
+    vm.download = function (isHourei, title, regulation_id) {
+
+      requestDataByLawId(law._id)
+        .then(function (lawDataList) {
+          vm.lawDataListUpdate = lawDataList;
+        })
+        .then(function () {
+          if (isHourei) {
+            vm.tmpLawDetails.forEach((_lawData, k) => {
+              var newLawData = _.find(vm.lawDataListUpdate, {
+                _id: _lawData._id
+              });
+              _lawData.law_rules = setValueForField(newLawData.law_rules);
+              if (newLawData.law_rules.length > vm.maxColumnRules) {
+                vm.maxColumnRules = newLawData.law_rules.length;
+                console.log(vm.maxColumnRules);
+              }
+            });
+          } else {
+            vm.tmpLawRegulations[regulation_id].forEach((_lawData, k) => {
+              var newLawData = _.find(vm.lawDataListUpdate, {
+                _id: _lawData._id
+              });
+              _lawData.law_rules = setValueForField(newLawData.law_rules);
+              if (newLawData.law_rules.length > vm.maxColumnRules) {
+                vm.maxColumnRules = newLawData.law_rules.length;
+                console.log(vm.maxColumnRules);
+              }
+            });
+          }
+
+          if (!$scope.$$phase) $scope.$digest();
+        })
+        .then(function () {
+          $timeout(function () {}, 1000);
+          // tableId
+          var _tableId = isHourei ? '#detail_hourei' : '#regulation_' + regulation_id;
+          var exportHref = Excel.tableToExcel(_tableId, title);
+          $timeout(function () {
+            location.href = exportHref;
+          }, 100); // trigger download
+        })
+        .catch(function (err) {
+          $scope.nofityError('法令データの保存が失敗しました。' + err);
+        });
+
+
+      // var id = '5ac3342b13bee011683c2099';
+
+    };
+
+    function setValueForField(rules) {
+      var _rules = [];
+      rules.forEach((rule, key) => {
+        rule.fields.forEach((field, k) => {
+          // in database has format ("name" : "4_15_null")
+          var _dataField = field.name.split('_');
+          field.bukken = parseInt(_dataField[0], 10);
+          field.deuta1 = parseInt(_dataField[1], 10);
+          field.deuta2 = _dataField[2] ? parseInt(_dataField[2], 10) : null;
+
+          var tmpPropertiesKo = _.filter(vm.listMasterProperties, function (item) {
+            return item.bukken === field.bukken &&
+              item.daikoumoku === field.deuta1 &&
+              item.kokoumoku === field.deuta2;
+          });
+          if (tmpPropertiesKo) {
+            field.bukken_name = tmpPropertiesKo[0].bukken_name;
+            field.daikoumoku_name = tmpPropertiesKo[0].daikoumoku_name;
+            field.kokoumoku_name = tmpPropertiesKo[0].kokoumoku_name;
+          }
+        });
+      });
+      return rules;
+    }
+
+    function requestDataByLawId(_lawId) {
+      return new Promise(function (resolve, reject) {
+        LawsApi.requestDataByLawId(_lawId)
+          .then((res) => {
+            resolve(res.data);
+          })
+          .catch((res) => {
+            reject(res.data.message);
+          });
+      });
+    }
+
+    $scope.getNumber = function (num) {
+      var temp = [];
+      for (var j = 1; j <= num; j++) {
+        temp.push(j);
+      }
+      return temp;
+    };
   }
+
+  angular.module('laws.admin').factory('Excel', function ($window) {
+    var uri = 'data:application/vnd.ms-excel;base64,',
+      template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"' +
+      ' xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>' +
+      '<x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>' +
+      '</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table>' +
+      '</body></html>',
+      base64 = function (s) {
+        return $window.btoa(unescape(encodeURIComponent(s)));
+      },
+      format = function (s, c) {
+        return s.replace(/{(\w+)}/g, function (m, p) {
+          return c[p];
+        });
+      };
+    return {
+      tableToExcel: function (tableId, worksheetName) {
+        var table = $(tableId);
+        var exTable = table.clone();
+        exTable.find('.remove_th, .remove_td').remove();
+
+        var ctx = {
+            worksheet: worksheetName,
+            table: exTable.html()
+          },
+          href = uri + base64(format(template, ctx));
+        return href;
+      }
+    };
+  });
 
   /**
    * controller display modal
@@ -434,7 +629,7 @@
 
     /**
      * when click button 閉じる in modal
-    */
+     */
     $ctrl.cancel = function () {
       $uibModalInstance.dismiss('cancel');
     };
