@@ -3,7 +3,8 @@
 
   angular
     .module('docs.services')
-    .factory('DocsService', DocsService);
+    .factory('DocsService', DocsService)
+    .factory('DocsApi', DocsApi);
 
   DocsService.$inject = ['$resource', '$log'];
 
@@ -49,5 +50,14 @@
       // Log error
       $log.error(error);
     }
+  }
+
+  DocsApi.$inject = ['$http'];
+  function DocsApi($http) {
+
+    this.autoChecked = docId => {
+      return $http.post('/api/docs/' + docId + '/autoChecked', null, { ignoreLoadingBar: true });
+    };
+    return this;
   }
 }());

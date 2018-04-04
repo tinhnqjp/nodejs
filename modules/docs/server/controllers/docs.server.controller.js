@@ -6,6 +6,14 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Doc = mongoose.model('Doc'),
+  Property = mongoose.model('Property'),
+  Law = mongoose.model('Law'),
+  LawData = mongoose.model('LawData'),
+  LawRule = mongoose.model('LawRule'),
+  LawDetail = mongoose.model('LawDetail'),
+  LawRegulation = mongoose.model('LawRegulation'),
+  MasterLaw = mongoose.model('MasterLaw'),
+  MasterProperties = mongoose.model('MasterProperties'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
@@ -83,23 +91,23 @@ exports.list = function (req, res) {
   var limit = Number(req.query.limit) || 10;
   var page = Number(req.query.page) || 1;
   Doc.find()
-  .skip((limit * page) - limit)
-  .limit(limit)
-  .sort('-created').populate('user', 'displayName').exec(function (err, docs) {
-    Doc.count().exec(function (err, count) {
-      if (err) {
-        return res.status(422).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json({
-          docs: docs,
-          current: page,
-          total: count
-        });
-      }
+    .skip((limit * page) - limit)
+    .limit(limit)
+    .sort('-created').populate('user', 'displayName').exec(function (err, docs) {
+      Doc.count().exec(function (err, count) {
+        if (err) {
+          return res.status(422).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json({
+            docs: docs,
+            current: page,
+            total: count
+          });
+        }
+      });
     });
-  });
 };
 
 /**
@@ -125,3 +133,133 @@ exports.docByID = function (req, res, next, id) {
     next();
   });
 };
+
+exports.autoChecked = function (req, res) {
+  var _docId = req.doc._id;
+  var property, laws, listMasterLawDetail;
+  // 1 get property
+  getPropertyByDocId(_docId)
+    .then(function (_property) {
+      
+      property = _property;
+      var _year = property.men10.getFullYear();
+      // 2 get law by year
+      return getLawsByYear(_year);
+    })
+    .then(function (_laws) {
+      laws = _laws;
+      // 3 get list masterlaw
+      return getMasterLawDetail();
+    })
+    .then(function (_listMasterLawDetail) {
+      listMasterLawDetail = _listMasterLawDetail;
+
+      listMasterLawDetail.forEach((_master, index) => {
+        laws.forEach((_laws) => {
+          var lawData = filterLawData(_master, _laws.law_details);
+          var isValid = false;
+          lawData.forEach((_lawData) => {
+            isValid = checkValidateRule(_lawData.law_rules);
+          });
+          console.log(index, lawData, isValid);
+        });
+      });
+      //return getLawDatasByLawId();
+      res.json(laws);
+    })
+    .catch(function (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    });
+};
+
+function filterLawData(master_law, _laws) {
+  var lawData = _.filter(_laws.law_details, {
+    'master_law': master_law._id
+  });
+  var lawData2 = _.filter(lawData, function (_lawData) {
+    return _lawData.law_rules.length > 0 
+  })
+  return lawData2;
+}
+
+function checkValidateRule(_lawRules) {
+  var isValid = false;
+  _lawRules.forEach((_lawRule) => {
+    if (_lawRule.fields.length > 0) {
+
+    }
+  });
+
+  return isValid;
+}
+
+function checkValidateFields(_fields) {
+  var isValid = false;
+  _fields.forEach((_field) => {
+    if (_field.properties.length > 0) {
+
+    }
+  });
+
+  return isValid;
+}
+
+function getPropertyByDocId(_docId) {
+  return new Promise(function (resolve, reject) {
+    Property.findOne({
+        doc: _docId
+      })
+      .exec(function (err, property) {
+        if (err) {
+          reject(err);
+        }
+        resolve(property);
+      });
+  });
+}
+
+function getLawsByYear(_year) {
+  return new Promise(function (resolve, reject) {
+    Law.find({
+        year: _year
+      })
+      .populate({
+        path: 'law_details',
+        model: 'LawDetail',
+        populate: {
+          path: 'law_details',
+          model: 'LawData',
+          populate: {
+            path: 'law_rules',
+            model: 'LawRule'
+          }
+        }
+      })
+      .exec(function (err, laws) {
+        if (err) {
+          reject(err);
+        }
+        resolve(laws);
+      });
+  });
+}
+
+function getMasterLawDetail() {
+  return new Promise(function (resolve, reject) {
+    MasterLaw.find()
+      .exec(function (err, masterLawList) {
+        if (err) {
+          reject(err);
+        }
+        var masterLawDetailList = _.filter(masterLawList, {
+          'type': 'detail'
+        });
+
+        resolve(masterLawDetailList);
+      });
+  });
+}
+
+

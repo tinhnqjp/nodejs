@@ -18,6 +18,8 @@ module.exports = function (app) {
     .put(docs.update)
     .delete(docs.delete);
 
+  app.route('/api/docs/:docId/autoChecked').post(docs.autoChecked);
+
   // Finish by binding the doc middleware
   app.param('docId', docs.docByID);
 };

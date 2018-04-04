@@ -5,9 +5,11 @@
     .module('docs.admin')
     .controller('DocsAdminController', DocsAdminController);
 
-  DocsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'Authentication', 'Notification', 'Excel', '$timeout', 'LawsApi'];
+  DocsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 
+    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi'];
 
-  function DocsAdminController($scope, $state, $window, doc, Authentication, Notification, Excel, $timeout, LawsApi) {
+  function DocsAdminController($scope, $state, $window, doc, Authentication, 
+    Notification, Excel, $timeout, DocsApi, LawsApi) {
     var vm = this;
 
     vm.doc = doc;
@@ -56,6 +58,22 @@
       $timeout(function () { location.href = exportHref; }, 100); // trigger download
     };
 
+    vm.autoChecked = function (mendou) {
+      //vm.doc.property
+      // get properties with docid
+      console.log("autoChecked");
+      DocsApi.autoChecked(vm.doc._id)
+      .then((res) => {
+        console.log(res.data);
+        //vm.listMasterProperties = res.data;
+        //vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
+      })
+      .catch((res) => {
+        $scope.nofityError('マスターデータのロードが失敗しました。');
+      });
+
+      console.log(vm.doc);
+    };
   }
 
   angular.module('docs.admin').filter('contains', function () {
