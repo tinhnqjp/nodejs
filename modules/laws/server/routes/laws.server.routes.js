@@ -32,4 +32,5 @@ module.exports = function (app) {
 
   app.route('/api/listMasterProperties').get(laws.listMasterProperties);
   app.route('/api/listMasterLaw').get(laws.listMasterLaw);
+  app.route('/api/requestLawsByYear').post(laws.requestLawsByYear);
 };

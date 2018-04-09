@@ -479,6 +479,48 @@ exports.listMasterLaw = function (req, res) {
   });
 };
 
+exports.requestLawsByYear = function (req, res) {
+  var year = req.body.year;
+  getLawsByYear(year)
+  .then(function (law) {
+    res.json(law);
+  })
+  .catch(function (err) {
+    return res.status(422).send({
+      message: errorHandler.getErrorMessage(err)
+    });
+  });
+};
+
+function getLawsByYear(_year) {
+  return new Promise(function (resolve, reject) {
+    Law.find({
+      year: _year
+    })
+    .populate({
+      path: 'law_details',
+      model: 'LawDetail',
+      populate: {
+        path: 'law_details',
+        model: 'LawData',
+        populate: {
+          path: 'law_rules',
+          model: 'LawRule'
+        }
+      }
+    })
+    .exec(function (err, laws) {
+      if (err) {
+        reject(err);
+      }
+      if (laws.length > 1) {
+        reject({ message: '同じ年度の法令データがあります。ご確認ください。' });
+      }
+      resolve(laws[0]);
+    });
+  });
+}
+
 function getLawDataById(_lawDataId) {
   return new Promise(function (resolve, reject) {
     LawData.findById(_lawDataId)

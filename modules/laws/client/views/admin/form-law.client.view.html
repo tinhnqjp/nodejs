@@ -52,18 +52,22 @@
                                     法令 ({{vm.law.law_details.law_details.length}})
                                 </a>
                             </uib-accordion-heading>
-                            <button type="button" ng-click="vm.download(true, '法令')" class="btn btn-primary btn-sm pull-right" style="margin-bottom:20px;"><i class="glyphicon glyphicon-save"></i> ダウンロード</button>
+                            <button type="button" ng-click="vm.download(true, '法令')" class="btn btn-primary btn-sm pull-right" style="margin-bottom:20px;"><i class="glyphicon glyphicon-save"></i> エクスポート</button>
                             <div id="detail_hourei">
+                                <style>
+                                    .bg-primary { background-color:#286090; color:#fff}
+                                    table.table.table-bordered > tr > td { border: 1px solid #d8d4d4 }
+                                </style>
                                 <h3 class="used-excel-export">法令</h3>
-                                <table class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawDetails">
+                                <table border="1" class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawDetails">
                                     <thead>
                                         <tr>
                                             <th class="bg-primary" style="width:50px;">#</th>
                                             <th class="bg-primary" style="width:100px;">項目1</th>
-                                            <th class="bg-primary" style="width:100px;">項目2</th>
-                                            <th class="bg-primary" style="width:200px;">法文</th>
-                                            <th class="bg-primary remove_th" style="width:150px;">条件</th>
-                                            <th class="bg-primary used-excel-export" ng-repeat="i in getNumber(vm.maxColumnRules)">条件グループ{{i}}</th>
+                                            <th class="bg-primary" style="width:100px">項目2</th>
+                                            <th class="bg-primary" style="width:200px">法文</th>
+                                            <th class="bg-primary ignore-excel-export" style="width:150px;">条件</th>
+                                            <th class="bg-primary used-excel-export" style="background-color:#286090; color:#fff" ng-repeat="i in getNumber(vm.maxColumnRules)">条件グループ{{i}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -76,23 +80,24 @@
                                             <td ng-if="lawData.master_law.rowspan === 0 && lawData.master_law.item2">{{ lawData.master_law.item2 }}</td>
                                             <td ng-if="lawData.master_law.rowspan < 0">{{ lawData.master_law.item2 }}</td>
                                             <td>{{ lawData.master_law.legal_text }}</td>
-                                            <td style="text-align:center;width:150px;" class="remove_td">
+                                            <td style="text-align:center;width:150px;" class="ignore-excel-export">
                                                 <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn" ng-click="vm.showLawsRule(lawData, '法令')"> 条件割当</button>
                                             </td>
                                             <td class="used-excel-export" ng-repeat="lawRule in lawData.law_rules">
                                                 <span ng-repeat="field in lawRule.fields">
-                                                    {{field.bukken_name}},{{field.daikoumoku_name}}
+                                                    <span ng-if="field.bukken_name">{{field.bukken_name}}</span>
+                                                    <span ng-if="field.daikoumoku_name">,{{field.daikoumoku_name}}</span>
                                                     <span ng-if="field.kokoumoku_name">,{{field.kokoumoku_name}}</span>
                                                     <span ng-repeat="property in field.properties">
                                                         <span ng-if="property.value">,{{property.value}}</span>
                                                         <span ng-if="property.value1">,{{property.value1}}</span>
-                                                        <span ng-if="property.compare1">,{{property.compare1}}</span>
+                                                        <span ng-if="property.compare1">,{{ getValidationByFind(property.compare1).name }}</span>
                                                         <span ng-if="property.value2">,{{property.value2}}</span>
-                                                        <span ng-if="property.compare2">,{{property.compare2}}</span>
-                                                    </span><br ng-if="!$last" style="mso-data-placement:same-cell;" />
+                                                        <span ng-if="property.compare2">,{{ getValidationByFind(property.compare2).name }}</span>
+                                                    </span><br ng-if="!$last" style="mso-data-placement:same-cell;"/>
                                                 </span>
                                             </td>
-                                            <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></th>
+                                            <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -107,18 +112,22 @@
                                     <div ng-show="regulation.busy"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
                                 </a>
                             </uib-accordion-heading>
-                            <button type="button" ng-click="vm.download(false, regulation.todoufuken, regulation._id)" class="btn btn-primary btn-sm pull-right" style="margin-bottom:20px;"><i class="glyphicon glyphicon-save"></i> ダウンロード</button>
+                            <button type="button" ng-click="vm.download(false, regulation.todoufuken, regulation._id)" class="btn btn-primary btn-sm pull-right" style="margin-bottom:20px;"><i class="glyphicon glyphicon-save"></i> エクスポート</button>
                             <div id="regulation_{{ regulation._id }}">
-                                <h3 class="used-excel-export">{{regulation.todoufuken}}</h3>
-                                <table class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawRegulations[regulation._id]">
+                                    <style>
+                                    .bg-primary { background-color:#286090; color:#fff}
+                                    table.table.table-bordered > tr > td { border: 1px solid #d8d4d4 }
+                                </style>
+                                <h3 class="used-excel-export">{{ regulation.todoufuken }}</h3>
+                                <table border="1" class="table table-striped table-bordered table-hover" ng-show="vm.tmpLawRegulations[regulation._id]">
                                     <thead>
                                         <tr>
                                             <th class="bg-primary" style="width:50px;">#</th>
                                             <th class="bg-primary" style="width:100px;">項目1</th>
-                                            <th class="bg-primary" style="width:100px;">項目2</th>
-                                            <th class="bg-primary" style="width:200px;">法文</th>
-                                            <th class="bg-primary remove_th" style="width:150px;">条件</th>
-                                            <th class="bg-primary used-excel-export" ng-repeat="i in getNumber(vm.maxColumnRules)">条件グループ{{i}}</th>
+                                            <th class="bg-primary" style="width:100px">項目2</th>
+                                            <th class="bg-primary" style="width:200px">法文</th>
+                                            <th class="bg-primary ignore-excel-export" style="width:150px;">条件</th>
+                                            <th class="bg-primary used-excel-export" style="background-color:#286090; color:#fff" ng-repeat="i in getNumber(vm.maxColumnRules)">条件グループ{{i}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -131,24 +140,25 @@
                                             <td ng-if="lawData.master_law.rowspan === 0 && lawData.master_law.item2">{{ lawData.master_law.item2 }}</td>
                                             <td ng-if="lawData.master_law.rowspan < 0">{{ lawData.master_law.item2 }}</td>
                                             <td>{{ lawData.master_law.legal_text }}</td>
-                                            <td style="text-align:center;width:150px;" class="remove_td">
+                                            <td style="text-align:center;width:150px;" class="ignore-excel-export">
                                                 <button type="button" ng-class="vm.classButtonLawsRule(lawData.law_rules)" class="btn btn-sm" id="rule_btn"
                                                 ng-click="vm.showLawsRule(lawData, regulation.todoufuken)"> 条件割当</button>
                                             </td>
                                             <td class="used-excel-export" ng-repeat="lawRule in lawData.law_rules">
                                                 <span ng-repeat="field in lawRule.fields">
-                                                    {{field.bukken_name}},{{field.daikoumoku_name}}
+                                                    <span ng-if="field.bukken_name">{{field.bukken_name}}</span>
+                                                    <span ng-if="field.daikoumoku_name">,{{field.daikoumoku_name}}</span>
                                                     <span ng-if="field.kokoumoku_name">,{{field.kokoumoku_name}}</span>
                                                     <span ng-repeat="property in field.properties">
                                                         <span ng-if="property.value">,{{property.value}}</span>
                                                         <span ng-if="property.value1">,{{property.value1}}</span>
-                                                        <span ng-if="property.compare1">,{{property.compare1}}</span>
+                                                        <span ng-if="property.compare1">,{{ getValidationByFind(property.compare1).name }}</span>
                                                         <span ng-if="property.value2">,{{property.value2}}</span>
-                                                        <span ng-if="property.compare2">,{{property.compare2}}</span>
-                                                    </span><br ng-if="!$last" style="mso-data-placement:same-cell;" />
+                                                        <span ng-if="property.compare2">,{{ getValidationByFind(property.compare2).name }}</span>
+                                                    </span><br ng-if="!$last" style="mso-data-placement:same-cell;"/>
                                                 </span>
                                             </td>
-                                            <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></th>
+                                            <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></td>
                                         </tr>
                                     </tbody>
                                 </table>

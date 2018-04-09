@@ -80,6 +80,9 @@
     this.listMasterLaw = () => {
       return $http.get('/api/listMasterLaw', null, { ignoreLoadingBar: true });
     };
+    this.requestLawsByYear = (year) => {
+      return $http.post('/api/requestLawsByYear', { year: year }, { ignoreLoadingBar: true });
+    };
     return this;
   }
 }());

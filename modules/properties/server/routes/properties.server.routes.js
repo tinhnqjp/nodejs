@@ -20,4 +20,6 @@ module.exports = function (app) {
 
   // Finish by binding the property middleware
   app.param('propertyId', properties.propertyByID);
+
+  app.route('/api/requestPropertyByDoc').post(properties.requestPropertyByDoc);
 };

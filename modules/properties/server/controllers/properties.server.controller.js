@@ -129,3 +129,17 @@ exports.propertyByID = function (req, res, next, id) {
     next();
   });
 };
+
+
+exports.requestPropertyByDoc = function (req, res) {
+  var doc = req.body.doc;
+  Property.findOne({ doc: doc }).exec(function (err, property) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(property);
+  });
+};

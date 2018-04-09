@@ -2,13 +2,14 @@
 
 angular.module('core').controller('AppController', AppController);
 
-AppController.$inject = ['$scope', 'Authentication', 'ngDialog', 'notifyService'];
+AppController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'ngDialog', 'notifyService', 'Excel'];
 
-function AppController($scope, Authentication, ngDialog, notifyService) {
+function AppController($scope, $timeout, $window, Authentication, ngDialog, notifyService, Excel) {
   $scope.Authentication = Authentication;
   $scope.handleShowConfirm = handleShowConfirm;
   $scope.nofitySuccess = nofitySuccess;
   $scope.nofityError = nofityError;
+  $scope.exportExcel = exportExcel;
 
   $scope.range = function (min, max, step) {
     step = step || 1;
@@ -44,5 +45,14 @@ function AppController($scope, Authentication, ngDialog, notifyService) {
 
   function nofityError(message) {
     return notifyService.error(message);
+  }
+
+  function exportExcel(tableId, sheetName, fileName) {
+    $timeout(function () {}, 1000);
+    // tableId
+    var exportHref = Excel.tableToExcel(tableId, sheetName, fileName);
+    $timeout(function () {
+      exportHref.click();
+    }, 100); // trigger download
   }
 }

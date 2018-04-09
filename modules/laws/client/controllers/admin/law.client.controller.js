@@ -6,10 +6,10 @@
     .controller('LawsAdminController', LawsAdminController);
 
   LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve',
-    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce', '$timeout', 'Excel'];
+    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce', '$timeout'];
 
   function LawsAdminController($scope, $state, $window, law, Authentication,
-    Notification, LawsService, LawsApi, $uibModal, $sce, $timeout, Excel) {
+    Notification, LawsService, LawsApi, $uibModal, $sce, $timeout) {
     var vm = this;
 
     vm.law = law;
@@ -20,55 +20,21 @@
     vm.showLawsRule = showLawsRule;
     vm.formLawsRule = {};
     vm.save = save;
-    vm.years = [{
-      id: 2020,
-      name: '2020年'
-    },
-    {
-      id: 2019,
-      name: '2019年'
-    },
-    {
-      id: 2018,
-      name: '2018年'
-    },
-    {
-      id: 2017,
-      name: '2017年'
-    },
-    {
-      id: 2016,
-      name: '2016年'
-    },
-    {
-      id: 2015,
-      name: '2015年'
-    },
-    {
-      id: 2014,
-      name: '2014年'
-    }
+    vm.years = [
+      { id: 2020, name: '2020年' },
+      { id: 2019, name: '2019年' },
+      { id: 2018, name: '2018年' },
+      { id: 2017, name: '2017年' },
+      { id: 2016, name: '2016年' },
+      { id: 2015, name: '2015年' },
+      { id: 2014, name: '2014年' }
     ];
-    vm.typeValidation = [{
-      id: '==',
-      name: '等しい'
-    },
-    {
-      id: '>=',
-      name: '以上'
-    },
-    {
-      id: '<=',
-      name: '以下'
-    },
-    {
-      id: '<',
-      name: '未満'
-    },
-    {
-      id: '>',
-      name: '超過'
-    }
+    vm.typeValidation = [
+      { id: '==', name: '等しい' },
+      { id: '>=', name: '以上' },
+      { id: '<=', name: '以下' },
+      { id: '<', name: '未満' },
+      { id: '>', name: '超過' }
     ];
 
     vm.tmpLawDetails = [];
@@ -483,7 +449,7 @@
     };
 
     vm.lawDataUpdate = [];
-    vm.maxColumnRules = 1;
+    vm.maxColumnRules = 0;
     vm.download = function (isHourei, title, regulation_id) {
 
       requestDataByLawId(law._id)
@@ -499,7 +465,6 @@
               _lawData.law_rules = setValueForField(newLawData.law_rules);
               if (newLawData.law_rules.length > vm.maxColumnRules) {
                 vm.maxColumnRules = newLawData.law_rules.length;
-                console.log(vm.maxColumnRules);
               }
             });
           } else {
@@ -510,7 +475,6 @@
               _lawData.law_rules = setValueForField(newLawData.law_rules);
               if (newLawData.law_rules.length > vm.maxColumnRules) {
                 vm.maxColumnRules = newLawData.law_rules.length;
-                console.log(vm.maxColumnRules);
               }
             });
           }
@@ -518,21 +482,12 @@
           if (!$scope.$$phase) $scope.$digest();
         })
         .then(function () {
-          $timeout(function () {}, 1000);
-          // tableId
           var _tableId = isHourei ? '#detail_hourei' : '#regulation_' + regulation_id;
-          var exportHref = Excel.tableToExcel(_tableId, title);
-          $timeout(function () {
-            location.href = exportHref;
-          }, 100); // trigger download
+          $scope.exportExcel(_tableId, 'エクスポート', 'エクスポート.xls');
         })
         .catch(function (err) {
           $scope.nofityError('法令データの保存が失敗しました。' + err);
         });
-
-
-      // var id = '5ac3342b13bee011683c2099';
-
     };
 
     function setValueForField(rules) {
@@ -544,16 +499,17 @@
           field.bukken = parseInt(_dataField[0], 10);
           field.deuta1 = parseInt(_dataField[1], 10);
           field.deuta2 = _dataField[2] ? parseInt(_dataField[2], 10) : null;
-
-          var tmpPropertiesKo = _.filter(vm.listMasterProperties, function (item) {
-            return item.bukken === field.bukken &&
-              item.daikoumoku === field.deuta1 &&
-              item.kokoumoku === field.deuta2;
-          });
-          if (tmpPropertiesKo) {
-            field.bukken_name = tmpPropertiesKo[0].bukken_name;
-            field.daikoumoku_name = tmpPropertiesKo[0].daikoumoku_name;
-            field.kokoumoku_name = tmpPropertiesKo[0].kokoumoku_name;
+          if (field.bukken > 0 && field.deuta1 > 0) {
+            var tmpPropertiesKo = _.filter(vm.listMasterProperties, function (item) {
+              return item.bukken === field.bukken &&
+                item.daikoumoku === field.deuta1 &&
+                item.kokoumoku === field.deuta2;
+            });
+            if (tmpPropertiesKo) {
+              field.bukken_name = tmpPropertiesKo[0].bukken_name;
+              field.daikoumoku_name = tmpPropertiesKo[0].daikoumoku_name;
+              field.kokoumoku_name = tmpPropertiesKo[0].kokoumoku_name;
+            }
           }
         });
       });
@@ -579,38 +535,11 @@
       }
       return temp;
     };
-  }
 
-  angular.module('laws.admin').factory('Excel', function ($window) {
-    var uri = 'data:application/vnd.ms-excel;base64,',
-      template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"' +
-      ' xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>' +
-      '<x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>' +
-      '</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table>' +
-      '</body></html>',
-      base64 = function (s) {
-        return $window.btoa(unescape(encodeURIComponent(s)));
-      },
-      format = function (s, c) {
-        return s.replace(/{(\w+)}/g, function (m, p) {
-          return c[p];
-        });
-      };
-    return {
-      tableToExcel: function (tableId, worksheetName) {
-        var table = $(tableId);
-        var exTable = table.clone();
-        exTable.find('.remove_th, .remove_td').remove();
-
-        var ctx = {
-            worksheet: worksheetName,
-            table: exTable.html()
-          },
-          href = uri + base64(format(template, ctx));
-        return href;
-      }
+    $scope.getValidationByFind = function (id) {
+      return vm.typeValidation.find(x => x.id === id);
     };
-  });
+  }
 
   /**
    * controller display modal

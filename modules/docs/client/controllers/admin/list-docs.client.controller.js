@@ -5,9 +5,11 @@
     .module('docs.admin')
     .controller('DocsAdminListController', DocsAdminListController);
 
-  DocsAdminListController.$inject = ['PropertiesService', '$scope', '$state', '$window', 'Authentication', 'Notification'];
+  DocsAdminListController.$inject = ['PropertiesService', '$scope', '$state', '$window',
+    'Authentication', 'Notification', 'LawsApi', 'PropertyApi'];
 
-  function DocsAdminListController(PropertiesService, $scope, $state, $window, Authentication, Notification) {
+  function DocsAdminListController(PropertiesService, $scope, $state, $window
+    , Authentication, Notification, LawsApi, PropertyApi) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -15,7 +17,6 @@
     vm.currentPage = 1;
     vm.pageSize = 10;
     getData();
-
     vm.pageChanged = function () {
       getData();
     };
@@ -28,5 +29,7 @@
         vm.currentPage = output.current;
       });
     }
+    // end controller
   }
+
 }());

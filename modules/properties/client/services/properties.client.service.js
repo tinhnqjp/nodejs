@@ -3,7 +3,8 @@
 
   angular
     .module('properties.services')
-    .factory('PropertiesService', PropertiesService);
+    .factory('PropertiesService', PropertiesService)
+    .factory('PropertyApi', PropertyApi);
 
   PropertiesService.$inject = ['$resource', '$log'];
 
@@ -49,5 +50,13 @@
       // Log error
       $log.error(error);
     }
+  }
+
+  PropertyApi.$inject = ['$http'];
+  function PropertyApi($http) {
+    this.requestPropertyByDoc = (doc) => {
+      return $http.post('/api/requestPropertyByDoc', { doc: doc }, { ignoreLoadingBar: true });
+    };
+    return this;
   }
 }());
