@@ -2,16 +2,6 @@
 <div class="col-xs-12">
     <div class="panel panel-primary">
         <div class="panel-body">
-            <div class="row" ng-if="vm.submitted && vm.form.propertyForm.$error">
-                <div class="col-sm-12" style="margin-bottom: 15px">
-                    <lu  class="alert-danger">
-                        <li ng-if="vm.submitted && vm.form.propertyForm.men311.$error.required">1.地名地番の地域が選択されていません。</li>
-                        <li ng-if="vm.submitted && vm.form.propertyForm.men312.$error.required">1.地名地番の住所が入力されていません。</li>
-                        <li ng-if="vm.submitted && vm.form.propertyForm.men321.$error.required">2.住居表示の地域が選択されていません。</li>
-                        <li ng-if="vm.submitted && vm.form.propertyForm.men322.$error.required">2.住居表示の住所が入力されていません。</li>
-                    </lu>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-md-12">
                     <label class="title_label">建築物及びその敷地に関する事項</label>
@@ -22,9 +12,9 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">1.地名地番</label>
             </div>
             <div class="col-sm-1"></div>
-            <div class="input-group form-inline panel col-sm-10" ng-class="vm.classError(vm.form.propertyForm.men311.$invalid, vm.form.propertyForm.men312.$invalid)">
+            <div class="input-group form-inline panel col-sm-10">
                 <span class="input-group-addon">地域</span>
-                <select class="selectpicker form-control" name="men311" ng-model="vm.property.men311">
+                <select class="selectpicker form-control" name="men3_1_1" ng-model="vm.property.men3_1_1">
                 　　<optgroup label="都道府県">
                     <option>北海道</option>
                     <option>青森県</option>
@@ -76,7 +66,7 @@
                     
                 </select>
                 <span class="input-group-addon">住所</span>
-                <input type="text" class="form-control" name="men312" ng-model="vm.property.men312"/>
+                <input type="text" class="form-control" name="men3_1_2" ng-model="vm.property.men3_1_2"/>
             </div>
             <hr>
 
@@ -84,9 +74,9 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">2.住居表示</label>
             </div>
             <div class="col-sm-1"></div>
-            <div class="input-group form-inline panel col-sm-10" ng-class="vm.classError(vm.form.propertyForm.men321.$invalid, vm.form.propertyForm.men322.$invalid)">
+            <div class="input-group form-inline panel col-sm-10">
                 <span class="input-group-addon">地域</span>
-                <select class="selectpicker form-control" name="men321" ng-model="vm.property.men321">
+                <select class="selectpicker form-control" name="men3_2_1" ng-model="vm.property.men3_2_1">
                 　　<optgroup label="都道府県">
                     <option>北海道</option>
                     <option>青森県</option>
@@ -138,42 +128,26 @@
                 </optgroup>
                 </select>
                 <span class="input-group-addon">住所</span>
-                <input type="text" class="form-control" name="men322" ng-model="vm.property.men322"/>
+                <input type="text" class="form-control" name="men3_2_2" ng-model="vm.property.men3_2_2"/>
             </div>
             <hr>
 
             <div class="form-group row">
                 <label for="txtTodo" class="col-sm-12 col title_label">3.都市計画区域及び準都市計画区域の内外の別等</label>
                 <div class="col-sm-1"></div>
-                <div class="col-sm-11" ng-class="vm.classError(vm.form.propertyForm.men331.$invalid)">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="都市計画区域内" name="men331[]" ng-model="vm.property.men331">都市計画区域内
-                    </label>
-                    <div class="row mg20l">
-                        (&nbsp;
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="市街化区域" name="men331[]" ng-model="vm.property.men331">市街化区域
+                <div class="col-sm-11">
+                    <div class="row" ng-repeat="ck in vm.data_men3_3">
+                        <label class="checkbox-inline" >
+                            <input type="checkbox" checklist-model="vm.property.men3_3" checklist-value="ck.name">
+                            {{ ck.name }}&nbsp;
                         </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="市街化調整区域" name="men331[]" ng-model="vm.property.men331">市街化調整区域
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" value="区域区分非設定" name="men331[]" ng-model="vm.property.men331">区域区分非設定
-                        </label>
-                        &nbsp;)
+                        <div class="row mg20l" ng-if="ck.child" class="row" ng-repeat="ckc in ck.child">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" checklist-model="vm.property.men3_3" checklist-value="ckc.name">
+                                {{ ckc.name }}&nbsp;
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-1"></div>
-                <div class="col-sm-11" ng-class="vm.classError(vm.form.propertyForm.men331.$invalid)">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="準都市計画区域内" name="men331[]" ng-model="vm.property.men331">準都市計画区域内
-                    </label>
-                </div>
-                <div class="col-sm-1"></div>
-                <div class="col-sm-11" ng-class="vm.classError(vm.form.propertyForm.men331.$invalid)">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="都市計画区域及び準都市計画区域外" name="men331[]" ng-model="vm.property.men331">都市計画区域及び準都市計画区域外
-                    </label>
                 </div>
             </div>
             <hr>
@@ -182,24 +156,18 @@
                 <label for="txtTodo" class="col-sm-12 col title_label">4.防火地域</label>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-10">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" name="men341[]" value="">防火地域
-                    </label>                                    
-                    <label class="checkbox-inline">
-                        <input type="checkbox"name="men341[]" value="">準防火地域
-                    </label>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" name="men341[]" value="">指定なし
+                    <label class="checkbox-inline" ng-repeat="ck in vm.data_men3_4">
+                        <input type="checkbox" checklist-model="vm.property.men3_4" checklist-value="ck">{{ ck }}&nbsp;
                     </label>
                 </div>
             </div>
             <hr>
 
-            <div class="form-group row" ng-class="vm.classError(vm.form.propertyForm.men351.$invalid)">
+            <div class="form-group row">
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">5.その他の区域、地域、地区又は街区</label>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="men351" ng-model="vm.property.men351">
+                    <input type="text" class="form-control" name="men3_5" ng-model="vm.property.men3_5">
                 </div>
             </div>
             <hr>
@@ -214,8 +182,8 @@
                             <span class="sub_title_label">ｲ.幅員</span>
                         </div>
                         <div class="col-sm-3"></div>
-                        <div class="col-sm-4" ng-class="vm.classError(vm.form.propertyForm.men36i.$invalid)">
-                            <input type="number" class="form-control" name="men36i" ng-model="vm.property.men36i"/>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" name="men3_6_1" ng-model="vm.property.men3_6_1"/>
                         </div>
                         <div class="col-sm-5">
                         </div>
@@ -227,8 +195,8 @@
                             <span class="sub_title_label">ﾛ.敷地と接している部分の長さ</span>
                         </div>
                         <div class="col-sm-3"></div>
-                        <div class="col-sm-4" ng-class="vm.classError(vm.form.propertyForm.men36ro.$invalid)">
-                            <input type="number" class="form-control" name="men36ro" ng-model="vm.property.men36ro"/>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" name="men3_6_2" ng-model="vm.property.men3_6_2"/>
                         </div>
                         <div class="col-sm-5">
                         </div>
@@ -251,27 +219,27 @@
                         <div class="col-sm-1" style="text-align:left;">
                         (1)
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i11.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i11" ng-model="vm.property.men37i11"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_1" ng-model="vm.property.men3_7_1_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i12.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i12" ng-model="vm.property.men37i12"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_2" ng-model="vm.property.men3_7_1_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i13.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i13" ng-model="vm.property.men37i13"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_3" ng-model="vm.property.men3_7_1_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i14.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i14" ng-model="vm.property.men37i14"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_4" ng-model="vm.property.men3_7_1_4"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
@@ -281,27 +249,27 @@
                         <div class="col-sm-1" style="text-align:left;">
                         (2)
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i21.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i21" ng-model="vm.property.men37i21"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_5" ng-model="vm.property.men3_7_1_5"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i22.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i22" ng-model="vm.property.men37i22"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_6" ng-model="vm.property.men3_7_1_6"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i23.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i23" ng-model="vm.property.men37i23"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_7" ng-model="vm.property.men3_7_1_7"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37i24.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37i24" ng-model="vm.property.men37i24"/>
+                                <input type="number" class="form-control" ng-blur="vm.plusFor3_7_5()" name="men3_7_1_8" ng-model="vm.property.men3_7_1_8"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
@@ -317,73 +285,21 @@
                         </div>
                         <div class="col-sm-3">
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ro1.$invalid)">
-                            <select class="form-control" name="men37ro1" ng-model="vm.property.men37ro1">
-                                <option>第1種低層住居専用地域</option>
-                                <option>第2種低層住居専用地域</option>
-                                <option>第1種中高層住居専用地域</option>
-                                <option>第2種中高層住居専用地域</option>
-                                <option>第1種住居地域</option>
-                                <option>第2種住居地域</option>
-                                <option>準住居地域</option>
-                                <option>近隣商業地域</option>
-                                <option>商業地域</option>
-                                <option>準工業地域</option>
-                                <option>工業地域</option>
-                                <option>工業専用地域</option>
-                                <option>指定なし</option>
-                            </select>
+                        <div class="col-sm-2">
+                            <select ng-model="vm.property.men3_7_2_1" class="form-control" 
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ro2.$invalid)">
-                            <select class="form-control" name="men37ro2" ng-model="vm.property.men37ro2">
-                                <option>第1種低層住居専用地域</option>
-                                <option>第2種低層住居専用地域</option>
-                                <option>第1種中高層住居専用地域</option>
-                                <option>第2種中高層住居専用地域</option>
-                                <option>第1種住居地域</option>
-                                <option>第2種住居地域</option>
-                                <option>準住居地域</option>
-                                <option>近隣商業地域</option>
-                                <option>商業地域</option>
-                                <option>準工業地域</option>
-                                <option>工業地域</option>
-                                <option>工業専用地域</option>
-                                <option>指定なし</option>
-                            </select>
+                        <div class="col-sm-2">
+                            <select ng-model="vm.property.men3_7_2_2" class="form-control" 
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ro3.$invalid)">
-                            <select class="form-control" name="men37ro3" ng-model="vm.property.men37ro3">
-                                <option>第1種低層住居専用地域</option>
-                                <option>第2種低層住居専用地域</option>
-                                <option>第1種中高層住居専用地域</option>
-                                <option>第2種中高層住居専用地域</option>
-                                <option>第1種住居地域</option>
-                                <option>第2種住居地域</option>
-                                <option>準住居地域</option>
-                                <option>近隣商業地域</option>
-                                <option>商業地域</option>
-                                <option>準工業地域</option>
-                                <option>工業地域</option>
-                                <option>工業専用地域</option>
-                                <option>指定なし</option>
-                            </select>
+                        <div class="col-sm-2">
+                            <select ng-model="vm.property.men3_7_2_3" class="form-control" 
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ro4.$invalid)">
-                            <select class="form-control" name="men37ro4" ng-model="vm.property.men37ro4">
-                                <option>第1種低層住居専用地域</option>
-                                <option>第2種低層住居専用地域</option>
-                                <option>第1種中高層住居専用地域</option>
-                                <option>第2種中高層住居専用地域</option>
-                                <option>第1種住居地域</option>
-                                <option>第2種住居地域</option>
-                                <option>準住居地域</option>
-                                <option>近隣商業地域</option>
-                                <option>商業地域</option>
-                                <option>準工業地域</option>
-                                <option>工業地域</option>
-                                <option>工業専用地域</option>
-                                <option>指定なし</option>
-                            </select>
+                        <div class="col-sm-2">
+                            <select ng-model="vm.property.men3_7_2_4" class="form-control" 
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
                         </div>
                     </div>
                     <div class="row">
@@ -396,27 +312,27 @@
                         </div>
                         <div class="col-sm-1">
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ha1.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ha1" ng-model="vm.property.men37ha1"/>
+                                <input type="number" class="form-control" name="men3_7_3_1" ng-model="vm.property.men3_7_3_1"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ha2.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ha2" ng-model="vm.property.men37ha2"/>
+                                <input type="number" class="form-control" name="men3_7_3_2" ng-model="vm.property.men3_7_3_2"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ha3.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ha3" ng-model="vm.property.men37ha3"/>
+                                <input type="number" class="form-control" name="men3_7_3_3" ng-model="vm.property.men3_7_3_3"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ha4.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ha4" ng-model="vm.property.men37ha4"/>
+                                <input type="number" class="form-control" name="men3_7_3_4" ng-model="vm.property.men3_7_3_4"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
@@ -431,27 +347,27 @@
                         </div>
                         <div class="col-sm-1">
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ni1.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ni1" ng-model="vm.property.men37ni1"/>
+                                <input type="number" class="form-control" name="men3_7_4_1" ng-model="vm.property.men3_7_4_1"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ni2.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ni2" ng-model="vm.property.men37ni2"/>
+                                <input type="number" class="form-control" name="men3_7_4_2" ng-model="vm.property.men3_7_4_2"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ni3.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ni3" ng-model="vm.property.men37ni3"/>
+                                <input type="number" class="form-control" name="men3_7_4_3" ng-model="vm.property.men3_7_4_3"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
-                        <div class="col-sm-2" ng-class="vm.classError(vm.form.propertyForm.men37ni4.$invalid)">
+                        <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men37ni4" ng-model="vm.property.men37ni4"/>
+                                <input type="number" class="form-control" name="men3_7_4_4" ng-model="vm.property.men3_7_4_4"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
@@ -469,7 +385,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_shikichi_goukei_1" value="" readonly/>
+                                <input type="number" class="form-control" name="men3_7_5_1" ng-model="vm.property.men3_7_5_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
@@ -484,7 +400,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_shikichi_goukei_2" value="" readonly/>
+                                <input type="number" class="form-control" name="men3_7_5_2" ng-model="vm.property.men3_7_5_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span>
                             </div>
                         </div>
@@ -501,7 +417,7 @@
                         </div>
                         <div class="col-sm-9">
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value=""/>
+                                <input type="number" class="form-control" name="men3_7_6" ng-model="vm.property.men3_7_6"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
@@ -518,7 +434,7 @@
                         </div>
                         <div class="col-sm-9">
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_shikichi_shinsei_1" value=""/>
+                                <input type="number" class="form-control" name="men3_7_7" ng-model="vm.property.men3_7_7"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
@@ -535,25 +451,17 @@
                 <div class="col-sm-5">
                     <div class="input-group form-inline panel">
                         <span class="input-group-addon">分類</span>
-                        <select class="form-control">
-                            <option>分類1</option>
-                            <option>分類2</option>
-                            <option>分類3</option>
-                            <option>分類4</option>
-                            <option>分類5</option>
-                        </select>
+                        <select class="form-control" name="men3_8_1" ng-model="vm.property.men3_8_1" 
+                        ng-change="vm.selectPropertyParent(vm.property.men3_8_1)"
+                        ng-options="o.name as o.name for o in vm.data_men3_8" data-width="fit"></select>
+
                         <span class="input-group-addon">区分</span>
-                        <select class="form-control">
-                            <option>08001</option>
-                            <option>08002</option>
-                            <option>08003</option>
-                            <option>08004</option>
-                            <option>08005</option>
-                        </select>
+                        <select class="form-control" name="men3_8_2" ng-model="vm.property.men3_8_2"
+                        ng-options="o as o for o in vm.data_men3_8.child_options" data-width="fit"></select>
                     </div>
                 </div>
                 <div class="col-sm-5">
-                    <input type="text" class="form-control" id="txtTodo" disabled="disabled">
+                    <input type="text" class="form-control" name="men3_8_3" ng-model="vm.property.men3_8_3">
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -562,28 +470,10 @@
             <div class="form-group row">
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">9.工事種別</label>
                 <div class="col-sm-2">
-                </div>
+                </div> 
                 <div class="col-sm-10">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">新築
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">増築
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">改築
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">移転
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">用途変更
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">大規模の修繕
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">大規模の模様替
+                    <label class="checkbox-inline" ng-repeat="ck in vm.data_men3_9">
+                        <input type="checkbox" checklist-model="vm.property.men3_9" checklist-value="ck">{{ ck }}&nbsp;
                     </label>
                 </div>
                 <div class="col-sm-12">
@@ -616,19 +506,19 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_num_kenchiku_1" value="" onblur="sum_txt_shikichi(0)"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_10_1_1" ng-model="vm.property.men3_10_1_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_num_kenchiku_2" value="" onblur="sum_txt_shikichi(0)"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_10_1_2" ng-model="vm.property.men3_10_1_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="input-group panel">
-                                <input type="text" class="form-control" id="txt_num_kenchiku_goukei" value="" readonly >
+                                <input type="number" class="form-control" name="men3_10_1_3" ng-model="vm.property.men3_10_1_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -647,7 +537,7 @@
                         </div>
                         <div class="col-sm-4">
                             <div class="input-group panel">
-                                <input type="text" class="form-control" id="txt_num_kenchiku_kenpeiritsu" value="" readonly/>
+                                <input type="number" class="form-control" name="men3_10_2" ng-model="vm.property.men3_10_2"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
@@ -672,21 +562,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_1_1" ng-model="vm.property.men3_11_1_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_1" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_1_2" ng-model="vm.property.men3_11_1_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_1" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_1_3" ng-model="vm.property.men3_11_1_3" >
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -702,21 +592,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_2" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_2_1" ng-model="vm.property.men3_11_2_1" />
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_2" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_2_2" ng-model="vm.property.men3_11_2_2" />
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_2" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_2_3" ng-model="vm.property.men3_11_2_3" />
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -732,21 +622,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_3" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_3_1" ng-model="vm.property.men3_11_3_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_3" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_3_2" ng-model="vm.property.men3_11_3_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_3" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_3_3" ng-model="vm.property.men3_11_3_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -762,21 +652,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_4" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_4_1" ng-model="vm.property.men3_11_4_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_4" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_4_2" ng-model="vm.property.men3_11_4_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_4" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_4_3" ng-model="vm.property.men3_11_4_3" />
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -792,21 +682,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_5" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_5_1" ng-model="vm.property.men3_11_5_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_5" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_5_2" ng-model="vm.property.men3_11_5_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_5" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_5_3" ng-model="vm.property.men3_11_5_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -822,21 +712,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_6" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_6_1" ng-model="vm.property.men3_11_6_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_6" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_6_2" ng-model="vm.property.men3_11_6_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_6" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_6_3" ng-model="vm.property.men3_11_6_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -852,21 +742,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_7" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_7_1" ng-model="vm.property.men3_11_7_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_7" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_7_2" ng-model="vm.property.men3_11_7_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_7" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_7_3" ng-model="vm.property.men3_11_7_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -882,21 +772,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_8" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_8_1" ng-model="vm.property.men3_11_8_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_8" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_8_2" ng-model="vm.property.men3_11_8_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_8" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_8_3" ng-model="vm.property.men3_11_8_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -912,21 +802,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_9" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_9_1" ng-model="vm.property.men3_11_9_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_9" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_9_2" ng-model="vm.property.men3_11_9_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_9" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_9_3" ng-model="vm.property.men3_11_9_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -942,21 +832,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_10" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_10_1" ng-model="vm.property.men3_11_10_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_10" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_10_2" ng-model="vm.property.men3_11_10_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_10" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_10_3" ng-model="vm.property.men3_11_10_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -972,21 +862,21 @@
                         <div class="col-sm-3">
                             (申請部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_11" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_11_1" ng-model="vm.property.men3_11_11_1"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             (申請以外の部分)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_11" value="" onblur="sum_txt_menseki()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_11_2" ng-model="vm.property.men3_11_11_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_goukei_11" value="" readonly >
+                                <input type="number" class="form-control" ng-blur="vm.goukei()" name="men3_11_11_3" ng-model="vm.property.men3_11_11_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -1006,7 +896,7 @@
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_nobe" value="" onblur="txt_menseki_nobe()"/>
+                                <input type="number"class="form-control" ng-blur="vm.goukei()" name="men3_11_12" ng-model="vm.property.men3_11_12"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
@@ -1026,7 +916,7 @@
                         <div class="col-sm-4">
                             (合計)
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_youseki" value="" readonly/>
+                                <input type="number"class="form-control" ng-blur="vm.goukei()" name="men3_11_13" ng-model="vm.property.men3_11_13"/>
                                 <span class="input-group-addon add-on flat">%</span> 
                             </div>
                         </div>
@@ -1048,7 +938,7 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="txt_uketsuke_go" />
+                            <input type="number" class="form-control" name="men3_12_1" ng-model="vm.property.men3_12_1"/>
                         </div>
                         <div class="col-sm-12 space">
                         </div>
@@ -1060,7 +950,7 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="txt_uketsuke_go" />
+                            <input type="number" class="form-control" name="men3_12_2" ng-model="vm.property.men3_12_2"/>
                         </div>
                     </div>
                 </div>
@@ -1082,14 +972,14 @@
                         <div class="col-sm-4">
                             (申請に係る建築物)<br/>
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" />
+                                <input type="number" class="form-control" name="men3_13_1_1" ng-model="vm.property.men3_13_1_1"/>
                                 <span class="input-group-addon add-on flat">m</span> 
                             </div>
                         </div>
                         <div class="col-sm-4">
                             (他の建築物)<br/>
                             <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_menseki_igai_1" value="" />
+                                <input type="number" class="form-control" name="men3_13_1_2" ng-model="vm.property.men3_13_1_2"/>
                                 <span class="input-group-addon add-on flat">m</span> 
                             </div>
                         </div>
@@ -1108,7 +998,7 @@
                             (申請に係る建築物)<br/>
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">地上</span>
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" />
+                                <input type="number" class="form-control" name="men3_13_2_1" ng-model="vm.property.men3_13_2_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
@@ -1116,7 +1006,7 @@
                             (他の建築物)<br/>
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">地上</span>
-                                <input type="text" class="form-control" id="txt_menseki_igai_1" value="" />
+                                <input type="number" class="form-control" name="men3_13_2_2" ng-model="vm.property.men3_13_2_2"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
@@ -1130,7 +1020,7 @@
                             (申請に係る建築物)<br/>
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">地下</span>
-                                <input type="text" class="form-control" id="txt_menseki_shinsei_1" value="" />
+                                <input type="number" class="form-control" name="men3_13_2_3" ng-model="vm.property.men3_13_2_3"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
@@ -1138,7 +1028,7 @@
                             (他の建築物)<br/>
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">地下</span>
-                                <input type="text" class="form-control" id="txt_menseki_igai_1" value="" />
+                                <input type="number" class="form-control" name="men3_13_2_4" ng-model="vm.property.men3_13_2_4"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
@@ -1154,7 +1044,7 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-4">
-                            <select class="form-control">
+                            <select class="form-control" name="men3_13_3_1" ng-model="vm.property.men3_13_3_1">
                                 <option>鉄骨鉄筋コンクリート造</option>
                                 <option>鉄筋コンクリート造</option>
                                 <option>鉄骨造</option>
@@ -1166,7 +1056,7 @@
                         <div class="col-sm-4">
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">一部</span>
-                                <select class="form-control">
+                                <select class="form-control" name="men3_13_3_2" ng-model="vm.property.men3_13_3_2">
                                     <option>鉄骨鉄筋コンクリート造</option>
                                     <option>鉄筋コンクリート造</option>
                                     <option>鉄骨造</option>
@@ -1189,10 +1079,10 @@
                         </div>
                         <div class="col-sm-4">
                             <label class="checkbox-inline">
-                                <input type="checkbox" value="">有
+                                <input type="radio" name="men3_13_4" ng-model="vm.property.men3_13_4" value="有"> 有
                             </label>
                             <label class="checkbox-inline">
-                                <input type="checkbox" value="">無
+                                <input type="radio" name="men3_13_4" ng-model="vm.property.men3_13_4" value="無"> 無
                             </label>
                         </div>
                         <div class="col-sm-4">
@@ -1207,15 +1097,10 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-10">
-                            <label class="checkbox-inline">
-                                <input type="checkbox" value="">道路高さ制限不適用
-                            </label><br/>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" value="">隣地高さ制限不適用
-                            </label><br/>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" value="">北側高さ制限不適用
-                            </label><br/>
+                            <label class="col-sm-12" ng-repeat="ck in vm.data_men3_13_5">
+                                <input type="checkbox" checklist-model="vm.property.men3_13_5" checklist-value="ck">
+                                {{ ck }}&nbsp;
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -1226,10 +1111,10 @@
             <div class="form-group row">
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">14.許可・認定等</label>
                 <div class="col-sm-12">
-                    <textarea class="form-control" rows="3"></textarea>
-                </div>
-                <div class="col-sm-12">
-                    <hr>
+                    <select class="form-control" data-width="fit"  ng-change="vm.changeSelect3_14()" name="men3_14_1" ng-model="vm.property.men3_14_1" ng-options="p as p for p in vm.data_men3_14">
+                    </select>
+                    <br>
+                    <textarea class="form-control" rows="3" name="men3_14" ng-model="vm.property.men3_14"></textarea>
                 </div>
             </div>
         </div>

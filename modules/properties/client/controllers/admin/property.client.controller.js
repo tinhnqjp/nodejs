@@ -5,9 +5,9 @@
     .module('properties.admin')
     .controller('PropertiesAdminController', PropertiesAdminController);
 
-  PropertiesAdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'Authentication', 'Notification', 'PropertiesService'];
+  PropertiesAdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'Authentication', 'Notification', 'PropertiesService', 'LawsApi'];
 
-  function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification, PropertiesService) {
+  function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification, PropertiesService, LawsApi) {
     var vm = this;
 
     vm.property = property;
@@ -15,16 +15,75 @@
     vm.form = {};
     vm.save = save;
     vm.submitted = false;
+    vm.listMasterProperties = [];
+    vm.data_men3_3;
+    vm.data_men3_4;
+    vm.data_men3_7_2;
+    vm.data_men3_8;
+    vm.data_men3_9;
+    vm.data_men3_14;
+    vm.data_men3_13_5 = ['道路高さ制限不適用', '隣地高さ制限不適用', '北側高さ制限不適用'];
+    vm.data_men4_2;
     initData();
 
     function initData() {
+      mathProperties();
       vm.property.men10 = new Date(vm.property.men10);
+
+      LawsApi.listMasterProperties()
+        .then((res) => {
+          vm.listMasterProperties = res.data;
+          vm.data_men3_3 = getOptionsFormMaster(3, 3);
+          vm.data_men3_4 = getOptionsFormMaster(3, 4);
+          vm.data_men3_7_2 = getOptionsFormMaster(3, 7, 2);
+          vm.data_men3_8 = getOptionsFormMaster(3, 8);
+          vm.data_men3_9 = getOptionsFormMaster(3, 9);
+          vm.data_men3_14 = getOptionsFormMaster(3, 14);
+          if (vm.property.men3_8_1) {
+            vm.selectPropertyParent(vm.property.men3_8_1);
+          }
+
+          vm.data_men4_2 = getOptionsFormMaster(4, 2);
+          if (vm.property.men4_2_1) {
+            vm.selectPropertyParent(vm.property.men4_2_1);
+          }
+        })
+        .catch((res) => {
+          $scope.nofityError('マスターデータのロードが失敗しました。');
+        });
     }
+
+    function getOptionsFormMaster(_bukken, _daikoumoku, _kokoumoku) {
+      var condition = { bukken: _bukken, daikoumoku: _daikoumoku };
+      if (_kokoumoku) {
+        condition.kokoumoku = _kokoumoku;
+      }
+      var filter = _.filter(vm.listMasterProperties, condition)[0];
+      if (filter) {
+        try {
+          var json = filter.json.replace(/'/g, '"');
+          return JSON.parse(json);
+        } catch (error) {
+          $scope.nofityError('Format json' + error);
+          return null;
+        }
+      }
+      return null;
+    }
+
+    function mathProperties() {
+      vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
+    }
+
+    vm.selectPropertyParent = function (value) {
+      var options = _.find(vm.data_men3_8, {
+        name: value
+      });
+      vm.data_men3_8.child_options = options.child;
+    };
 
     // Save Property
     function save(isValid) {
-      console.log(isValid);
-      console.log(vm.form.propertyForm);
       if (!isValid) {
         vm.submitted = true;
         $scope.$broadcast('show-errors-check-validity', 'vm.form.propertyForm');
@@ -67,6 +126,78 @@
       }
 
       return '';
+    };
+
+    vm.changeSelect3_14 = () => {
+      var str = vm.property.men3_14;
+      if (str) {
+        str += ',';
+      }
+      str += vm.property.men3_14_1;
+      vm.property.men3_14_1 = null;
+      vm.property.men3_14 = str;
+    };
+
+    /* math logic */
+    vm.plusFor3_7_5 = () => {
+      vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
+      vm.property.men3_7_5_2 = vm.property.men3_7_1_5 + vm.property.men3_7_1_6 + vm.property.men3_7_1_7 + vm.property.men3_7_1_8;
+      // 10.建築面積
+      vm.goukei();
+    };
+
+    function roundUp(number, digits) {
+      var factor = Math.pow(10, digits);
+      return Math.ceil(number * factor) / factor;
+    }
+
+    function percent(number) {
+      return roundUp(number * 100, 2);
+    }
+
+    function percentRoundLogic(input) {
+      // =IF(AB271,ROUNDUP(BE280/AB271,4),IF(AB272,ROUNDUP(BE280/AB272,4),""))
+      if (vm.property.men3_7_5_1) {
+        return percent(input / vm.property.men3_7_5_1);
+      } else if (vm.property.men3_7_5_2) {
+        return percent(input / vm.property.men3_7_5_2);
+      }
+      return 0;
+    }
+
+    vm.goukei = () => {
+      // 10.建築面積  ｲ.建築面積
+      vm.property.men3_10_1_3 = vm.property.men3_10_1_1 + vm.property.men3_10_1_2;
+      // ﾛ.建蔽率
+      // men3_10_1_3 = BE280
+      // men3_7_5_1 = AB271
+      // men3_7_5_2 = AB272
+      vm.property.men3_10_2 = percentRoundLogic(vm.property.men3_10_1_3);
+      // 11.延べ面積 ｲ.建築物全体
+      vm.property.men3_11_1_3 = vm.property.men3_11_1_1 + vm.property.men3_11_1_2;
+      // ﾛ.地階の住宅又は老人ホーム、福祉ホームその他これらに類するものの部分
+      vm.property.men3_11_2_3 = vm.property.men3_11_2_1 + vm.property.men3_11_2_2;
+      // ﾊ.エレベーターの昇降路の部分
+      vm.property.men3_11_3_3 = vm.property.men3_11_3_1 + vm.property.men3_11_3_2;
+      // ﾆ.共同住宅の共用の廊下等の部分
+      vm.property.men3_11_4_3 = vm.property.men3_11_4_1 + vm.property.men3_11_4_2;
+      // ﾎ.自動車車庫等の部分
+      vm.property.men3_11_5_3 = vm.property.men3_11_5_1 + vm.property.men3_11_5_2;
+      // ﾍ.備蓄倉庫の部分
+      vm.property.men3_11_6_3 = vm.property.men3_11_6_1 + vm.property.men3_11_6_2;
+      // ﾄ.蓄電池の設置部分
+      vm.property.men3_11_7_3 = vm.property.men3_11_7_1 + vm.property.men3_11_7_2;
+      // ﾁ.自家発電設備の設置部分
+      vm.property.men3_11_8_3 = vm.property.men3_11_8_1 + vm.property.men3_11_8_2;
+      // ﾘ.貯水槽の設置部分
+      vm.property.men3_11_9_3 = vm.property.men3_11_9_1 + vm.property.men3_11_9_2;
+      // ﾇ.住宅の部分
+      vm.property.men3_11_10_3 = vm.property.men3_11_10_1 + vm.property.men3_11_10_2;
+      // ﾙ.老人ホーム、福祉ホームその他これらに類するものの部分
+      vm.property.men3_11_11_3 = vm.property.men3_11_11_1 + vm.property.men3_11_11_2;
+      // ｦ.延べ面積
+      // ﾜ.容積率
+      vm.property.men3_11_13 = percentRoundLogic(vm.property.men3_11_12);
     };
   // end controller
   }

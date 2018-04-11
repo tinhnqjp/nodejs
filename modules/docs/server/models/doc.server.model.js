@@ -20,6 +20,9 @@ var DocSchema = new Schema({
   form1_ro: [],
   form1_ha: [],
   form1_item: [],
+  form4_ro: [],
+  form4_ha: [],
+  form4_item: [],
   property: {
     type: Schema.ObjectId,
     ref: 'Property'
