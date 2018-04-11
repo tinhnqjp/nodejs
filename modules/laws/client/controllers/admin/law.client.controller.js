@@ -238,6 +238,9 @@
      * @param {*} rule_field
      */
     vm.selectBukken = function (rule_field) {
+      rule_field.deuta1 = null;
+      rule_field.deuta2 = null;
+      rule_field.properties = [];
       rule_field.optionDai = createProperties(rule_field, 1);
     };
 
@@ -248,6 +251,8 @@
      */
     vm.selectDai = function (rule_field) {
       var tmpPropertiesKo = createProperties(rule_field, 2);
+      rule_field.deuta2 = null;
+      rule_field.optionKo = null;
       if (rule_field.deuta1 && tmpPropertiesKo[0].kokoumoku_name) {
         // has kokoumoku
         rule_field.optionKo = _.uniq(tmpPropertiesKo, 'kokoumoku');
@@ -538,6 +543,13 @@
 
     $scope.getValidationByFind = function (id) {
       return vm.typeValidation.find(x => x.id === id);
+    };
+
+    $scope.checkContains = function (arraySource, value) {
+      var index = arraySource.indexOf(value);
+      if (index === -1)
+        return false;
+      return true;
     };
   }
 
