@@ -23,7 +23,13 @@
     vm.data_men3_9;
     vm.data_men3_14;
     vm.data_men3_13_5 = ['道路高さ制限不適用', '隣地高さ制限不適用', '北側高さ制限不適用'];
-    vm.data_men4_2;
+    vm.data_men4_2_1;
+    vm.data_men4_2_2;
+    vm.data_men4_2_3;
+    vm.data_men4_3 = ['新築', '増築', '改築', '移転', '用途変更', '大規模の修繕', '大規模の模様替'];
+    vm.data_men4_5;
+    vm.data_men4_8;
+    vm.data_men4_9_5 = ['建築基準法施行令第136条の2の11第1号イ', '建築基準法施行令第136条の2の11第1号ロ'];
     initData();
 
     function initData() {
@@ -39,14 +45,25 @@
           vm.data_men3_8 = getOptionsFormMaster(3, 8);
           vm.data_men3_9 = getOptionsFormMaster(3, 9);
           vm.data_men3_14 = getOptionsFormMaster(3, 14);
+          var dataSelectPropertyParent = getOptionsFormMaster(4, 2);
           if (vm.property.men3_8_1) {
-            vm.selectPropertyParent(vm.property.men3_8_1);
+            vm.selectPropertyParent(vm.property.men3_8_1, vm.data_men3_8);
           }
 
-          vm.data_men4_2 = getOptionsFormMaster(4, 2);
-          if (vm.property.men4_2_1) {
-            vm.selectPropertyParent(vm.property.men4_2_1);
+          vm.data_men4_2_1 = _.clone(dataSelectPropertyParent);
+          if (vm.property.men4_2_1_1) {
+            vm.selectPropertyParent4_2_1();
           }
+          vm.data_men4_2_2 = _.clone(dataSelectPropertyParent);
+          if (vm.property.men4_2_2_1) {
+            vm.selectPropertyParent4_2_2();
+          }
+          vm.data_men4_2_3 = dataSelectPropertyParent;
+          if (vm.property.men4_2_3_1) {
+            vm.selectPropertyParent4_2_3();
+          }
+          vm.data_men4_5 = getOptionsFormMaster(4, 5);
+          vm.data_men4_8 = getOptionsFormMaster(4, 8);
         })
         .catch((res) => {
           $scope.nofityError('マスターデータのロードが失敗しました。');
@@ -75,11 +92,31 @@
       vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
     }
 
-    vm.selectPropertyParent = function (value) {
-      var options = _.find(vm.data_men3_8, {
+    vm.selectPropertyParent = function (value, data) {
+      //console.log(value, data);
+      var options = _.find(data, {
         name: value
       });
-      vm.data_men3_8.child_options = options.child;
+      data.child_options = options.child;
+    };
+
+    vm.selectPropertyParent4_2_1 = function () {
+      var options = _.find(vm.data_men4_2_1, {
+        name: vm.property.men4_2_1_1
+      });
+      vm.data_men4_2_1.child_options = options.child;
+    };
+    vm.selectPropertyParent4_2_2 = function () {
+      var options = _.find(vm.data_men4_2_2, {
+        name: vm.property.men4_2_2_1
+      });
+      vm.data_men4_2_2.child_options = options.child;
+    };
+    vm.selectPropertyParent4_2_3 = function () {
+      var options = _.find(vm.data_men4_2_3, {
+        name: vm.property.men4_2_3_1
+      });
+      vm.data_men4_2_3.child_options = options.child;
     };
 
     // Save Property
@@ -164,7 +201,7 @@
       }
       return 0;
     }
-
+    // form 3
     vm.goukei = () => {
       // 10.建築面積  ｲ.建築面積
       vm.property.men3_10_1_3 = vm.property.men3_10_1_1 + vm.property.men3_10_1_2;
@@ -199,6 +236,56 @@
       // ﾜ.容積率
       vm.property.men3_11_13 = percentRoundLogic(vm.property.men3_11_12);
     };
+
+    function int(value) {
+      if(!value) return 0;
+      return parseInt(value, 10);
+    }
+    // form 4-10
+    vm.goukei_4_10 = () => {
+      vm.property.men4_10_1_4 = int(vm.property.men4_10_1_2) + int(vm.property.men4_10_1_3);
+      vm.property.men4_10_2_4 = int(vm.property.men4_10_2_2) + int(vm.property.men4_10_2_3);
+      vm.property.men4_10_3_4 = int(vm.property.men4_10_3_2) + int(vm.property.men4_10_3_3);
+      vm.property.men4_10_4_4 = int(vm.property.men4_10_4_2) + int(vm.property.men4_10_4_3);
+      vm.property.men4_10_5_4 = int(vm.property.men4_10_5_2) + int(vm.property.men4_10_5_3);
+      vm.property.men4_10_6_4 = int(vm.property.men4_10_6_2) + int(vm.property.men4_10_6_3);
+      vm.property.men4_10_7_4 = int(vm.property.men4_10_7_2) + int(vm.property.men4_10_7_3);
+      vm.property.men4_10_8_4 = int(vm.property.men4_10_8_2) + int(vm.property.men4_10_8_3);
+      vm.property.men4_10_9_4 = int(vm.property.men4_10_9_2) + int(vm.property.men4_10_9_3);
+
+      vm.property.men4_10_10_2 = 
+        int(vm.property.men4_10_1_2)
+        + int(vm.property.men4_10_2_2)
+        + int(vm.property.men4_10_3_2)
+        + int(vm.property.men4_10_4_2)
+        + int(vm.property.men4_10_5_2)
+        + int(vm.property.men4_10_6_2)
+        + int(vm.property.men4_10_7_2)
+        + int(vm.property.men4_10_8_2)
+        + int(vm.property.men4_10_9_2);
+
+      vm.property.men4_10_10_3 = 
+        int(vm.property.men4_10_1_3)
+        + int(vm.property.men4_10_2_3)
+        + int(vm.property.men4_10_3_3)
+        + int(vm.property.men4_10_4_3)
+        + int(vm.property.men4_10_5_3)
+        + int(vm.property.men4_10_6_3)
+        + int(vm.property.men4_10_7_3)
+        + int(vm.property.men4_10_8_3)
+        + int(vm.property.men4_10_9_3);
+
+      vm.property.men4_10_10_4 = 
+        int(vm.property.men4_10_1_4)
+        + int(vm.property.men4_10_2_4)
+        + int(vm.property.men4_10_3_4)
+        + int(vm.property.men4_10_4_4)
+        + int(vm.property.men4_10_5_4)
+        + int(vm.property.men4_10_6_4)
+        + int(vm.property.men4_10_7_4)
+        + int(vm.property.men4_10_8_4)
+        + int(vm.property.men4_10_9_4);
+    }
   // end controller
   }
 }());

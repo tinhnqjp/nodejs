@@ -162,7 +162,7 @@ var PropertySchema = new Schema({
   men3_14: { type: String },
   // form men 4
   // 1.番号
-  men4_1: { type: String },
+  men4_1: { type: Number },
   // 2.用途
   men4_2_1_1: { type: String },
   men4_2_1_2: { type: String },
@@ -172,7 +172,7 @@ var PropertySchema = new Schema({
   men4_2_2_3: { type: String },
   men4_2_3_1: { type: String },
   men4_2_3_2: { type: String },
-  men4_2_4_3: { type: String },
+  men4_2_3_3: { type: String },
   // 3.工事種別
   men4_3: [{ type: String }],
   // 4.構造
@@ -181,13 +181,77 @@ var PropertySchema = new Schema({
   // 5.耐火建築物等
   men4_5: [{ type: String }],
   // 6.階数
-  men4_6_1: { type: String },
-  men4_6_2: { type: String },
-  men4_6_3: { type: String },
-  men4_6_4: { type: String },
+  men4_6_1: { type: Number },
+  men4_6_2: { type: Number },
+  men4_6_3: { type: Number },
+  men4_6_4: { type: Number },
   // 7.高さ
-  men4_7_1: { type: String },
-  men4_7_2: { type: String },
+  men4_7_1: { type: Number },
+  men4_7_2: { type: Number },
+  // 8.建築設備の種類
+  men4_8: { type: String },
+  // 9.確認の特例
+  // ｲ.建築基準法第６条の３第１項ただし書又は法１８条第４項ただし書の規定による審査の特例の適用の有無
+  men4_9_1: { type: String },
+  // ﾛ.建築基準法第６条の４第１項の規定による確認の特例の適用の有無
+  men4_9_2: { type: String },
+  // ﾊ.建築基準法施行令第１０条各号に掲げる建築物の区分
+  men4_9_3: { type: Number },
+  // ﾆ.認定型式の認定番号
+  men4_9_4: { type: Number },
+  // ﾎ.適合する一連の規定の区分
+  men4_9_5: [{ type: String }],
+  // ﾍ.認証型式部材等認証番号
+  men4_9_6: { type: Number },
+
+  men4_10_1_1: { type: Number },
+  men4_10_1_2: { type: Number },
+  men4_10_1_3: { type: Number },
+  men4_10_1_4: { type: Number },
+  men4_10_2_1: { type: Number },
+  men4_10_2_2: { type: Number },
+  men4_10_2_3: { type: Number },
+  men4_10_2_4: { type: Number },
+  men4_10_3_1: { type: Number },
+  men4_10_3_2: { type: Number },
+  men4_10_3_3: { type: Number },
+  men4_10_3_4: { type: Number },
+  men4_10_4_1: { type: Number },
+  men4_10_4_2: { type: Number },
+  men4_10_4_3: { type: Number },
+  men4_10_4_4: { type: Number },
+  men4_10_5_1: { type: Number },
+  men4_10_5_2: { type: Number },
+  men4_10_5_3: { type: Number },
+  men4_10_5_4: { type: Number },
+  men4_10_6_1: { type: Number },
+  men4_10_6_2: { type: Number },
+  men4_10_6_3: { type: Number },
+  men4_10_6_4: { type: Number },
+  men4_10_7_1: { type: Number },
+  men4_10_7_2: { type: Number },
+  men4_10_7_3: { type: Number },
+  men4_10_7_4: { type: Number },
+  men4_10_8_1: { type: Number },
+  men4_10_8_2: { type: Number },
+  men4_10_8_3: { type: Number },
+  men4_10_8_4: { type: Number },
+  men4_10_9_1: { type: Number },
+  men4_10_9_2: { type: Number },
+  men4_10_9_3: { type: Number },
+  men4_10_9_4: { type: Number },
+  // men4_10_10_1: { type: Number },
+  men4_10_10_2: { type: Number },
+  men4_10_10_3: { type: Number },
+  men4_10_10_4: { type: Number },
+
+  men4_9_11: { type: String },
+  men4_9_12: { type: String },
+  men4_9_13: { type: String },
+  men4_9_14: { type: String },
+  men4_9_15: { type: String },
+  men4_9_16: { type: String },
+  men4_9_17: { type: String },
 });
 
 mongoose.model('Property', PropertySchema);

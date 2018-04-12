@@ -23,12 +23,12 @@
                     <div class="input-group form-inline panel">
                         <span class="input-group-addon">分類</span>
                         <select class="form-control" name="men4_2_1_1" ng-model="vm.property.men4_2_1_1" 
-                        ng-change="vm.selectPropertyParent(vm.property.men4_2_1_1)"
-                        ng-options="o.name as o.name for o in vm.data_men4_2" data-width="fit"></select>
+                        ng-change="vm.selectPropertyParent4_2_1()"
+                        ng-options="o.name as o.name for o in vm.data_men4_2_1" data-width="fit"></select>
 
                         <span class="input-group-addon">区分</span>
                         <select class="form-control" name="men4_2_1_2" ng-model="vm.property.men4_2_1_2"
-                        ng-options="o as o for o in vm.data_men4_2.child_options" data-width="fit"></select>
+                        ng-options="o as o for o in vm.data_men4_2_1.child_options" data-width="fit"></select>
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -40,24 +40,36 @@
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">
                     <div class="input-group form-inline panel">
+                        <span class="input-group-addon">分類</span>
+                        <select class="form-control" name="men4_2_2_1" ng-model="vm.property.men4_2_2_1" 
+                        ng-change="vm.selectPropertyParent4_2_2()"
+                        ng-options="o.name as o.name for o in vm.data_men4_2_2" data-width="fit"></select>
+
                         <span class="input-group-addon">区分</span>
-                        <input type="text" class="form-control" id="txt_uketsuke_go" />
+                        <select class="form-control" name="men4_2_2_2" ng-model="vm.property.men4_2_2_2"
+                        ng-options="o as o for o in vm.data_men4_2_2.child_options" data-width="fit"></select>
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_2_2_3" ng-model="vm.property.men4_2_2_3">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-4">
                     <div class="input-group form-inline panel">
+                        <span class="input-group-addon">分類</span>
+                        <select class="form-control" name="men4_2_3_1" ng-model="vm.property.men4_2_3_1" 
+                        ng-change="vm.selectPropertyParent4_2_3()"
+                        ng-options="o.name as o.name for o in vm.data_men4_2_3" data-width="fit"></select>
+
                         <span class="input-group-addon">区分</span>
-                        <input type="text" class="form-control" id="txt_uketsuke_go" />
+                        <select class="form-control" name="men4_2_1_2" ng-model="vm.property.men4_2_3_2"
+                        ng-options="o as o for o in vm.data_men4_2_3.child_options" data-width="fit"></select>
                     </div>
                 </div>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_2_3_3" ng-model="vm.property.men4_2_3_3">
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -68,26 +80,9 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">3.工事種別</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">新築
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">増築
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">改築
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">移転
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">用途変更
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">大規模の修繕
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">大規模の模様替
+                    <label class="col-sm-12" ng-repeat="ck in vm.data_men4_3">
+                        <input type="checkbox" checklist-model="vm.property.men4_3" checklist-value="ck">
+                        {{ ck }}&nbsp;
                     </label>
                 </div>
                 <div class="col-sm-12">
@@ -99,12 +94,26 @@
                 <div class="col-sm-2">
                 </div>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <select class="form-control" name="men4_4_1" ng-model="vm.property.men4_4_1">
+                        <option>鉄骨鉄筋コンクリート造</option>
+                        <option>鉄筋コンクリート造</option>
+                        <option>鉄骨造</option>
+                        <option>補強コンクリートブロック造</option>
+                        <option>組積造</option>
+                        <option>木造</option>
+                    </select>
                 </div>
                 <div class="col-sm-4">
                     <div class="input-group form-inline panel">
-                    <span class="input-group-addon">一部</span>
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                        <span class="input-group-addon">一部</span>
+                        <select class="form-control" name="men4_4_2" ng-model="vm.property.men4_4_2">
+                            <option>鉄骨鉄筋コンクリート造</option>
+                            <option>鉄筋コンクリート造</option>
+                            <option>鉄骨造</option>
+                            <option>補強コンクリートブロック造</option>
+                            <option>組積造</option>
+                            <option>木造</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-sm-2"></div>
@@ -116,29 +125,9 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">5.耐火建築物等</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">耐火建築物
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">準耐火建築物（ｲ-1）
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">準耐火建築物（ｲ-2）
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">準耐火建築物（ﾛ-1）
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">準耐火建築物（ﾛ-2）
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">耐火構造建築物
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">特定避難時間倒壊等防止建築物
-                    </label><br/>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" value="">その他
+                    <label class="col-sm-12" ng-repeat="ck in vm.data_men4_5">
+                        <input type="checkbox" checklist-model="vm.property.men4_5" checklist-value="ck">
+                        {{ ck }}&nbsp;
                     </label>
                 </div>
                 <div class="col-sm-12">
@@ -150,13 +139,13 @@
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">
                     <label class="sub_title_label">ｲ.地階を除く階数</label>
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="number" class="form-control" name="men4_6_1" ng-model="vm.property.men4_6_1">
                     <label class="sub_title_label">ﾛ.地階の階数</label>
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="number" class="form-control" name="men4_6_2" ng-model="vm.property.men4_6_2">
                     <label class="sub_title_label">ﾊ.昇降機塔等の階の数</label>
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="number" class="form-control" name="men4_6_3" ng-model="vm.property.men4_6_3">
                     <label class="sub_title_label">ﾆ.地階の倉庫等の階の数</label>
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="number" class="form-control" name="men4_6_4" ng-model="vm.property.men4_6_4">
                 </div>
                 <div class="col-sm-7"></div>
                 <div class="col-sm-12">
@@ -168,9 +157,9 @@
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">
                     <label class="sub_title_label">ｲ.最高の高さ</label>
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_7_1" ng-model="vm.property.men4_7_1">
                     <label class="sub_title_label">ﾛ.最高の軒の高さ</label>
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_7_2" ng-model="vm.property.men4_7_2">
                 </div>
                 <div class="col-sm-6"></div>
                 <div class="col-sm-12">
@@ -181,7 +170,8 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">8.建築設備の種類</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <select class="form-control" name="men4_2_1_2" ng-model="vm.property.men4_8"
+                        ng-options="o as o for o in vm.data_men4_8" data-width="fit"></select>
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -201,11 +191,10 @@
                             </label>
                             <br/>
                             <label class="checkbox-inline">
-                                <input type="checkbox" value="">有
+                                <input type="radio" name="men4_9_1" ng-model="vm.property.men4_9_1" value="有"> 有
                             </label>
-                            <br/>
                             <label class="checkbox-inline">
-                                <input type="checkbox" value="">無
+                                <input type="radio" name="men4_9_1" ng-model="vm.property.men4_9_1" value="無"> 無
                             </label>
                         </div>
                         <div class="col-sm-12">
@@ -214,11 +203,10 @@
                             </label>
                             <br/>
                             <label class="checkbox-inline">
-                                <input type="checkbox" value="">有
+                                <input type="radio" name="men4_9_2" ng-model="vm.property.men4_9_2" value="有"> 有
                             </label>
-                            <br/>
                             <label class="checkbox-inline">
-                                <input type="checkbox" value="">無
+                                <input type="radio" name="men4_9_2" ng-model="vm.property.men4_9_2" value="無"> 無
                             </label>
                         </div>
                         <div class="col-sm-12">
@@ -228,7 +216,7 @@
                             <br/>
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">第</span>
-                                <input type="text" class="form-control" id="txt_uketsuke_go" />
+                                <input type="number" class="form-control" name="men4_9_3" ng-model="vm.property.men4_9_3"/>
                                 <span class="input-group-addon add-on flat">号</span> 
                             </div>
                         </div>
@@ -239,7 +227,7 @@
                             <br/>
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">第</span>
-                                <input type="text" class="form-control" id="txt_uketsuke_go" />
+                                <input type="number" class="form-control" name="men4_9_4" ng-model="vm.property.men4_9_4"/>
                                 <span class="input-group-addon add-on flat">号</span> 
                             </div>
                         </div>
@@ -248,12 +236,9 @@
                                 ﾎ.適合する一連の規定の区分
                             </label>
                             <br/>
-                            <label>
-                                <input type="checkbox" value="">建築基準法施行令第136条の2の11第1号イ
-                            </label>
-                            <br/>
-                            <label>
-                                <input type="checkbox" value="">建築基準法施行令第136条の2の11第1号ロ
+                            <label class="col-sm-12" ng-repeat="ck in vm.data_men4_9_5">
+                                <input type="checkbox" checklist-model="vm.property.men4_9_5" checklist-value="ck">
+                                {{ ck }}&nbsp;
                             </label>
                         </div>
                         <div class="col-sm-12">
@@ -261,7 +246,7 @@
                                 ﾍ.認証型式部材等認証番号
                             </label>
                             <br/>
-                            <input type="text" class="form-control" id="txt_uketsuke_go" />
+                            <input type="number" class="form-control" name="men4_9_6" ng-model="vm.property.men4_9_6"/>
                         </div>
                     </div>
                 </div>
@@ -269,335 +254,311 @@
                     <hr>
                 </div>
             </div>
-            <script type="text/javascript">
-
-                function sum_txt_yaku() {
-                    var row = document.getElementsByClassName("txt_yaku");
-                    var shinsei_sum = 0;
-                    var igai_sum = 0;
-                    var sum = 0;
-                    for(var i=1;i<=row.length;i++){
-                        var shinsei = document.getElementById('txt_yaku_shinsei_' + i).value;
-                        var igai = document.getElementById('txt_yaku_igai_' + i).value;
-                        goukei = +shinsei + +igai;
-
-                        if (goukei > 0) {
-                            document.getElementById('txt_yaku_goukei_' + i).value =  parseFloat(goukei).toFixed(2);    
-                        }
-                        if (shinsei > 0) {
-                            document.getElementById('txt_yaku_shinsei_' + i).value =  parseFloat(shinsei).toFixed(2);    
-                        }
-                        if (igai > 0) {
-                            document.getElementById('txt_yaku_igai_' + i).value =  parseFloat(igai).toFixed(2);
-                        }
-
-                        shinsei_sum += +shinsei;
-                        igai_sum += +igai;
-                        sum += goukei;
-                    }
-
-                    document.getElementById('txt_yaku_shinsei').innerHTML =  parseFloat(shinsei_sum).toFixed(2);
-                    document.getElementById('txt_yaku_igai').innerHTML =  parseFloat(igai_sum).toFixed(2);
-                    document.getElementById('txt_yaku_goukei').innerHTML =  parseFloat(sum).toFixed(2);
-                }
-            </script>
             <div class="form-group row">
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">10.床 面 積</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
+                    <!-- header -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
-                            &nbsp;
-                            <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_yaku_kai_1" value=""/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
                         </div>
                         <div class="col-sm-2">
                             (申請部分)
-                            <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_1" value="" onblur="sum_txt_yaku()"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
                         </div>
                         <div class="col-sm-2">
                             (申請以外の部分)
-                            <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_yaku_igai_1" value="" onblur="sum_txt_yaku()"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
                         </div>
                         <div class="col-sm-2">
                             (合計)
-                            <div class="input-group form-inline panel">
-                                <input type="text" class="form-control" id="txt_yaku_goukei_1" value="" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
                         </div>
                     </div>
-
+                    <!-- header end-->
                     <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                        <label for="txtTodo" class="col-sm-2 col-form-label">ｲ.階 別</label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_2" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_1_1" ng-model="vm.property.men4_10_1_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_2" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_1_2" ng-model="vm.property.men4_10_1_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_2" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_1_3" ng-model="vm.property.men4_10_1_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_2" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_1_4" ng-model="vm.property.men4_10_1_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
+                    <!-- No.2 -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_3" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_2_1" ng-model="vm.property.men4_10_2_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_3" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_2_2" ng-model="vm.property.men4_10_2_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_3" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_2_3" ng-model="vm.property.men4_10_2_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_3" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_2_4" ng-model="vm.property.men4_10_2_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
+                    <!-- No.2 end-->
+                    <!-- No.3 -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_4" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_3_1" ng-model="vm.property.men4_10_3_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_4" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_3_2" ng-model="vm.property.men4_10_3_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_4" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_3_3" ng-model="vm.property.men4_10_3_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_4" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_3_4" ng-model="vm.property.men4_10_3_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
+                    <!-- No.3 end-->
+                    <!-- No.4 -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_5" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_4_1" ng-model="vm.property.men4_10_4_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_5" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_4_2" ng-model="vm.property.men4_10_4_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_5" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_4_3" ng-model="vm.property.men4_10_4_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_5" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_4_4" ng-model="vm.property.men4_10_4_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
+                    <!-- No.4 end-->
+                    <!-- No.5 -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_6" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_1" ng-model="vm.property.men4_10_5_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_6" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_2" ng-model="vm.property.men4_10_5_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_6" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_3" ng-model="vm.property.men4_10_5_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_6" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_4" ng-model="vm.property.men4_10_5_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
+                    <!-- No.5 end-->
+                    <!-- No.6 -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_7" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_1" ng-model="vm.property.men4_10_6_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_7" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_2" ng-model="vm.property.men4_10_6_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_7" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_3" ng-model="vm.property.men4_10_6_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_7" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_4" ng-model="vm.property.men4_10_6_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
+                    <!-- No.6 end-->
+                    <!-- No.7 -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_8" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_1" ng-model="vm.property.men4_10_7_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_8" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_2" ng-model="vm.property.men4_10_7_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_8" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_3" ng-model="vm.property.men4_10_7_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_8" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_4" ng-model="vm.property.men4_10_7_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
+                    <!-- No.7 end-->
+                    <!-- No.8 -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_kai_9" value="" />
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_1" ng-model="vm.property.men4_10_8_1"/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_shinsei_9" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_2" ng-model="vm.property.men4_10_8_2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_igai_9" value="" onblur="sum_txt_yaku()"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_3" ng-model="vm.property.men4_10_8_3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                
-                                <input type="text" class="form-control" id="txt_yaku_goukei_9" value="" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_4" ng-model="vm.property.men4_10_8_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <label for="txtTodo" class="col-sm-12 col-form-label sub_title_label">ﾛ.合 計</label>
-                        <div class="col-sm-4"></div>
+                    <!-- No.8 end-->
+                    <!-- No.9 -->
+                    <div class="row txt_yaku">
+                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-2">
-                            (<span id="txt_yaku_shinsei">0</span> m<sup>2</sup>)
+                            <div class="input-group form-inline panel">
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_1" ng-model="vm.property.men4_10_9_1"/>
+                                <span class="input-group-addon add-on flat">階</span> 
+                            </div>
                         </div>
                         <div class="col-sm-2">
-                            (<span id="txt_yaku_igai">0</span> m<sup>2</sup>)
+                            <div class="input-group form-inline panel">
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_2" ng-model="vm.property.men4_10_9_2"/>
+                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
+                            </div>
                         </div>
                         <div class="col-sm-2">
-                            (<span id="txt_yaku_goukei">0</span> m<sup>2</sup>)
+                            <div class="input-group form-inline panel">
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_3" ng-model="vm.property.men4_10_9_3"/>
+                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group form-inline panel">
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_4" ng-model="vm.property.men4_10_9_4" readonly/>
+                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
+                            </div>
                         </div>
                     </div>
+                    <!-- No.9 end-->
+                    <!-- goukei -->
+                    <div class="row txt_yaku">
+                        <hr>
+                        <label for="txtTodo" class="col-sm-2 col-form-label">ﾛ.合 計</label>
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group form-inline panel">
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_10_2" ng-model="vm.property.men4_10_10_2" readonly/>
+                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group form-inline panel">
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_10_3" ng-model="vm.property.men4_10_10_3" readonly/>
+                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group form-inline panel">
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_10_4" ng-model="vm.property.men4_10_10_4" readonly/>
+                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
+                            </div>
+                        </div>
+                    </div>
+                    <!-- goukei end -->
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -607,7 +568,7 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">11.屋　　根</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_9_11" ng-model="vm.property.men4_9_11">
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -617,7 +578,7 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">12.外　　壁</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_9_12" ng-model="vm.property.men4_9_12">
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -627,7 +588,7 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">13.軒　　裏</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_9_13" ng-model="vm.property.men4_9_13">
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -637,7 +598,7 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">14.居室の床の高さ</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_9_14" ng-model="vm.property.men4_9_14">
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -647,7 +608,7 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">15.便所の種類</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="men4_1" ng-model="vm.property.men4_1">
+                    <input type="text" class="form-control" name="men4_9_15" ng-model="vm.property.men4_9_15">
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -657,7 +618,7 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">16.その他必要な事項</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <textarea class="form-control"></textarea>
+                    <textarea class="form-control" name="men4_9_16" ng-model="vm.property.men4_9_16"></textarea>
                 </div>
                 <div class="col-sm-12">
                     <hr>
@@ -667,7 +628,7 @@
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">17.備　　考</label>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-10">
-                    <textarea class="form-control"></textarea>
+                    <textarea class="form-control" name="men4_9_17" ng-model="vm.property.men4_9_17"></textarea>
                 </div>
                 <div class="col-sm-12">
                     <hr>
