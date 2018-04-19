@@ -59,7 +59,8 @@
                                 <div class="row">
                                     <div class="col-sm-12 mg10b">
                                         <span class="pull-left">条件グループ{{$index + 1}}</span>
-                                        <button type="button" ng-click="vm.removeLawsRule(rule)" class="btn btn-danger btn-sm pull-right"><i class="glyphicon glyphicon-trash"></i> 削除</button>
+                                        <button type="button" ng-click="vm.removeLawsRule(rule)" class=" btn btn-danger btn-sm pull-right"><i class="glyphicon glyphicon-trash"></i> 削除</button>
+                                        <button type="button" ng-click="vm.copyLawsRule(rule)" class="mg15r btn btn-warning btn-sm pull-right"><i class="glyphicon glyphicon-copyright-mark"></i> コピー</button>
                                     </div> 
                                     <div class="col-sm-12">
                                         <table id="law_sort_table" class="editableTable table table-striped table-bordered table-hover">
@@ -120,6 +121,7 @@
                                                         <td>
                                                             <div class="properties" data-ng-repeat="property in rule_field.properties" >
                                                                 <div ng-switch on="property.type">
+                                                                        {{ property.type }}
                                                                     <input ng-model="property.type" type="hidden"/>
                                                                     <div ng-switch-when="1">
                                                                         <div ng-class="vm.classProperties(rule_field.properties)">
@@ -135,6 +137,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div ng-switch-when="2">
+                                                                        
                                                                         <div ng-class="vm.classProperties(rule_field.properties)" ng-if="property.parent_flag === 0">
                                                                             <div class="input-group form-inline panel">
                                                                                 <select ng-model="property.value" class="form-control" 
@@ -248,7 +251,7 @@
         </div>
         <div ng-if="$ctrl.property.parent_flag === 1" class="row" ng-repeat="ck in $ctrl.property.options">
             <label class="col-sm-12" >
-                <input type="checkbox" style="margin-left:20px;" checklist-model="$ctrl.property.value" checklist-value="ck.name">
+                <input type="checkbox" ng-change="$ctrl.checkboxSelectParent(ck, checked)" style="margin-left:20px;" checklist-model="$ctrl.property.value" checklist-value="ck.name">
                 {{ ck.name }}&nbsp;
             </label>
             <div ng-if="ck.child" class="row" ng-repeat="ckc in ck.child">

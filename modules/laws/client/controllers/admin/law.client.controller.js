@@ -43,6 +43,12 @@
     initData();
     vm.busy = false;
     vm.scrollTopValue = 0;
+    /**
+     * is submitted ?
+     */
+    vm.submitted = false;
+    // using in download
+    vm.maxColumnRules = 0;
 
     /** init method */
     function initData() {
@@ -158,6 +164,7 @@
      * @param {*} listValue value from database
      */
     function createListProperties(_properties, listValue) {
+     // console.log("create properties",_properties, listValue);
       var _newProperties = [];
       _properties.forEach((property, k) => {
         if ((property.type === 2 || property.type === 3) && property.json) {
@@ -190,17 +197,19 @@
          * spec for master property:
          * display child group checkbox (parent_flag = 3) when parent_flag selectbox has value
          */
-        if (property.parent_flag === 3 && property.value.length > 0) {
+        if (property.parent_flag === 3) {
           var parent_property = _.find(_properties, {
             parent_flag: 2
           });
-          var options = _.find(property.options, {
-            name: parent_property.value
-          });
-          _newProperties[k].child_options = options.child;
+          if (parent_property.value) {
+            var options = _.find(property.options, {
+              name: parent_property.value
+            });
+            _newProperties[k].child_options = options.child;
+          }
         }
       });
-
+     // console.log(_newProperties);
       return _newProperties;
     }
 
@@ -299,6 +308,22 @@
       vm.formLawsRule.rules.push({
         rule_name: '',
         fields: []
+      });
+    };
+
+    /**
+     * copy a rule
+     * @param {*} _rule current rule
+     */
+    vm.copyLawsRule = function (_rule) {
+      var index = vm.formLawsRule.rules.indexOf(_rule);
+      var number = index + 1;
+      $scope.handleShowConfirm({
+        message: '条件グループ' + number + 'をコピーします。よろしいですか？'
+      }, () => {
+        var newRule = angular.copy(_rule);
+        newRule.rule_name = newRule.rule_name + ' - コピー';
+        vm.formLawsRule.rules.push(newRule);
       });
     };
 
@@ -404,8 +429,10 @@
       vm.busy = false;
     };
 
-    vm.submitted = false;
-    // Save Law
+    /**
+     * save law new / edit
+     * @param {*} isValid valid
+     */
     function save(isValid) {
       if (!isValid) {
         vm.submitted = true;
@@ -433,11 +460,13 @@
           });
       });
     }
+
     /**
      * display list checkbox
      * @param {*} property property of rule
      */
     vm.openModal = function (property) {
+      // init modal
       var modalInstance = $uibModal.open({
         animation: true,
         ariaLabelledBy: 'modal-title',
@@ -453,8 +482,12 @@
       });
     };
 
-    vm.lawDataUpdate = [];
-    vm.maxColumnRules = 0;
+    /**
+     * click download in 法令や都道府県
+     * @param {*} isHourei true: 法令 ・false: 都道府県
+     * @param {*} title title of excel export
+     * @param {*} regulation_id if 都道府県
+     */
     vm.download = function (isHourei, title, regulation_id) {
 
       requestDataByLawId(law._id)
@@ -462,6 +495,7 @@
           vm.lawDataListUpdate = lawDataList;
         })
         .then(function () {
+          // 法令
           if (isHourei) {
             vm.tmpLawDetails.forEach((_lawData, k) => {
               var newLawData = _.find(vm.lawDataListUpdate, {
@@ -473,6 +507,7 @@
               }
             });
           } else {
+            // 都道府県
             vm.tmpLawRegulations[regulation_id].forEach((_lawData, k) => {
               var newLawData = _.find(vm.lawDataListUpdate, {
                 _id: _lawData._id
@@ -483,10 +518,11 @@
               }
             });
           }
-
+          // reload form
           if (!$scope.$$phase) $scope.$digest();
         })
         .then(function () {
+          // export excel
           var _tableId = isHourei ? '#detail_hourei' : '#regulation_' + regulation_id;
           $scope.exportExcel(_tableId, 'エクスポート', 'エクスポート.xls');
         })
@@ -495,6 +531,10 @@
         });
     };
 
+    /**
+     * set value 条件グループ1
+     * @param {*} rules rule
+     */
     function setValueForField(rules) {
       var _rules = [];
       rules.forEach((rule, key) => {
@@ -521,6 +561,10 @@
       return rules;
     }
 
+    /**
+     * Get law data by law id
+     * @param {*} _lawId law
+     */
     function requestDataByLawId(_lawId) {
       return new Promise(function (resolve, reject) {
         LawsApi.requestDataByLawId(_lawId)
@@ -533,6 +577,10 @@
       });
     }
 
+    /**
+     * create array from number
+     * ng-repeat="i in getNumber(vm.maxColumnRules)"
+     */
     $scope.getNumber = function (num) {
       var temp = [];
       for (var j = 1; j <= num; j++) {
@@ -541,10 +589,20 @@
       return temp;
     };
 
+    /**
+     * convert mark id: '==', name: '等しい'
+     * @param {*} id ==
+     * @returns String 等しい
+     */
     $scope.getValidationByFind = function (id) {
       return vm.typeValidation.find(x => x.id === id);
     };
 
+    /**
+     * check containts
+     * @param {*} arraySource source
+     * @param {*} value value
+     */
     $scope.checkContains = function (arraySource, value) {
       var index = arraySource.indexOf(value);
       if (index === -1)
@@ -583,6 +641,7 @@
      * @param {*} checked status checked
      */
     $ctrl.checkboxSelectChild = function (property_p, property_c, checked) {
+      console.log($ctrl.property.value);
       if (!$ctrl.property.value) {
         $ctrl.property.value = [];
       }
@@ -592,7 +651,27 @@
         $ctrl.property.value.push(property_c.name);
       }
     };
-  });
 
+    /**
+     * spec for master property (parent_flag = 1):
+     * when click checked at checkbox parent (false)-> checkbox child auto unchecked
+     * @param {*} property_p parent
+     * @param {*} checked status checked
+     */
+    $ctrl.checkboxSelectParent = function (property_p, checked) {
+      var idx = $ctrl.property.value.indexOf(property_p.name);
+      if (idx >= 0 && !checked) {
+        if (property_p.child) {
+          $ctrl.property.value.splice(idx, 1);
+          property_p.child.forEach(c => {
+            var idc = $ctrl.property.value.indexOf(c.name);
+            if (idc >= 0) {
+              $ctrl.property.value.splice(idc, 1);
+            }
+          });
+        }
+      }
+    };
+  });
 
 }());

@@ -4,7 +4,7 @@
   angular
     .module('core')
     .factory('Excel', Excel);
-  
+
   Excel.$inject = ['$window'];
 
   function Excel($window) {
@@ -25,7 +25,7 @@
     return {
       tableToExcel: function (tableId, worksheetName, fileName) {
         var exTable = $(tableId).clone();
-        //remove the action th/td
+        // remove the action th/td
         exTable.find('.ignore-excel-export').remove();
         var ctx = {
           worksheet: worksheetName,

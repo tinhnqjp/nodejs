@@ -16,68 +16,105 @@
     vm.save = save;
     vm.submitted = false;
     vm.listMasterProperties = [];
+    // form 3
     vm.data_men3_3;
     vm.data_men3_4;
+    vm.data_men3_5_1;
+    vm.data_men3_5_2;
+    vm.data_men3_5_3;
     vm.data_men3_7_2;
     vm.data_men3_8;
     vm.data_men3_9;
     vm.data_men3_14;
-    vm.data_men3_13_5 = ['道路高さ制限不適用', '隣地高さ制限不適用', '北側高さ制限不適用'];
-    vm.data_men4_2_1;
-    vm.data_men4_2_2;
-    vm.data_men4_2_3;
+    vm.data_men3_13_7 = ['道路高さ制限不適用', '隣地高さ制限不適用', '北側高さ制限不適用'];
+    // form 4
+    vm.data_men4_2;
+    vm.data_men4_2_c1;
+    vm.data_men4_2_c2;
+    vm.data_men4_2_c3;
     vm.data_men4_3 = ['新築', '増築', '改築', '移転', '用途変更', '大規模の修繕', '大規模の模様替'];
+    vm.data_men4_4;
     vm.data_men4_5;
     vm.data_men4_8;
     vm.data_men4_9_5 = ['建築基準法施行令第136条の2の11第1号イ', '建築基準法施行令第136条の2の11第1号ロ'];
+
+    vm.goukei3_7 = goukei3_7;
+    vm.goukei3_10 = goukei3_10;
+    vm.goukei3_11 = goukei3_11;
+    vm.goukei_4_10 = goukei_4_10;
+    vm.selectParent3_8 = selectParent3_8;
+    vm.selectParent4_2 = selectParent4_2;
     initData();
 
+    /**
+     * init
+     */
     function initData() {
-      mathProperties();
+      // convert to date
       vm.property.men10 = new Date(vm.property.men10);
-
+      // sum men3_7_5
+      vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
+      // get data from master properties
       LawsApi.listMasterProperties()
         .then((res) => {
           vm.listMasterProperties = res.data;
           vm.data_men3_3 = getOptionsFormMaster(3, 3);
           vm.data_men3_4 = getOptionsFormMaster(3, 4);
+          vm.data_men3_5_1 = getOptionsFormMaster(3, 5, 1);
+          vm.data_men3_5_2 = getOptionsFormMaster(3, 5, 2);
+          vm.data_men3_5_3 = getOptionsFormMaster(3, 5, 3);
+
           vm.data_men3_7_2 = getOptionsFormMaster(3, 7, 2);
-          vm.data_men3_8 = getOptionsFormMaster(3, 8);
+          var data_men3_8_tmp = getOptionsFormMaster(3, 8);
+          vm.data_men3_8 = {
+            c1: { class: _.clone(data_men3_8_tmp), division: [] }
+          };
+          vm.selectParent3_8('c1');
+
+          // men3_9
           vm.data_men3_9 = getOptionsFormMaster(3, 9);
           vm.data_men3_14 = getOptionsFormMaster(3, 14);
-          var dataSelectPropertyParent = getOptionsFormMaster(4, 2);
-          if (vm.property.men3_8_1) {
-            vm.selectPropertyParent(vm.property.men3_8_1, vm.data_men3_8);
-          }
+          // men4_2
+          var data_men4_2_tmp = getOptionsFormMaster(4, 2);
+          vm.data_men4_2 = {
+            c1: { class: _.clone(data_men4_2_tmp), division: [] },
+            c2: { class: _.clone(data_men4_2_tmp), division: [] },
+            c3: { class: _.clone(data_men4_2_tmp), division: [] }
+          };
+          // init for pulldown men4_2
+          vm.selectParent4_2('c1');
+          vm.selectParent4_2('c2');
+          vm.selectParent4_2('c3');
 
-          vm.data_men4_2_1 = _.clone(dataSelectPropertyParent);
-          if (vm.property.men4_2_1_1) {
-            vm.selectPropertyParent4_2_1();
-          }
-          vm.data_men4_2_2 = _.clone(dataSelectPropertyParent);
-          if (vm.property.men4_2_2_1) {
-            vm.selectPropertyParent4_2_2();
-          }
-          vm.data_men4_2_3 = dataSelectPropertyParent;
-          if (vm.property.men4_2_3_1) {
-            vm.selectPropertyParent4_2_3();
-          }
+          vm.data_men4_4 = getOptionsFormMaster(4, 4);
           vm.data_men4_5 = getOptionsFormMaster(4, 5);
           vm.data_men4_8 = getOptionsFormMaster(4, 8);
         })
         .catch((res) => {
           $scope.nofityError('マスターデータのロードが失敗しました。');
         });
+
+      goukei3_7();
+      goukei_4_10();
     }
 
+    /**
+     * get options by bukken, daikoumoku, kokoumoku
+     * @param {*} _bukken
+     * @param {*} _daikoumoku
+     * @param {*} _kokoumoku
+     */
     function getOptionsFormMaster(_bukken, _daikoumoku, _kokoumoku) {
       var condition = { bukken: _bukken, daikoumoku: _daikoumoku };
       if (_kokoumoku) {
         condition.kokoumoku = _kokoumoku;
       }
+      // get first
       var filter = _.filter(vm.listMasterProperties, condition)[0];
+      // exist
       if (filter) {
         try {
+          // convert from string json to array
           var json = filter.json.replace(/'/g, '"');
           return JSON.parse(json);
         } catch (error) {
@@ -88,38 +125,30 @@
       return null;
     }
 
-    function mathProperties() {
-      vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
+    function selectParent3_8(select) {
+      if (!vm.property.men3_8 || !vm.property.men3_8[select].class) {
+        return;
+      }
+      var options = _.find(vm.data_men3_8[select].class, {
+        name: vm.property.men3_8[select].class
+      });
+      vm.data_men3_8[select].division = options.child;
     }
 
-    vm.selectPropertyParent = function (value, data) {
-      //console.log(value, data);
-      var options = _.find(data, {
-        name: value
+    function selectParent4_2(select) {
+      if (!vm.property.men4_2 || !vm.property.men4_2[select].class) {
+        return;
+      }
+      var options = _.find(vm.data_men4_2[select].class, {
+        name: vm.property.men4_2[select].class
       });
-      data.child_options = options.child;
-    };
+      vm.data_men4_2[select].division = options.child;
+    }
 
-    vm.selectPropertyParent4_2_1 = function () {
-      var options = _.find(vm.data_men4_2_1, {
-        name: vm.property.men4_2_1_1
-      });
-      vm.data_men4_2_1.child_options = options.child;
-    };
-    vm.selectPropertyParent4_2_2 = function () {
-      var options = _.find(vm.data_men4_2_2, {
-        name: vm.property.men4_2_2_1
-      });
-      vm.data_men4_2_2.child_options = options.child;
-    };
-    vm.selectPropertyParent4_2_3 = function () {
-      var options = _.find(vm.data_men4_2_3, {
-        name: vm.property.men4_2_3_1
-      });
-      vm.data_men4_2_3.child_options = options.child;
-    };
-
-    // Save Property
+    /**
+     * save property (add new / edit)
+     * @param {*} isValid valid
+     */
     function save(isValid) {
       if (!isValid) {
         vm.submitted = true;
@@ -139,152 +168,150 @@
         });
     }
 
-    // show class error or success in form
-    vm.classError = (property) => {
-      if (vm.submitted) {
-        if (property) {
-          return 'has-error';
-        } else {
-          return 'has-success';
-        }
-      }
-
-      return '';
-    };
-
-    // show class error or success in form
-    vm.classError = (property1, property2) => {
-      if (vm.submitted) {
-        if (property1 || property2) {
-          return 'has-error';
-        } else {
-          return 'has-success';
-        }
-      }
-
-      return '';
-    };
-
     vm.changeSelect3_14 = () => {
       var str = vm.property.men3_14;
       if (str) {
         str += ',';
+      } else {
+        str = '';
       }
       str += vm.property.men3_14_1;
       vm.property.men3_14_1 = null;
       vm.property.men3_14 = str;
     };
 
-    /* math logic */
-    vm.plusFor3_7_5 = () => {
-      vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
-      vm.property.men3_7_5_2 = vm.property.men3_7_1_5 + vm.property.men3_7_1_6 + vm.property.men3_7_1_7 + vm.property.men3_7_1_8;
-      // 10.建築面積
-      vm.goukei();
+    vm.changeSelect3_5 = () => {
+      var str = vm.property.men3_5_3;
+      if (str) {
+        str += ',';
+      } else {
+        str = '';
+      }
+      str += vm.property.men3_5_31;
+      vm.property.men3_5_31 = null;
+      vm.property.men3_5_3 = str;
     };
 
-    function roundUp(number, digits) {
-      var factor = Math.pow(10, digits);
-      return Math.ceil(number * factor) / factor;
+    /* math logic */
+    function goukei3_7() {
+      var form = vm.property.men3_7_1;
+      var c1 = getChild(form, 'c1');
+      var c2 = getChild(form, 'c2');
+      var c3 = getChild(form, 'c3');
+      var c4 = getChild(form, 'c4');
+      var c5 = getChild(form, 'c5');
+      var c6 = getChild(form, 'c6');
+      var c7 = getChild(form, 'c7');
+      var c8 = getChild(form, 'c8');
+
+      vm.property.men3_7_7 = {
+        c1: c1 + c2 + c3 + c4,
+        c2: c5 + c6 + c7 + c8
+      };
+
+      // 10.建築面積
+      goukei3_10();
     }
 
+    /**
+     * form 3 10.建築面積
+     */
+    function goukei3_10() {
+      // 10.建築面積
+      // ｲ.建築面積
+      var total_i = toInt(vm.property.men3_10_1) + toInt(vm.property.men3_10_3);
+      vm.property.men3_10_4 = total_i;
+      // // ﾛ.建蔽率
+      vm.property.men3_10_2 = percentRoundLogic(total_i);
+      // 11.延べ面積
+      goukei3_11();
+    }
+
+    /**
+     * 11.延べ面積
+     */
+    function goukei3_11() {
+      // 11.延べ面積
+      // ｲ.建築物全体
+      vm.property.men3_11_5 = vm.property.men3_11_1 + vm.property.men3_11_4;
+
+      var form = 'men3_11_';
+      // men3_11_6 ~ men3_11_15 (ﾛ.~ﾙ.)
+      for (var index = 6; index <= 15; index++) {
+        var form_name = form + index;
+        if (vm.property[form_name]) {
+          var c1 = getChild(vm.property[form_name], 'c1');
+          var c2 = getChild(vm.property[form_name], 'c2');
+          var c3 = c1 + c2;
+          vm.property[form_name].c3 = c3;
+        }
+      }
+      // ﾜ.容積率
+      vm.property.men3_11_3 = percentRoundLogic(vm.property.men3_11_2);
+    }
+
+    /**
+     * percent & ROUNDUP
+     * @param {*} number
+     */
     function percent(number) {
-      return roundUp(number * 100, 2);
+      var factor = Math.pow(10, 2);
+      number = Math.ceil(number * 100 * factor) / factor;
+      return number;
     }
 
     function percentRoundLogic(input) {
       // =IF(AB271,ROUNDUP(BE280/AB271,4),IF(AB272,ROUNDUP(BE280/AB272,4),""))
-      if (vm.property.men3_7_5_1) {
-        return percent(input / vm.property.men3_7_5_1);
+      // men3_7_7 ﾎ.敷地面積の合計
+      var c1 = vm.property.men3_7_7.c1;
+      var c2 = vm.property.men3_7_7.c2;
+      if (c1) {
+        return percent(input / c1);
       } else if (vm.property.men3_7_5_2) {
-        return percent(input / vm.property.men3_7_5_2);
+        return percent(input / c2);
       }
       return 0;
     }
-    // form 3
-    vm.goukei = () => {
-      // 10.建築面積  ｲ.建築面積
-      vm.property.men3_10_1_3 = vm.property.men3_10_1_1 + vm.property.men3_10_1_2;
-      // ﾛ.建蔽率
-      // men3_10_1_3 = BE280
-      // men3_7_5_1 = AB271
-      // men3_7_5_2 = AB272
-      vm.property.men3_10_2 = percentRoundLogic(vm.property.men3_10_1_3);
-      // 11.延べ面積 ｲ.建築物全体
-      vm.property.men3_11_1_3 = vm.property.men3_11_1_1 + vm.property.men3_11_1_2;
-      // ﾛ.地階の住宅又は老人ホーム、福祉ホームその他これらに類するものの部分
-      vm.property.men3_11_2_3 = vm.property.men3_11_2_1 + vm.property.men3_11_2_2;
-      // ﾊ.エレベーターの昇降路の部分
-      vm.property.men3_11_3_3 = vm.property.men3_11_3_1 + vm.property.men3_11_3_2;
-      // ﾆ.共同住宅の共用の廊下等の部分
-      vm.property.men3_11_4_3 = vm.property.men3_11_4_1 + vm.property.men3_11_4_2;
-      // ﾎ.自動車車庫等の部分
-      vm.property.men3_11_5_3 = vm.property.men3_11_5_1 + vm.property.men3_11_5_2;
-      // ﾍ.備蓄倉庫の部分
-      vm.property.men3_11_6_3 = vm.property.men3_11_6_1 + vm.property.men3_11_6_2;
-      // ﾄ.蓄電池の設置部分
-      vm.property.men3_11_7_3 = vm.property.men3_11_7_1 + vm.property.men3_11_7_2;
-      // ﾁ.自家発電設備の設置部分
-      vm.property.men3_11_8_3 = vm.property.men3_11_8_1 + vm.property.men3_11_8_2;
-      // ﾘ.貯水槽の設置部分
-      vm.property.men3_11_9_3 = vm.property.men3_11_9_1 + vm.property.men3_11_9_2;
-      // ﾇ.住宅の部分
-      vm.property.men3_11_10_3 = vm.property.men3_11_10_1 + vm.property.men3_11_10_2;
-      // ﾙ.老人ホーム、福祉ホームその他これらに類するものの部分
-      vm.property.men3_11_11_3 = vm.property.men3_11_11_1 + vm.property.men3_11_11_2;
-      // ｦ.延べ面積
-      // ﾜ.容積率
-      vm.property.men3_11_13 = percentRoundLogic(vm.property.men3_11_12);
-    };
 
-    function int(value) {
-      if(!value) return 0;
+    function getChild(value, param) {
+      if (!value || !value[param]) return 0;
+      return parseInt(value[param], 10);
+    }
+
+    function toInt(value) {
+      if (!value) return 0;
       return parseInt(value, 10);
     }
-    // form 4-10
-    vm.goukei_4_10 = () => {
-      vm.property.men4_10_1_4 = int(vm.property.men4_10_1_2) + int(vm.property.men4_10_1_3);
-      vm.property.men4_10_2_4 = int(vm.property.men4_10_2_2) + int(vm.property.men4_10_2_3);
-      vm.property.men4_10_3_4 = int(vm.property.men4_10_3_2) + int(vm.property.men4_10_3_3);
-      vm.property.men4_10_4_4 = int(vm.property.men4_10_4_2) + int(vm.property.men4_10_4_3);
-      vm.property.men4_10_5_4 = int(vm.property.men4_10_5_2) + int(vm.property.men4_10_5_3);
-      vm.property.men4_10_6_4 = int(vm.property.men4_10_6_2) + int(vm.property.men4_10_6_3);
-      vm.property.men4_10_7_4 = int(vm.property.men4_10_7_2) + int(vm.property.men4_10_7_3);
-      vm.property.men4_10_8_4 = int(vm.property.men4_10_8_2) + int(vm.property.men4_10_8_3);
-      vm.property.men4_10_9_4 = int(vm.property.men4_10_9_2) + int(vm.property.men4_10_9_3);
 
-      vm.property.men4_10_10_2 = 
-        int(vm.property.men4_10_1_2)
-        + int(vm.property.men4_10_2_2)
-        + int(vm.property.men4_10_3_2)
-        + int(vm.property.men4_10_4_2)
-        + int(vm.property.men4_10_5_2)
-        + int(vm.property.men4_10_6_2)
-        + int(vm.property.men4_10_7_2)
-        + int(vm.property.men4_10_8_2)
-        + int(vm.property.men4_10_9_2);
+    /**
+     * sum all of men4_10
+     */
+    function goukei_4_10() {
+      // 階別合計 men4_10_5 ~ men4_10_13
+      var form = 'men4_10_';
+      var total_c1 = 0;
+      var total_c2 = 0;
+      var total_c3 = 0;
+      var total_c4 = 0;
+      for (var index = 5; index <= 13; index++) {
+        var form_name = form + index;
+        if (vm.property[form_name]) {
 
-      vm.property.men4_10_10_3 = 
-        int(vm.property.men4_10_1_3)
-        + int(vm.property.men4_10_2_3)
-        + int(vm.property.men4_10_3_3)
-        + int(vm.property.men4_10_4_3)
-        + int(vm.property.men4_10_5_3)
-        + int(vm.property.men4_10_6_3)
-        + int(vm.property.men4_10_7_3)
-        + int(vm.property.men4_10_8_3)
-        + int(vm.property.men4_10_9_3);
-
-      vm.property.men4_10_10_4 = 
-        int(vm.property.men4_10_1_4)
-        + int(vm.property.men4_10_2_4)
-        + int(vm.property.men4_10_3_4)
-        + int(vm.property.men4_10_4_4)
-        + int(vm.property.men4_10_5_4)
-        + int(vm.property.men4_10_6_4)
-        + int(vm.property.men4_10_7_4)
-        + int(vm.property.men4_10_8_4)
-        + int(vm.property.men4_10_9_4);
+          var c1 = getChild(vm.property[form_name], 'c1');
+          var c2 = getChild(vm.property[form_name], 'c2');
+          var c3 = getChild(vm.property[form_name], 'c3');
+          var c4 = c2 + c3;
+          vm.property[form_name].c4 = c4;
+          total_c4 += c4;
+          total_c1 += c1;
+          total_c2 += c2;
+          total_c3 += c3;
+        }
+      }
+      vm.property.men4_10_1 = total_c1;
+      vm.property.men4_10_2 = total_c2;
+      vm.property.men4_10_3 = total_c3;
+      vm.property.men4_10_4 = total_c4;
     }
   // end controller
   }
