@@ -17,6 +17,7 @@
     vm.submitted = false;
     vm.listMasterProperties = [];
     // form 3
+    vm.data_men3_1;
     vm.data_men3_3;
     vm.data_men3_4;
     vm.data_men3_5_1;
@@ -37,6 +38,13 @@
     vm.data_men4_5;
     vm.data_men4_8;
     vm.data_men4_9_5 = ['建築基準法施行令第136条の2の11第1号イ', '建築基準法施行令第136条の2の11第1号ロ'];
+    vm.data_men4_10 = [
+      { id: 'F', name: '地上階(F)' },
+      { id: 'B', name: '地下階(B)' },
+      { id: 'P', name: '昇降機塔等の階(P)' },
+      { id: 'M', name: '地階の倉庫等の階(M)' },
+    ];
+    vm.data_men4_15;
 
     vm.goukei3_7 = goukei3_7;
     vm.goukei3_10 = goukei3_10;
@@ -58,6 +66,7 @@
       LawsApi.listMasterProperties()
         .then((res) => {
           vm.listMasterProperties = res.data;
+          vm.data_men3_1 = getOptionsFormMaster(3, 1, 1);
           vm.data_men3_3 = getOptionsFormMaster(3, 3);
           vm.data_men3_4 = getOptionsFormMaster(3, 4);
           vm.data_men3_5_1 = getOptionsFormMaster(3, 5, 1);
@@ -89,6 +98,7 @@
           vm.data_men4_4 = getOptionsFormMaster(4, 4);
           vm.data_men4_5 = getOptionsFormMaster(4, 5);
           vm.data_men4_8 = getOptionsFormMaster(4, 8);
+          vm.data_men4_15 = getOptionsFormMaster(4, 15);
         })
         .catch((res) => {
           $scope.nofityError('マスターデータのロードが失敗しました。');
@@ -159,7 +169,7 @@
       vm.property.createOrUpdate()
         .then((res) => {
           vm.busy = false;
-          $state.go('admin.properties.list');
+          // $state.go('admin.properties.list');
           $scope.nofitySuccess('物件データの保存が完了しました。');
         })
         .catch((res) => {

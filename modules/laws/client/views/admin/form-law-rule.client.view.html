@@ -121,18 +121,11 @@
                                                         <td>
                                                             <div class="properties" data-ng-repeat="property in rule_field.properties" >
                                                                 <div ng-switch on="property.type">
-                                                                        {{ property.type }}
                                                                     <input ng-model="property.type" type="hidden"/>
                                                                     <div ng-switch-when="1">
                                                                         <div ng-class="vm.classProperties(rule_field.properties)">
                                                                             <div class="input-group form-inline panel">
-                                                                                <span ng-if="property.html_label_s" class="input-group-addon">
-                                                                                    <span ng-bind-html="property.html_label_s"></span>
-                                                                                </span>
                                                                                 <input ng-model="property.value" class="form-control" type="text" maxlength="200"/>
-                                                                                <span ng-if="property.html_label_e" class="input-group-addon add-on flat">
-                                                                                    <span ng-bind-html="property.html_label_e"></span>
-                                                                                </span> 
                                                                             </div>
                                                                         </div>
                                                                     </div>

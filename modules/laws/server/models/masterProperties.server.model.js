@@ -17,7 +17,6 @@ var MasterPropertiesSchema = new Schema({
   kokoumoku: { type: Number },
   kokoumoku_name: { type: String, trim: true },
   type: { type: Number },
-  label_s: { type: String, trim: true },
   value: { type: String, trim: true },
   list: { type: String, trim: true }
 });

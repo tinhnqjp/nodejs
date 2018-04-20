@@ -53,6 +53,6 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     var exportHref = Excel.tableToExcel(tableId, sheetName, fileName);
     $timeout(function () {
       exportHref.click();
-    }, 100); // trigger download
+    }, 1000); // trigger download
   }
 }

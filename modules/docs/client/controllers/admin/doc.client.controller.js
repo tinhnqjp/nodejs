@@ -167,11 +167,11 @@
 
         lawData.law_rules.forEach(rule => {
           // OR with rules
+          var validateAndFields = [];
           rule.fields.forEach(field => {
             // field.name = '3_6_1';
             var form_name = FORM + field.name;
             var valueInput = formProperty[form_name];
-            
             // check obj or number
             // obj: men3_7_1 {c1: 1, c2: 2, c3: 3, c4: 4, c5: 55}
             // number: men3_6_1 60
@@ -180,6 +180,7 @@
                 // AND with properties
               var validateAndProperties = [];
               field.properties.forEach(property => {
+                // type 4
                 if (property.type === 4) {
                   // output "value >= 15 AND value <= 35"
                   if (!isObject) {
@@ -193,44 +194,58 @@
                       }
                     }
                   }
-                  
+                } else {
+                  var formMaster = getFormMaster(field.name);
+                  //console.log(formMaster);
+                  if (property.type === 3 && formMaster.parent_flag === 0) {
+                    
+                    if (!isObject) {
+                      validateAndProperties.push(checkCheckboxs(valueInput, property.value));
+                    } else {
+                      // this case (law: listcheckbox, properties is multi and pulldown)
+                      // form4 - 4.構造
+                      for (var key in valueInput) {
+                        var input = valueInput[key];
+                        validateAndProperties.push(checkCheckboxs([input], property.value));
+                      }
+                    }
+                  }
+                  if (property.type === 3 && formMaster.parent_flag === 1) {
+                    validateAndProperties.push(checkCheckboxsParent(valueInput, property.value, formMaster));
+                  }
+
+                  if (property.type === 2) {
+                    if (!isObject) {
+                      validateAndProperties.push(checkPulldown(valueInput, property.value, formMaster.mapping));
+                    } else {
+                      if (property.value) {
+                        for (var key in valueInput) {
+                          var input = valueInput[key];
+                          var isCorrect = false;
+                          if (input.class == property.value) {
+                            isCorrect = true;
+                          } else if (input.division == property.value) {
+                            isCorrect = true;
+                          }
+                          validateAndProperties.push(isCorrect);
+                        }
+                      }
+                    }
+                  }
                 }
               });
-              //var result = checkedAND(validateAndProperties);
-              console.log(validateAndProperties, result);
+              validateAndFields.push(checkedAND(validateAndProperties));
+            } else {
+              validateAndFields.push(false);
             }
-            // if (valueInput) {
-            //   // AND with properties
-            //   var validateAndProperties = [];
-            //   field.properties.forEach(property => {
-            //     if (property.type === 4) {
-            //       // output "value >= 15 AND value <= 35"
-            //       validateAndProperties.push(valueInput + ' ' + property.compare1 + property.value1 + ' && ' + valueInput + ' ' + property.compare2 + property.value2);
-            //     } else {
-            //       var formMaster = getFormMaster(field.name);
-            //       console.log(formMaster);
-            //       if (property.type === 3 && formMaster.parent_flag === 0) {
-            //         validateAndProperties.push(checkCheckboxs(valueInput, property.value));
-            //       }
-            //       if (property.type === 3 && formMaster.parent_flag === 1) {
-            //         validateAndProperties.push(checkCheckboxsParent(valueInput, property.value, formMaster));
-            //       }
-            //       if (property.type === 2 && formMaster.parent_flag === 0) {
-            //         validateAndProperties.push(checkCheckboxs(valueInput, property.value));
-            //       }
-            //     }
-
-            //   });
-            //   if (!obj[form_name]) { obj[form_name] = [];}
-            //   obj[form_name].push(checkedAND(validateAndProperties));
-            //   validateOrRules.push(checkedAND(validateAndProperties));
-            // } else {
-            //   validateOrRules.push(false);
-            // }
+            
           });
+
+          validateOrRules.push(checkedAND(validateAndFields));
         });
         // OR with rules
         var result = checkedOR(validateOrRules);
+        
         resolve({ master_law: lawData.master_law, form1_ro: result });
       });
     }
@@ -249,19 +264,19 @@
       return strCondition;
     }
 
-    function getFormMaster(_men) {
-      var _dataField = _men.split('_');
-      var condition = { bukken: parseInt(_dataField[0], 10), daikoumoku: parseInt(_dataField[1], 10) };
-      if (_dataField[2]) {
-        condition.kokoumoku = parseInt(_dataField[2], 10);
+    function checkPulldown(valueInput, property, mapping) {
+      if (mapping === 2) {
+        var listLaws = valueInput.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+        if (_.contains(listLaws, property)) {
+          return true;
+        }
+        return false;
       }
-      // get first
-      var filter = _.filter(vm.listMasterProperties, condition)[0];
-      // exist
-      if (filter) {
-        return filter;
+      if (mapping === 3) {
+        console.log(valueInput, property);
       }
-      return null;
+
+      return false;
     }
 
     function checkCheckboxs(listValue, strLaws) {
@@ -333,10 +348,24 @@
           }
         }
       });
-
-      console.log(listLaws, listValue, intersects);
       return intersects;
     }
+
+    function getFormMaster(_men) {
+      var _dataField = _men.split('_');
+      var condition = { bukken: parseInt(_dataField[0], 10), daikoumoku: parseInt(_dataField[1], 10) };
+      if (_dataField[2]) {
+        condition.kokoumoku = parseInt(_dataField[2], 10);
+      }
+      // get first
+      var filter = _.filter(vm.listMasterProperties, condition)[0];
+      // exist
+      if (filter) {
+        return filter;
+      }
+      return null;
+    }
+
     /**
      check OR in each array
      * @param {*} conditions array [true, true, false] => false

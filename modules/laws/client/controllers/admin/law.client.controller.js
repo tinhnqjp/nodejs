@@ -175,9 +175,6 @@
             console.log('Error: Format json of property.' + error);
           }
 
-        } else if (property.type === 1) {
-          property.html_label_s = $sce.trustAsHtml(property.label_s);
-          property.html_label_e = $sce.trustAsHtml(property.label_e);
         }
 
         // process value from dabase set to control
