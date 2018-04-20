@@ -69,7 +69,8 @@
      * @param {*} mendou form1, form4, form7
      */
     vm.autoChecked = function (mendou) {
-      var property, law;
+      var property;
+      var law;
       // get law by year
       getFormProperty(vm.doc._id)
       .then(function (_property) {
@@ -172,6 +173,7 @@
             // field.name = '3_6_1';
             var form_name = FORM + field.name;
             var valueInput = formProperty[form_name];
+            var i;
             // check obj or number
             // obj: men3_7_1 {c1: 1, c2: 2, c3: 3, c4: 4, c5: 55}
             // number: men3_6_1 60
@@ -186,9 +188,9 @@
                   if (!isObject) {
                     validateAndProperties.push(getConditonType4(valueInput, property));
                   } else {
-                    for (var key in valueInput) {
-                      if (valueInput[key]) {
-                        validateAndProperties.push(getConditonType4(valueInput[key], property));
+                    for (i in valueInput) {
+                      if (valueInput[i]) {
+                        validateAndProperties.push(getConditonType4(valueInput[i], property));
                       } else {
                         validateAndProperties.push(false);
                       }
@@ -196,17 +198,19 @@
                   }
                 } else {
                   var formMaster = getFormMaster(field.name);
-                  //console.log(formMaster);
                   if (property.type === 3 && formMaster.parent_flag === 0) {
-                    
+
                     if (!isObject) {
                       validateAndProperties.push(checkCheckboxs(valueInput, property.value));
                     } else {
                       // this case (law: listcheckbox, properties is multi and pulldown)
                       // form4 - 4.構造
-                      for (var key in valueInput) {
-                        var input = valueInput[key];
-                        validateAndProperties.push(checkCheckboxs([input], property.value));
+                      for (i in valueInput) {
+                        if (valueInput[i]) {
+                          validateAndProperties.push(checkCheckboxs([valueInput[i]], property.value));
+                        } else {
+                          validateAndProperties.push(false);
+                        }
                       }
                     }
                   }
@@ -214,43 +218,55 @@
                     validateAndProperties.push(checkCheckboxsParent(valueInput, property.value, formMaster));
                   }
 
+                  // type 2 pulldown
                   if (property.type === 2) {
+                    var isCorrect = false;
                     if (!isObject) {
-                      validateAndProperties.push(checkPulldown(valueInput, property.value, formMaster.mapping));
+                      if (formMaster.mapping === 1) {
+                        validateAndProperties.push(checkedEq(valueInput, property.value));
+                      }
+                      if (formMaster.mapping === 2) {
+                        var listLaws = valueInput.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+                        validateAndProperties.push(checkedContains(property, listLaws));
+                      }
                     } else {
-                      if (property.value) {
-                        for (var key in valueInput) {
-                          var input = valueInput[key];
-                          var isCorrect = false;
-                          if (input.class == property.value) {
-                            isCorrect = true;
-                          } else if (input.division == property.value) {
-                            isCorrect = true;
+                      // valueInput have mutil properties
+                      for (i in valueInput) {
+                        if (formMaster.mapping === 1) {
+                          validateAndProperties.push(checkedEq(valueInput[i], property.value));
+                        }
+                        if (formMaster.mapping === 3 && property.value) {
+                          var check = false;
+                          if (checkedEq(valueInput[i].class, property.value)) {
+                            check = true;
+                          } else if (checkedEq(valueInput[i].division, property.value)) {
+                            check = true;
                           }
-                          validateAndProperties.push(isCorrect);
+                          validateAndProperties.push(check);
                         }
                       }
                     }
                   }
                 }
               });
+              console.log(validateAndProperties);
               validateAndFields.push(checkedAND(validateAndProperties));
             } else {
               validateAndFields.push(false);
             }
-            
+
           });
 
           validateOrRules.push(checkedAND(validateAndFields));
         });
         // OR with rules
         var result = checkedOR(validateOrRules);
-        
+
         resolve({ master_law: lawData.master_law, form1_ro: result });
       });
     }
 
-    function getConditonType4 (valueInput, property) {
+    function getConditonType4(valueInput, property) {
       var strCondition = '';
       if (property.compare1 && property.value1) {
         strCondition += valueInput + ' ' + property.compare1 + ' ' + property.value1;
@@ -262,21 +278,6 @@
         strCondition += valueInput + ' ' + property.compare2 + ' ' + property.value2;
       }
       return strCondition;
-    }
-
-    function checkPulldown(valueInput, property, mapping) {
-      if (mapping === 2) {
-        var listLaws = valueInput.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-        if (_.contains(listLaws, property)) {
-          return true;
-        }
-        return false;
-      }
-      if (mapping === 3) {
-        console.log(valueInput, property);
-      }
-
-      return false;
     }
 
     function checkCheckboxs(listValue, strLaws) {
@@ -366,6 +367,21 @@
       return null;
     }
 
+    function checkedEq(valueInput, valueProperty) {
+      var isCorrect = false;
+      if (valueInput === valueProperty) {
+        isCorrect = true;
+      }
+      return isCorrect;
+    }
+
+    function checkedContains(valueInput, listChecked) {
+      var isCorrect = false;
+      if (_.contains(listChecked, valueInput)) {
+        isCorrect = true;
+      }
+      return isCorrect;
+    }
     /**
      check OR in each array
      * @param {*} conditions array [true, true, false] => false
