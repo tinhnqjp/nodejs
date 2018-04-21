@@ -52,7 +52,9 @@
                                     法令 ({{vm.law.law_details.law_details.length}})
                                 </a>
                             </uib-accordion-heading>
+                            
                             <button type="button" ng-click="vm.download(true, '法令')" class="btn btn-primary btn-sm pull-right" style="margin-bottom:20px;"><i class="glyphicon glyphicon-save"></i> エクスポート</button>
+                            <a target="_blank" ng-if="vm.linkDown" href="{{ vm.linkDown[detail_hourei] }}" download="エクスポート.xls" class="mg15r pull-right">link</a>
                             <div id="detail_hourei">
                                 <style>
                                     .bg-primary { background-color:#286090; color:#fff}
@@ -97,7 +99,7 @@
                                                     </span><br ng-if="!$last" style="mso-data-placement:same-cell;"/>
                                                 </span>
                                             </td>
-                                            <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></td>
+                                            <!-- <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></td> -->
                                         </tr>
                                     </tbody>
                                 </table>
@@ -158,7 +160,7 @@
                                                     </span><br ng-if="!$last" style="mso-data-placement:same-cell;"/>
                                                 </span>
                                             </td>
-                                            <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></td>
+                                            <!-- <td class="used-excel-export" ng-if="(vm.maxColumnRules - lawData.law_rules.length) > 0" ng-repeat="i in getNumber(vm.maxColumnRules - lawData.law_rules.length)"></td> -->
                                         </tr>
                                     </tbody>
                                 </table>

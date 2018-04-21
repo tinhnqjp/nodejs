@@ -486,7 +486,7 @@
      * @param {*} regulation_id if 都道府県
      */
     vm.download = function (isHourei, title, regulation_id) {
-
+      vm.busy = true;
       requestDataByLawId(law._id)
         .then(function (lawDataList) {
           vm.lawDataListUpdate = lawDataList;
@@ -494,6 +494,7 @@
         .then(function () {
           // 法令
           if (isHourei) {
+            vm.maxColumnRules = 0;
             vm.tmpLawDetails.forEach((_lawData, k) => {
               var newLawData = _.find(vm.lawDataListUpdate, {
                 _id: _lawData._id
@@ -505,6 +506,7 @@
             });
           } else {
             // 都道府県
+            vm.maxColumnRules = 0;
             vm.tmpLawRegulations[regulation_id].forEach((_lawData, k) => {
               var newLawData = _.find(vm.lawDataListUpdate, {
                 _id: _lawData._id
@@ -520,10 +522,16 @@
         })
         .then(function () {
           // export excel
-          var _tableId = isHourei ? '#detail_hourei' : '#regulation_' + regulation_id;
-          $scope.exportExcel(_tableId, 'エクスポート', 'エクスポート.xls');
+          var _tableId = isHourei ? 'detail_hourei' : 'regulation_' + regulation_id;
+          var href = $scope.exportExcel('#' + _tableId, 'エクスポート');
+          vm.busy = false;
+          $scope.handleShowDownload({
+            href: href,
+            file: 'エクスポート.xls'
+          });
         })
         .catch(function (err) {
+          vm.busy = false;
           $scope.nofityError('法令データの保存が失敗しました。' + err);
         });
     };

@@ -7,6 +7,7 @@ AppController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'ngD
 function AppController($scope, $timeout, $window, Authentication, ngDialog, notifyService, Excel) {
   $scope.Authentication = Authentication;
   $scope.handleShowConfirm = handleShowConfirm;
+  $scope.handleShowDownload = handleShowDownload;
   $scope.nofitySuccess = nofitySuccess;
   $scope.nofityError = nofityError;
   $scope.exportExcel = exportExcel;
@@ -20,11 +21,30 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     return input;
   };
 
-  // Hiển thị confirm xác nhận
+  // modal confirm
   function handleShowConfirm(content, resolve, reject) {
     $scope.dialog = content;
     ngDialog.openConfirm({
       templateUrl: 'confirmTemplate.html',
+      scope: $scope
+    }).then(res => {
+      delete $scope.dialog;
+      if (resolve) {
+        resolve(res);
+      }
+    }, res => {
+      delete $scope.dialog;
+      if (reject) {
+        reject(res);
+      }
+    });
+  }
+
+  function handleShowDownload(href, file, resolve, reject) {
+    $scope.dialog = href;
+    $scope.file = file;
+    ngDialog.openConfirm({
+      templateUrl: 'downloadTemplate.html',
       scope: $scope
     }).then(res => {
       delete $scope.dialog;
@@ -47,12 +67,7 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     return notifyService.error(message);
   }
 
-  function exportExcel(tableId, sheetName, fileName) {
-    $timeout(function () {}, 1000);
-    // tableId
-    var exportHref = Excel.tableToExcel(tableId, sheetName, fileName);
-    $timeout(function () {
-      exportHref.click();
-    }, 1000); // trigger download
+  function exportExcel(tableId, sheetName) {
+    return Excel.tableToExcel(tableId, sheetName);
   }
 }

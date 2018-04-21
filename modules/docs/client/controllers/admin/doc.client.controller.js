@@ -61,7 +61,11 @@
      * @param {*} mendou form1, form4, form7
      */
     vm.download = function (mendou) {
-      $scope.exportExcel('#tableToExport', 'チェックシート', 'ダウンロード.xls');
+      var href = $scope.exportExcel('#tableToExport', 'チェックシート');
+      $scope.handleShowDownload({
+        href: href,
+        file: 'ダウンロード.xls'
+      });
     };
 
     /**
@@ -172,48 +176,55 @@
           rule.fields.forEach(field => {
             // field.name = '3_6_1';
             var form_name = FORM + field.name;
+            console.log(form_name);
             var valueInput = formProperty[form_name];
             var i;
             // check obj or number
             // obj: men3_7_1 {c1: 1, c2: 2, c3: 3, c4: 4, c5: 55}
             // number: men3_6_1 60
             if (valueInput) {
-              var isObject = _.isObject(valueInput);
+              // multi object
+              var isMulti = !Array.isArray(valueInput);
                 // AND with properties
               var validateAndProperties = [];
               field.properties.forEach(property => {
                 // type 4
                 if (property.type === 4) {
                   // output "value >= 15 AND value <= 35"
-                  if (!isObject) {
+                  if (!isMulti) {
                     validateAndProperties.push(getConditonType4(valueInput, property));
                   } else {
+                    var isEmpty = true;
                     for (i in valueInput) {
                       if (valueInput[i]) {
+                        isEmpty = false;
                         validateAndProperties.push(getConditonType4(valueInput[i], property));
-                      } else {
-                        validateAndProperties.push(false);
                       }
+                    }
+                    if (isEmpty) {
+                      validateAndProperties.push(false);
                     }
                   }
                 } else {
                   var formMaster = getFormMaster(field.name);
+                  // checkbox equa
                   if (property.type === 3 && formMaster.parent_flag === 0) {
-
-                    if (!isObject) {
+                    console.log(isMulti);
+                    if (!isMulti) {
                       validateAndProperties.push(checkCheckboxs(valueInput, property.value));
                     } else {
                       // this case (law: listcheckbox, properties is multi and pulldown)
                       // form4 - 4.構造
                       for (i in valueInput) {
+                        // console.log("valueInput[i]", valueInput[i]);
                         if (valueInput[i]) {
                           validateAndProperties.push(checkCheckboxs([valueInput[i]], property.value));
-                        } else {
-                          validateAndProperties.push(false);
                         }
                       }
+                     // console.log(validateAndProperties);
                     }
                   }
+                  // checkbox parent - child
                   if (property.type === 3 && formMaster.parent_flag === 1) {
                     validateAndProperties.push(checkCheckboxsParent(valueInput, property.value, formMaster));
                   }
@@ -221,7 +232,7 @@
                   // type 2 pulldown
                   if (property.type === 2) {
                     var isCorrect = false;
-                    if (!isObject) {
+                    if (!isMulti) {
                       if (formMaster.mapping === 1) {
                         validateAndProperties.push(checkedEq(valueInput, property.value));
                       }
@@ -249,19 +260,22 @@
                   }
                 }
               });
-              console.log(validateAndProperties);
-              validateAndFields.push(checkedAND(validateAndProperties));
+              
+              var resultCheckAnd = checkedAND(validateAndProperties);
+              console.log(validateAndProperties, "xxx", resultCheckAnd);
+              validateAndFields.push(resultCheckAnd);
             } else {
               validateAndFields.push(false);
             }
 
           });
-
+          console.log("validateAndFields", validateAndFields);
           validateOrRules.push(checkedAND(validateAndFields));
         });
         // OR with rules
+        console.log("validateOrRules", validateOrRules);
         var result = checkedOR(validateOrRules);
-
+        console.log("result", result);
         resolve({ master_law: lawData.master_law, form1_ro: result });
       });
     }
@@ -282,6 +296,7 @@
 
     function checkCheckboxs(listValue, strLaws) {
       var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+      //console.log(listLaws, "&&", listValue);
       var isCorrect = false;
       listLaws.forEach(law => {
         if (!isCorrect) {

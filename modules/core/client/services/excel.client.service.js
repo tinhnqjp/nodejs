@@ -23,7 +23,7 @@
         });
       };
     return {
-      tableToExcel: function (tableId, worksheetName, fileName) {
+      tableToExcel: function (tableId, worksheetName) {
         var exTable = $(tableId).clone();
         // remove the action th/td
         exTable.find('.ignore-excel-export').remove();
@@ -32,10 +32,7 @@
           table: exTable.html()
         };
 
-        var a = document.createElement('a');
-        a.href = uri + base64(format(template, ctx));
-        a.download = fileName;
-        return a;
+        return uri + base64(format(template, ctx));
       }
     };
   }
