@@ -206,7 +206,7 @@
           }
         }
       });
-     // console.log(_newProperties);
+
       return _newProperties;
     }
 
@@ -523,11 +523,13 @@
         .then(function () {
           // export excel
           var _tableId = isHourei ? 'detail_hourei' : 'regulation_' + regulation_id;
+          var _file_name = isHourei ? title : '条例 （' + title + '）';
           var href = $scope.exportExcel('#' + _tableId, 'エクスポート');
           vm.busy = false;
           $scope.handleShowDownload({
             href: href,
-            file: 'エクスポート.xls'
+            file: '法令_' + _file_name + '.xls',
+            text: 'ダウンロード'
           });
         })
         .catch(function (err) {

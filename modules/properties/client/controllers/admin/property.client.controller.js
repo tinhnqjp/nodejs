@@ -38,12 +38,7 @@
     vm.data_men4_5;
     vm.data_men4_8;
     vm.data_men4_9_5 = ['建築基準法施行令第136条の2の11第1号イ', '建築基準法施行令第136条の2の11第1号ロ'];
-    vm.data_men4_10 = [
-      { id: 'F', name: '地上階(F)' },
-      { id: 'B', name: '地下階(B)' },
-      { id: 'P', name: '昇降機塔等の階(P)' },
-      { id: 'M', name: '地階の倉庫等の階(M)' },
-    ];
+    vm.data_men4_10;
     vm.data_men4_15;
 
     vm.goukei3_7 = goukei3_7;
@@ -98,6 +93,7 @@
           vm.data_men4_4 = getOptionsFormMaster(4, 4);
           vm.data_men4_5 = getOptionsFormMaster(4, 5);
           vm.data_men4_8 = getOptionsFormMaster(4, 8);
+          vm.data_men4_10 = getOptionsFormMaster(4, 10, 14);
           vm.data_men4_15 = getOptionsFormMaster(4, 15);
         })
         .catch((res) => {

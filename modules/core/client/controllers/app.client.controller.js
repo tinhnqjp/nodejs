@@ -40,9 +40,8 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     });
   }
 
-  function handleShowDownload(href, file, resolve, reject) {
-    $scope.dialog = href;
-    $scope.file = file;
+  function handleShowDownload(dialog, resolve, reject) {
+    $scope.dialog = dialog;
     ngDialog.openConfirm({
       templateUrl: 'downloadTemplate.html',
       scope: $scope

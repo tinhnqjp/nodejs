@@ -150,6 +150,12 @@
                                                                                 ng-options="o as o for o in property.child_options" data-width="fit"></select>
                                                                             </div>
                                                                         </div>
+                                                                        <div ng-class="vm.classProperties(rule_field.properties)" ng-if="property.parent_flag === 4">
+                                                                            <div class="input-group form-inline panel">
+                                                                                <select ng-model="property.value" class="form-control" 
+                                                                                ng-options="o.id as o.name for o in property.options" data-width="fit"></select>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                     <div ng-switch-when="3">
                                                                         <div ng-class="vm.classProperties(rule_field.properties)">

@@ -1,10 +1,10 @@
 <!-- modal template -->
 <script type="text/ng-template" id="downloadTemplate.html">
     <div class="modal-header-confirm">
-        <h4 class="modal-title-confirm">ダウンロード</h4>
+        <h4 class="modal-title-confirm">エクスポートが完了しました</h4>
     </div>
     <div class="modal-body text-center" id="modal-body" >
-        <a target="_blank" href="{{:: dialog.href}}" download="{{:: dialog.file}}">ダウンロード</a>
+        <a class="btn btn-info" target="_blank" href="{{:: dialog.href}}" download="{{:: dialog.file}}">{{:: dialog.text}}</a>
     </div>
     <div class="modal-footer">
         <button class="btn btn-warning" type="button" ng-click="closeThisDialog()">閉じる</button>

@@ -64,7 +64,8 @@
       var href = $scope.exportExcel('#tableToExport', 'チェックシート');
       $scope.handleShowDownload({
         href: href,
-        file: 'ダウンロード.xls'
+        file: 'ダウンロード.xls',
+        text: 'ダウンロード'
       });
     };
 
@@ -260,22 +261,22 @@
                   }
                 }
               });
-              
+
               var resultCheckAnd = checkedAND(validateAndProperties);
-              console.log(validateAndProperties, "xxx", resultCheckAnd);
+              console.log(validateAndProperties, 'xxx', resultCheckAnd);
               validateAndFields.push(resultCheckAnd);
             } else {
               validateAndFields.push(false);
             }
 
           });
-          console.log("validateAndFields", validateAndFields);
+          console.log('validateAndFields', validateAndFields);
           validateOrRules.push(checkedAND(validateAndFields));
         });
         // OR with rules
-        console.log("validateOrRules", validateOrRules);
+        console.log('validateOrRules', validateOrRules);
         var result = checkedOR(validateOrRules);
-        console.log("result", result);
+        console.log('result', result);
         resolve({ master_law: lawData.master_law, form1_ro: result });
       });
     }
@@ -296,7 +297,7 @@
 
     function checkCheckboxs(listValue, strLaws) {
       var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-      //console.log(listLaws, "&&", listValue);
+
       var isCorrect = false;
       listLaws.forEach(law => {
         if (!isCorrect) {
