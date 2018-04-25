@@ -27,12 +27,12 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     ngDialog.openConfirm({
       templateUrl: 'confirmTemplate.html',
       scope: $scope
-    }).then(res => {
+    }).then(function (res) {
       delete $scope.dialog;
       if (resolve) {
         resolve(res);
       }
-    }, res => {
+    }, function (res) {
       delete $scope.dialog;
       if (reject) {
         reject(res);
@@ -42,15 +42,23 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
 
   function handleShowDownload(dialog, resolve, reject) {
     $scope.dialog = dialog;
+    $scope.dialog.isSaveOrOpenBlob = false;
+    if (window.navigator.msSaveOrOpenBlob) {
+      $scope.dialog.isSaveOrOpenBlob = true;
+    }
+
     ngDialog.openConfirm({
       templateUrl: 'downloadTemplate.html',
       scope: $scope
-    }).then(res => {
-      delete $scope.dialog;
-      if (resolve) {
-        resolve(res);
+    }).then(function (res) {
+      if (window.navigator.msSaveOrOpenBlob) {
+        var blob = new Blob([dialog.href], {
+          type: 'application/csv;charset=utf-8;'
+        });
+        window.navigator.msSaveOrOpenBlob(blob, dialog.file);
       }
-    }, res => {
+
+    }, function (res) {
       delete $scope.dialog;
       if (reject) {
         reject(res);

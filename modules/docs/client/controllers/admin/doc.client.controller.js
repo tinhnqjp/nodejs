@@ -26,10 +26,10 @@
     function initData() {
       // load list data masterlaw
       LawsApi.listMasterLaw()
-        .then((res) => {
+        .then(function (res) {
           vm.listMasterLaw = res.data;
         })
-        .catch((res) => {
+        .catch(function (res) {
           $scope.nofityError('マスターデータのロードが失敗しました。');
         });
     }
@@ -41,16 +41,16 @@
     vm.save = function (isValid) {
       $scope.handleShowConfirm({
         message: '保存します。よろしいですか？'
-      }, () => {
+      }, function () {
         if (!isValid) {
           $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
           return false;
         }
         vm.doc.createOrUpdate()
-          .then((res) => {
+          .then(function (res) {
             $scope.nofitySuccess('第一号様式データの保存が完了しました。');
           })
-          .catch((res) => {
+          .catch(function (res) {
             $scope.nofityError('第一号様式データの保存が失敗しました。' + res.data.message);
           });
       });
@@ -91,7 +91,7 @@
         vm.listMasterProperties = _listMaster;
         var _promises = [];
         // each law data
-        law.law_details.law_details.forEach(lawData => {
+        law.law_details.law_details.forEach(function (lawData) {
           if (lawData.law_rules.length) {
             _promises.push(checkRules(property, lawData));
           }
@@ -106,7 +106,7 @@
         });
         // update value
         vm.doc.form1_ro = [];
-        result.forEach(item => {
+        result.forEach(function (item) {
           if (item.form1_ro) {
             vm.doc.form1_ro.push(item.id);
           }
@@ -125,10 +125,10 @@
     function getFormProperty(doc) {
       return new Promise(function (resolve, reject) {
         PropertyApi.requestPropertyByDoc(doc)
-        .then((res) => {
+        .then(function (res) {
           resolve(res.data);
         })
-        .catch((res) => {
+        .catch(function (res) {
           reject(res.data.message);
         });
       });
@@ -141,10 +141,10 @@
     function getLawsByYear(year) {
       return new Promise(function (resolve, reject) {
         LawsApi.requestLawsByYear(year)
-        .then((res) => {
+        .then(function (res) {
           resolve(res.data);
         })
-        .catch((res) => {
+        .catch(function (res) {
           reject(res.data.message);
         });
       });
@@ -156,10 +156,10 @@
     function getMasterProperties() {
       return new Promise(function (resolve, reject) {
         LawsApi.listMasterProperties()
-        .then((res) => {
+        .then(function (res) {
           resolve(res.data);
         })
-        .catch((res) => {
+        .catch(function (res) {
           reject(res.data.message);
         });
       });
@@ -171,10 +171,10 @@
         var validateOrRules = [];
         var obj = [];
 
-        lawData.law_rules.forEach(rule => {
+        lawData.law_rules.forEach(function (rule) {
           // OR with rules
           var validateAndFields = [];
-          rule.fields.forEach(field => {
+          rule.fields.forEach(function (field) {
             // field.name = '3_6_1';
             var form_name = FORM + field.name;
             console.log(form_name);
@@ -188,7 +188,7 @@
               var isMulti = !Array.isArray(valueInput);
                 // AND with properties
               var validateAndProperties = [];
-              field.properties.forEach(property => {
+              field.properties.forEach(function (property) {
                 // type 4
                 if (property.type === 4) {
                   // output "value >= 15 AND value <= 35"
@@ -299,7 +299,7 @@
       var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
 
       var isCorrect = false;
-      listLaws.forEach(law => {
+      listLaws.forEach(function (law) {
         if (!isCorrect) {
           if (_.contains(listValue, law)) {
             isCorrect = true;
@@ -315,7 +315,7 @@
       var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
       var intersects = checkParentChild(options, listLaws, listValue);
       var isCorrect = false;
-      intersects.forEach(item => {
+      intersects.forEach(function (item) {
         if (!isCorrect) {
           if (!item.hasChild || (item.hasChild && item.child.length > 0)) {
             isCorrect = true;
@@ -330,11 +330,11 @@
       // and list value of law
       // -> intersect list
       var newjson = [];
-      options.forEach(option => {
+      options.forEach(function (option) {
         if (_.contains(listLaws, option.name)) {
           if (option.child) {
             var childs = [];
-            option.child.forEach(child => {
+            option.child.forEach(function (child) {
               if (_.contains(listLaws, child.name)) {
                 childs.push({ name: child.name });
               }
@@ -350,11 +350,11 @@
       // intersect list (master properties + value of law)
       // and list value of form
       // -> intersect list
-      newjson.forEach(option => {
+      newjson.forEach(function (option) {
         if (_.contains(listValue, option.name)) {
           if (option.hasChild && option.child.length > 0) {
             var childs = [];
-            option.child.forEach(child => {
+            option.child.forEach(function (child) {
               if (_.contains(listValue, child.name)) {
                 childs.push({ name: child.name });
               }
@@ -404,7 +404,7 @@
      */
     function checkedOR(conditions) {
       var isCorrect = false;
-      conditions.forEach(condition => {
+      conditions.forEach(function (condition) {
         if (eval(condition)) {
           isCorrect = true;
         }
@@ -418,7 +418,7 @@
      */
     function checkedAND(conditions) {
       var isCorrect = true;
-      conditions.forEach(condition => {
+      conditions.forEach(function (condition) {
         if (!eval(condition)) {
           isCorrect = false;
         }

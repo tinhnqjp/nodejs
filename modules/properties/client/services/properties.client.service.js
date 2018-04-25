@@ -54,7 +54,7 @@
 
   PropertyApi.$inject = ['$http'];
   function PropertyApi($http) {
-    this.requestPropertyByDoc = (doc) => {
+    this.requestPropertyByDoc = function (doc) {
       return $http.post('/api/requestPropertyByDoc', { doc: doc }, { ignoreLoadingBar: true });
     };
     return this;

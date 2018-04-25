@@ -22,6 +22,7 @@
           return c[p];
         });
       };
+
     return {
       tableToExcel: function (tableId, worksheetName) {
         var exTable = $(tableId).clone();
@@ -32,9 +33,12 @@
           table: exTable.html()
         };
 
-        return uri + base64(format(template, ctx));
+        if (window.navigator.msSaveOrOpenBlob) {
+          return format(template, ctx);
+        } else {
+          return uri + base64(format(template, ctx));
+        }
       }
     };
   }
-
 }());

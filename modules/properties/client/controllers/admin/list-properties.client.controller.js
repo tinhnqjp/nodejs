@@ -29,7 +29,7 @@
     function remove(_property) {
       $scope.handleShowConfirm({
         message: 'この物件データを削除します。よろしいですか？'
-      }, () => {
+      }, function () {
         vm.busy = true;
         var property = new PropertiesService({ _id: _property._id });
         property.$remove(function () {

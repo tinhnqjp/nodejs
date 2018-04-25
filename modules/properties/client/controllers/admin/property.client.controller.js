@@ -59,7 +59,7 @@
       vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
       // get data from master properties
       LawsApi.listMasterProperties()
-        .then((res) => {
+        .then(function (res) {
           vm.listMasterProperties = res.data;
           vm.data_men3_1 = getOptionsFormMaster(3, 1, 1);
           vm.data_men3_3 = getOptionsFormMaster(3, 3);
@@ -96,7 +96,7 @@
           vm.data_men4_10 = getOptionsFormMaster(4, 10, 14);
           vm.data_men4_15 = getOptionsFormMaster(4, 15);
         })
-        .catch((res) => {
+        .catch(function (res) {
           $scope.nofityError('マスターデータのロードが失敗しました。');
         });
 
@@ -163,18 +163,18 @@
       }
      // return null;
       vm.property.createOrUpdate()
-        .then((res) => {
+        .then(function (res) {
           vm.busy = false;
           // $state.go('admin.properties.list');
           $scope.nofitySuccess('物件データの保存が完了しました。');
         })
-        .catch((res) => {
+        .catch(function (res) {
           vm.busy = false;
           $scope.nofityError('物件データの保存が失敗しました。' + res.data.message);
         });
     }
 
-    vm.changeSelect3_14 = () => {
+    vm.changeSelect3_14 = function () {
       var str = vm.property.men3_14;
       if (str) {
         str += ',';
@@ -186,7 +186,7 @@
       vm.property.men3_14 = str;
     };
 
-    vm.changeSelect3_5 = () => {
+    vm.changeSelect3_5 = function () {
       var str = vm.property.men3_5_3;
       if (str) {
         str += ',';

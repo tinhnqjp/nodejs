@@ -55,7 +55,7 @@
   DocsApi.$inject = ['$http'];
   function DocsApi($http) {
 
-    this.autoChecked = docId => {
+    this.autoChecked = function (docId) {
       return $http.post('/api/docs/' + docId + '/autoChecked', null, { ignoreLoadingBar: true });
     };
     return this;

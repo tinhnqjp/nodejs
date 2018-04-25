@@ -1,0 +1,92 @@
+<form name="vm.form.mentionForm" ng-submit="vm.save(vm.form.mentionForm.$valid)" novalidate>
+    <div id="content2" class="w3-container" style="padding-top:50px;">
+            
+        <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+            <span id="myIntro" class="w3-hide">特記様式管理</span>
+        </div>
+        <div>
+            <strong style="font-size:20px;">特記様式管理</strong><br/>
+        </div>
+        <button type="submit" class="btn btn-primary pull-right" id="btn_save_add">
+            <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
+        </button>
+        <a type="button" data-ui-sref="admin.mentions.list" class="mg15r btn btn-warning pull-right">
+            キャンセル
+        </a>
+        <div style="font-weight:bold; padding-top:10px;">
+            <a data-ui-sref="admin.mentions.list">一覧 </a> > ドキュメント登録
+        </div>
+
+        <hr>
+        <!-- #コントロールボタン -->
+        <!-- 入力Form -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">特記様式登録</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="input-group form-inline panel">
+                                    <span class="input-group-addon mw120">名称</span>
+                                    <input name="name" id="name" ng-model="vm.mention.name" type="text"
+                                    class="form-control" placeholder="名称" title="名称" required autofocu />
+                                    <div ng-messages="vm.form.mentionForm.name.$error" role="alert">
+                                        <p class="help-block error-text" ng-message="required">name is required.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <a type="button" class="btn btn-success pull-left" id="add_btn" ng-click="vm.pushMention()">
+                                    <span class="glyphicon glyphicon-plus"></span> 追加</a>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-primary" colspan="3" style="text-align:center;">（い）</th>
+                                        <th class="bg-primary" rowspan="2" style="text-align:center;">（ろ）</th>
+                                        <th class="bg-primary" rowspan="2" style="text-align:center;">（は）</th>
+                                        <th class="bg-primary" rowspan="2" width="120px" style="text-align:center;">最終チェック<br>項目</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-primary" colspan="2" style="text-align:center;">条項</th>
+                                        <th class="bg-primary" style="text-align:center;">見出し</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in vm.mention.contents track by $index">
+                                        <!-- process rowspan and colspan of item1 & item2 条項 -->
+                                        <td><input type="text" class="form-control" ng-model="vm.mention.contents[$index].clause"/></td>
+                                        <!-- legal_text -->
+                                        <td><input type="text" class="form-control" ng-model="vm.mention.contents[$index].headline"/></td>
+                                        <!-- checkbox form1_ha （ろ） -->
+                                        <td style="text-align:center;">
+                                            <input type='checkbox' class="form-control" ng-model='vm.mention.contents[$index].time1_check'/>
+                                        </td>
+                                        <!-- process rowspan of checkbox form1_ha （は） -->
+                                        <td style="text-align:center;">
+                                            <input type='checkbox' class="form-control" ng-model='vm.mention.contents[$index].time2_check'/>
+                                        </td>
+                                        <!-- process rowspan of checkbox item  最終チェック 項目-->
+                                        <td style="text-align:center;">
+                                            <input type='checkbox' class="form-control" ng-model='vm.mention.contents[$index].final_check'/>
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <button type="button" ng-click="vm.removeMention(item)" class="btn btn-danger btn-sm">
+                                                <i class="glyphicon glyphicon-trash"></i> 削除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #入力Form -->
+    </div>
+</form>

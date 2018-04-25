@@ -55,32 +55,32 @@
   LawsApi.$inject = ['$http'];
   function LawsApi($http) {
 
-    this.requestDetail = lawId => {
+    this.requestDetail = function (lawId) {
       return $http.post('/api/laws/' + lawId + '/requestDetail', null, { ignoreLoadingBar: true });
     };
-    this.requestRegulation = lawId => {
+    this.requestRegulation = function (lawId) {
       return $http.post('/api/laws/' + lawId + '/requestRegulation', null, { ignoreLoadingBar: true });
     };
-    this.requestData = (lawId, lawDataId) => {
+    this.requestData = function (lawId, lawDataId) {
       return $http.post('/api/laws/' + lawId + '/requestData', { id: lawDataId }, { ignoreLoadingBar: true });
     };
-    this.requestDataByLawId = (lawId) => {
+    this.requestDataByLawId = function (lawId) {
       return $http.post('/api/laws/' + lawId + '/requestDataByLawId', null, { ignoreLoadingBar: true });
     };
 
-    this.copyLaw = (lawId) => {
+    this.copyLaw = function (lawId) {
       return $http.post('/api/laws/' + lawId + '/copyLaw', null, { ignoreLoadingBar: true });
     };
-    this.postLawData = (lawId, lawDataId, lawRules) => {
+    this.postLawData = function (lawId, lawDataId, lawRules) {
       return $http.post('/api/laws/' + lawId + '/postLawData', { lawRules: lawRules, lawDataId: lawDataId }, { ignoreLoadingBar: true });
     };
-    this.listMasterProperties = () => {
+    this.listMasterProperties = function () {
       return $http.get('/api/listMasterProperties', null, { ignoreLoadingBar: true });
     };
-    this.listMasterLaw = () => {
+    this.listMasterLaw = function () {
       return $http.get('/api/listMasterLaw', null, { ignoreLoadingBar: true });
     };
-    this.requestLawsByYear = (year) => {
+    this.requestLawsByYear = function (year) {
       return $http.post('/api/requestLawsByYear', { year: year }, { ignoreLoadingBar: true });
     };
     return this;

@@ -38,7 +38,7 @@
 
     // remove law
     function remove(_law) {
-      $scope.handleShowConfirm({ message: 'この法令を削除します。よろしいですか？' }, () => {
+      $scope.handleShowConfirm({ message: 'この法令を削除します。よろしいですか？' }, function () {
         vm.busy = true;
         var law = new LawsService({ _id: _law._id });
         law.$remove(function () {
@@ -51,15 +51,15 @@
 
     // copy law
     function copy(_law) {
-      $scope.handleShowConfirm({ message: 'この法令データをコピーします。よろしいですか？' }, () => {
+      $scope.handleShowConfirm({ message: 'この法令データをコピーします。よろしいですか？' }, function () {
         vm.busy = true;
         LawsApi.copyLaw(_law._id)
-          .then((res) => {
+          .then(function (res) {
             vm.busy = false;
             getData();
             $scope.nofitySuccess('法令データのコピーが完了しました。');
           })
-          .catch((res) => {
+          .catch(function (res) {
             vm.busy = false;
             $scope.nofityError('法令データのコピーが失敗しました。');
           });

@@ -54,33 +54,33 @@
     function initData() {
       vm.busy = true;
       LawsApi.listMasterProperties()
-        .then((res) => {
+        .then(function (res) {
           vm.listMasterProperties = res.data;
           vm.bukken = _.uniq(vm.listMasterProperties, 'bukken');
         })
-        .catch((res) => {
+        .catch(function (res) {
           $scope.nofityError('マスターデータのロードが失敗しました。');
         });
 
       if (law._id) {
         LawsApi.requestRegulation(law._id)
-          .then((res) => {
+          .then(function (res) {
             vm.todoufuken_regulations = res.data.todoufuken_regulations;
             if (vm.todoufuken_regulations.length === 0) return;
-            vm.todoufuken_regulations.forEach((tr, key) => {
+            vm.todoufuken_regulations.forEach(function (tr, key) {
               vm.tmpLawRegulations[tr._id] = [];
             });
 
           })
-          .catch((res) => {
+          .catch(function (res) {
             $scope.nofityError('マスターデータのロードが失敗しました。');
           });
 
         LawsApi.requestDetail(law._id)
-          .then((res) => {
+          .then(function (res) {
             vm.tmpLawDetails = res.data.law_details;
           })
-          .catch((res) => {
+          .catch(function (res) {
             $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
           });
       }
@@ -112,13 +112,13 @@
       vm.isVisibleLawsRule = true;
 
       LawsApi.requestData(_lawData.law_id, _lawDataId)
-        .then((res) => {
+        .then(function (res) {
           var rules = res.data.law_rules;
 
           var _rules = [];
-          rules.forEach((rule, key) => {
+          rules.forEach(function (rule, key) {
             var _fields = [];
-            rule.fields.forEach((field, k) => {
+            rule.fields.forEach(function (field, k) {
               // in database has format ("name" : "4_15_null")
               var _dataField = field.name.split('_');
               _fields[k] = {
@@ -146,7 +146,7 @@
           });
           vm.formLawsRule.rules = rules;
         })
-        .catch((res) => {
+        .catch(function (res) {
           $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
         });
     }
@@ -164,9 +164,8 @@
      * @param {*} listValue value from database
      */
     function createListProperties(_properties, listValue) {
-     // console.log("create properties",_properties, listValue);
       var _newProperties = [];
-      _properties.forEach((property, k) => {
+      _properties.forEach(function (property, k) {
         if ((property.type === 2 || property.type === 3) && property.json) {
           try {
             var json = property.json.replace(/'/g, '"');
@@ -317,7 +316,7 @@
       var number = index + 1;
       $scope.handleShowConfirm({
         message: '条件グループ' + number + 'をコピーします。よろしいですか？'
-      }, () => {
+      }, function () {
         var newRule = angular.copy(_rule);
         newRule.rule_name = newRule.rule_name + ' - コピー';
         vm.formLawsRule.rules.push(newRule);
@@ -333,7 +332,7 @@
       var number = index + 1;
       $scope.handleShowConfirm({
         message: '条件グループ' + number + 'を削除します。よろしいですか？'
-      }, () => {
+      }, function () {
         vm.formLawsRule.rules.splice(index, 1);
       });
     };
@@ -355,7 +354,7 @@
     vm.removeLawsRuleField = function (_rule, _ruleField) {
       $scope.handleShowConfirm({
         message: 'この条件項目を削除します。よろしいですか？'
-      }, () => {
+      }, function () {
         var index = vm.formLawsRule.rules.indexOf(_rule);
         var indexField = vm.formLawsRule.rules[index].fields.indexOf(_ruleField);
         vm.formLawsRule.rules[index].fields.splice(indexField, 1);
@@ -369,16 +368,16 @@
     vm.saveRules = function (isValid) {
       $scope.handleShowConfirm({
         message: '保存します。よろしいですか？'
-      }, () => {
+      }, function () {
         if (!isValid) {
           $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
           return false;
         }
         LawsApi.postLawData(law._id, vm.formLawsRule.info._id, vm.formLawsRule.rules)
-          .then((res) => {
+          .then(function (res) {
             $scope.nofitySuccess('条件データの保存が完了しました。');
           })
-          .catch((res) => {
+          .catch(function (res) {
             $scope.nofityError('条件データの保存が失敗しました。' + res.data.message);
           });
       });
@@ -402,11 +401,11 @@
       if (vm.tmpLawDetails.length === 0) {
         vm.busy = true;
         LawsApi.requestDetail(law._id)
-          .then((res) => {
+          .then(function (res) {
             vm.tmpLawDetails = res.data.law_details;
             vm.busy = false;
           })
-          .catch((res) => {
+          .catch(function (res) {
             $scope.nofityError('法令データのロードが失敗しました。' + res.data.message);
           });
       }
@@ -415,7 +414,7 @@
     /**
      * when click open collapse toudofuken 北海道...
      */
-    vm.openCollapse = regulationId => {
+    vm.openCollapse = function (regulationId) {
       if (vm.tmpLawRegulations[regulationId].length > 0) return;
       vm.busy = true;
       var tr = _.findWhere(vm.todoufuken_regulations, {
@@ -438,7 +437,7 @@
       }
       $scope.handleShowConfirm({
         message: '保存します。よろしいですか？'
-      }, () => {
+      }, function () {
         vm.busy = true;
         // Create a new law, or update the current instance
         var rs_law = new LawsService({
@@ -447,11 +446,11 @@
           name: vm.law.name
         });
         rs_law.createOrUpdate()
-          .then((res) => {
+          .then(function (res) {
             vm.busy = false;
             $scope.nofitySuccess('法令データの保存が完了しました。');
           })
-          .catch((res) => {
+          .catch(function (res) {
             vm.busy = false;
             $scope.nofityError('法令データの保存が失敗しました。' + res.data.message);
           });
@@ -495,7 +494,7 @@
           // 法令
           if (isHourei) {
             vm.maxColumnRules = 0;
-            vm.tmpLawDetails.forEach((_lawData, k) => {
+            vm.tmpLawDetails.forEach(function (_lawData, k) {
               var newLawData = _.find(vm.lawDataListUpdate, {
                 _id: _lawData._id
               });
@@ -507,7 +506,7 @@
           } else {
             // 都道府県
             vm.maxColumnRules = 0;
-            vm.tmpLawRegulations[regulation_id].forEach((_lawData, k) => {
+            vm.tmpLawRegulations[regulation_id].forEach(function (_lawData, k) {
               var newLawData = _.find(vm.lawDataListUpdate, {
                 _id: _lawData._id
               });
@@ -519,16 +518,18 @@
           }
           // reload form
           if (!$scope.$$phase) $scope.$digest();
+          return requesLawById(vm.law._id);
         })
-        .then(function () {
+        .then(function (requesLawNew) {
           // export excel
           var _tableId = isHourei ? 'detail_hourei' : 'regulation_' + regulation_id;
-          var _file_name = isHourei ? title : '条例 （' + title + '）';
+          var _file_name_first = requesLawNew.name;
+          var _file_name_last = isHourei ? title : '条例 （' + title + '）';
           var href = $scope.exportExcel('#' + _tableId, 'エクスポート');
           vm.busy = false;
           $scope.handleShowDownload({
             href: href,
-            file: '法令_' + _file_name + '.xls',
+            file: _file_name_first + '_' + _file_name_last + '.xls',
             text: 'ダウンロード'
           });
         })
@@ -544,8 +545,8 @@
      */
     function setValueForField(rules) {
       var _rules = [];
-      rules.forEach((rule, key) => {
-        rule.fields.forEach((field, k) => {
+      rules.forEach(function (rule, key) {
+        rule.fields.forEach(function (field, k) {
           // in database has format ("name" : "4_15_null")
           var _dataField = field.name.split('_');
           field.bukken = parseInt(_dataField[0], 10);
@@ -575,13 +576,34 @@
     function requestDataByLawId(_lawId) {
       return new Promise(function (resolve, reject) {
         LawsApi.requestDataByLawId(_lawId)
-          .then((res) => {
+          .then(function (res) {
             resolve(res.data);
           })
-          .catch((res) => {
+          .catch(function (res) {
             reject(res.data.message);
           });
       });
+    }
+
+    function requesLawByLawId(_lawId) {
+      return new Promise(function (resolve, reject) {
+        LawsApi.requestDataByLawId(_lawId)
+          .then(function (res) {
+            resolve(res.data);
+          })
+          .catch(function (res) {
+            reject(res.data.message);
+          });
+      });
+    }
+    /**
+     * Get law by law id
+     * @param {*} _lawId law
+     */
+    function requesLawById(_lawId) {
+      return LawsService.get({
+        lawId: _lawId
+      }).$promise;
     }
 
     /**
@@ -601,8 +623,10 @@
      * @param {*} id ==
      * @returns String 等しい
      */
-    $scope.getValidationByFind = function (id) {
-      return vm.typeValidation.find(x => x.id === id);
+    $scope.getValidationByFind = function (_id) {
+      return _.find(vm.typeValidation, {
+        id: _id
+      });
     };
 
     /**
@@ -648,7 +672,6 @@
      * @param {*} checked status checked
      */
     $ctrl.checkboxSelectChild = function (property_p, property_c, checked) {
-      console.log($ctrl.property.value);
       if (!$ctrl.property.value) {
         $ctrl.property.value = [];
       }
@@ -670,7 +693,7 @@
       if (idx >= 0 && !checked) {
         if (property_p.child) {
           $ctrl.property.value.splice(idx, 1);
-          property_p.child.forEach(c => {
+          property_p.child.forEach(function (c) {
             var idc = $ctrl.property.value.indexOf(c.name);
             if (idc >= 0) {
               $ctrl.property.value.splice(idc, 1);

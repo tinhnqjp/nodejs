@@ -4,7 +4,8 @@
         <h4 class="modal-title-confirm">エクスポートが完了しました</h4>
     </div>
     <div class="modal-body text-center" id="modal-body" >
-        <a class="btn btn-info" target="_blank" href="{{:: dialog.href}}" download="{{:: dialog.file}}">{{:: dialog.text}}</a>
+        <a ng-if="!dialog.isSaveOrOpenBlob" class="btn btn-info" target="_blank" href="{{:: dialog.href}}" download="{{:: dialog.file}}">{{:: dialog.text}}</a>
+        <button ng-if="dialog.isSaveOrOpenBlob" class="btn btn-info" type="button" ng-click="confirm()">{{:: dialog.text}}</button>
     </div>
     <div class="modal-footer">
         <button class="btn btn-warning" type="button" ng-click="closeThisDialog()">閉じる</button>

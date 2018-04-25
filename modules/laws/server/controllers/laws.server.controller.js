@@ -40,7 +40,7 @@ function createDataComon(req, res) {
 
     // save to LawDetail
     var law_details = [];
-    masterLawDetailList.forEach((item, index, array) => {
+    masterLawDetailList.forEach(function (item, index, array) {
       var newLawData = new LawData({
         master_law: item,
         law_id: lawId
@@ -56,9 +56,9 @@ function createDataComon(req, res) {
 
     // save to lawRegulation
     var todoufuken_regulations = [];
-    tdfk.forEach((_tdfk, _index, array) => {
+    tdfk.forEach(function (_tdfk, _index, array) {
       var law_regulations_array = [];
-      masterLawTdfkList.forEach((item, index, array) => {
+      masterLawTdfkList.forEach(function (item, index, array) {
         var newLawDataReg = new LawData({
           master_law: item,
           law_id: lawId
@@ -258,9 +258,9 @@ exports.createData = function (req, res) {
       removeLawRule.exec();
 
       var law_rules = [];
-      _lawRules.forEach((item, index, array) => {
+      _lawRules.forEach(function (item, index, array) {
         var fields = [];
-        item.fields.forEach((field, inx) => {
+        item.fields.forEach(function (field, inx) {
           console.log(field);
           var f = {
             type: field.type,
@@ -395,7 +395,7 @@ exports.postLawData = function (req, res) {
     .then(function () {
       // create new array rules
       var promises = [];
-      _lawRules.forEach((item, index, array) => {
+      _lawRules.forEach(function (item, index, array) {
         promises.push(saveLawRule(lawData.law_id, _lawDataId, item, index));
       });
       return Promise.all(promises);
@@ -635,7 +635,7 @@ function saveLawRule(_lawId, _lawDataId, _lawRule) {
   return new Promise(function (resolve, reject) {
     // create new array fields in rule
     var fields = [];
-    _lawRule.fields.forEach((field, inx) => {
+    _lawRule.fields.forEach(function (field, inx) {
       var nameFiled = field.bukken + '_' + field.deuta1;
       if (field.deuta2) {
         nameFiled += '_' + field.deuta2;
@@ -719,13 +719,13 @@ function copyNewLawData(_lawId, _itemData) {
     });
 
     var law_rules = [];
-    _itemData.law_rules.forEach((itemRule, r) => {
+    _itemData.law_rules.forEach(function (itemRule, r) {
       // create rule
       var newFields = [];
-      itemRule.fields.forEach((iField, i) => {
+      itemRule.fields.forEach(function (iField, i) {
         var newProperties = [];
         if (iField.properties) {
-          iField.properties.forEach((iProperties, k) => {
+          iField.properties.forEach(function (iProperties, k) {
             newProperties[k] = {
               value: iProperties.value
             };
@@ -762,7 +762,7 @@ function copyNewLawData(_lawId, _itemData) {
 
 function copyLawDataDetail(_lawId, _oldLawDataList) {
   var promises = [];
-  _oldLawDataList.forEach((itemData, index, array) => {
+  _oldLawDataList.forEach(function (itemData, index, array) {
     promises.push(copyNewLawData(_lawId, itemData));
   });
   return Promise.all(promises);
@@ -771,7 +771,7 @@ function copyLawDataDetail(_lawId, _oldLawDataList) {
 function copyLawDataTdfk(_lawId, _oldLawDataList, _todoufuken) {
   return new Promise(function (resolve, reject) {
     var promises = [];
-    _oldLawDataList.forEach((itemData, index, array) => {
+    _oldLawDataList.forEach(function (itemData, index, array) {
       promises.push(copyNewLawData(_lawId, itemData));
     });
     Promise.all(promises).then(function (law_regulations) {
@@ -779,7 +779,7 @@ function copyLawDataTdfk(_lawId, _oldLawDataList, _todoufuken) {
         todoufuken: _todoufuken,
         law_regulations: law_regulations
       });
-    }).catch(err => {
+    }).catch(function (err) {
       return reject(err);
     });
   });
@@ -803,11 +803,11 @@ function createLawDedail(_lawId, _law_details) {
 function createLawRegulation(_lawId, _oldRegulationDataList) {
   return new Promise(function (resolve, reject) {
     var promises = [];
-    _oldRegulationDataList.forEach((itemReg, _index) => {
+    _oldRegulationDataList.forEach(function (itemReg, _index) {
       promises.push(copyLawDataTdfk(_lawId, itemReg.law_regulations, itemReg.todoufuken));
     });
 
-    Promise.all(promises).then(result => {
+    Promise.all(promises).then(function (result) {
       var newLawRegulation = new LawRegulation({
         law_id: _lawId,
         todoufuken_regulations: result
@@ -818,7 +818,7 @@ function createLawRegulation(_lawId, _oldRegulationDataList) {
         }
         return resolve(newLawRegulation);
       });
-    }).catch(err => {
+    }).catch(function (err) {
       return reject(err);
     });
   });
