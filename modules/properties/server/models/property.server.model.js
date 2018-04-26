@@ -27,18 +27,15 @@ var PropertySchema = new Schema({
   },
   men11: {
     type: String,
-    trim: true,
-    required: '建築主の概要が入力されていません。'
+    trim: true
   },
   men12: {
     type: String,
-    trim: true,
-    required: '代表者の概要が入力されていません。'
+    trim: true
   },
   men13: {
     type: String,
-    trim: true,
-    required: '設計者の概要が入力されていません。'
+    trim: true
   },
   men3_1_1: { type: String },
   men3_1_2: { type: String },

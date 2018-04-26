@@ -23,6 +23,18 @@
           roles: ['admin']
         }
       })
+      .state('admin.properties.import', {
+        url: '/import',
+        templateUrl: '/modules/properties/client/views/admin/import-property.client.view.html',
+        controller: 'PropertyImportsAdminController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin']
+        },
+        resolve: {
+          propertyResolve: newProperty
+        }
+      })
       .state('admin.properties.create', {
         url: '/create',
         templateUrl: '/modules/properties/client/views/admin/form-property.client.view.html',

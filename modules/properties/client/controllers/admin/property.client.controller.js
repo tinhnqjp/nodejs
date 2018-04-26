@@ -225,7 +225,7 @@
     function goukei3_10() {
       // 10.建築面積
       // ｲ.建築面積
-      var total_i = toInt(vm.property.men3_10_1) + toInt(vm.property.men3_10_3);
+      var total_i = toFloat(vm.property.men3_10_1) + toFloat(vm.property.men3_10_3);
       vm.property.men3_10_4 = total_i;
       // // ﾛ.建蔽率
       vm.property.men3_10_2 = percentRoundLogic(total_i);
@@ -281,12 +281,12 @@
 
     function getChild(value, param) {
       if (!value || !value[param]) return 0;
-      return parseInt(value[param], 10);
+      return parseFloat(value[param]);
     }
 
-    function toInt(value) {
-      if (!value) return 0;
-      return parseInt(value, 10);
+    function toFloat(value) {
+      if (!value) { return 0; }
+      return parseFloat(value);
     }
 
     /**

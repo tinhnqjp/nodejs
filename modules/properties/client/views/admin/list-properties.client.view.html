@@ -12,7 +12,7 @@
   <hr>
   <div class="table-responsive">
         <div class="pull-right" style="padding:10px;">
-            <button class="btn btn-info btn-sm"><i class="glyphicon glyphicon-allow-down"></i> NICEインポート</button>
+            <a class="btn btn-info btn-sm" data-ui-sref="admin.properties.import"><i class="glyphicon glyphicon-allow-down"></i> NICEインポート</a>
         </div>
         <table class="table table-striped table-bordered table-hover">
             <thead>
@@ -40,13 +40,13 @@
         </table>
     </div>
    
-  <div style="width:100%; text-align:center;">
-      <hr>
-      <ul uib-pagination
-        total-items="vm.totalItems"
-        items-per-page="vm.pageSize"
-        previous-text="前"
-        next-text="次"
-        ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
-  </div>
+    <div style="width:100%; text-align:center;">
+        <hr>
+        <ul uib-pagination
+            total-items="vm.totalItems"
+            items-per-page="vm.pageSize"
+            previous-text="前"
+            next-text="次"
+            ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
+    </div>
 </div>

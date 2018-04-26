@@ -57,6 +57,12 @@
     this.requestPropertyByDoc = function (doc) {
       return $http.post('/api/requestPropertyByDoc', { doc: doc }, { ignoreLoadingBar: true });
     };
+    this.importPropertyFormMysql = function (ids) {
+      return $http.post('/api/importPropertyFormMysql', { ids: ids }, { ignoreLoadingBar: true });
+    };
+    this.requestPropertiesMysql = function (input) {
+      return $http.post('/api/requestPropertiesMysql', input, { ignoreLoadingBar: true });
+    };
     return this;
   }
 }());

@@ -22,4 +22,6 @@ module.exports = function (app) {
   app.param('propertyId', properties.propertyByID);
 
   app.route('/api/requestPropertyByDoc').post(properties.requestPropertyByDoc);
+  app.route('/api/importPropertyFormMysql').post(properties.importPropertyFormMysql);
+  app.route('/api/requestPropertiesMysql').post(properties.requestPropertiesMysql);
 };
