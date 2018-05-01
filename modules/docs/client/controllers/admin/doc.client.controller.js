@@ -179,86 +179,28 @@
             var form_name = FORM + field.name;
             console.log(form_name);
             var valueInput = formProperty[form_name];
-            var i;
             // check obj or number
             // obj: men3_7_1 {c1: 1, c2: 2, c3: 3, c4: 4, c5: 55}
             // number: men3_6_1 60
             if (valueInput) {
               // multi object
-              var isMulti = !Array.isArray(valueInput);
+              var isMulti = checkMulti(valueInput);
                 // AND with properties
               var validateAndProperties = [];
               field.properties.forEach(function (property) {
-                // type 4
-                if (property.type === 4) {
-                  // output "value >= 15 AND value <= 35"
-                  if (!isMulti) {
-                    validateAndProperties.push(getConditonType4(valueInput, property));
-                  } else {
-                    var isEmpty = true;
-                    for (i in valueInput) {
-                      if (valueInput[i]) {
-                        isEmpty = false;
-                        validateAndProperties.push(getConditonType4(valueInput[i], property));
-                      }
-                    }
-                    if (isEmpty) {
-                      validateAndProperties.push(false);
-                    }
-                  }
-                } else {
-                  var formMaster = getFormMaster(field.name);
-                  // checkbox equa
-                  if (property.type === 3 && formMaster.parent_flag === 0) {
-                    console.log(isMulti);
-                    if (!isMulti) {
-                      validateAndProperties.push(checkCheckboxs(valueInput, property.value));
-                    } else {
-                      // this case (law: listcheckbox, properties is multi and pulldown)
-                      // form4 - 4.構造
-                      for (i in valueInput) {
-                        // console.log("valueInput[i]", valueInput[i]);
-                        if (valueInput[i]) {
-                          validateAndProperties.push(checkCheckboxs([valueInput[i]], property.value));
-                        }
-                      }
-                     // console.log(validateAndProperties);
-                    }
-                  }
-                  // checkbox parent - child
-                  if (property.type === 3 && formMaster.parent_flag === 1) {
-                    validateAndProperties.push(checkCheckboxsParent(valueInput, property.value, formMaster));
-                  }
-
-                  // type 2 pulldown
-                  if (property.type === 2) {
-                    var isCorrect = false;
-                    if (!isMulti) {
-                      if (formMaster.mapping === 1) {
-                        validateAndProperties.push(checkedEq(valueInput, property.value));
-                      }
-                      if (formMaster.mapping === 2) {
-                        var listLaws = valueInput.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-                        validateAndProperties.push(checkedContains(property, listLaws));
-                      }
-                    } else {
-                      // valueInput have mutil properties
-                      for (i in valueInput) {
-                        if (formMaster.mapping === 1) {
-                          validateAndProperties.push(checkedEq(valueInput[i], property.value));
-                        }
-                        if (formMaster.mapping === 3 && property.value) {
-                          var check = false;
-                          if (checkedEq(valueInput[i].class, property.value)) {
-                            check = true;
-                          } else if (checkedEq(valueInput[i].division, property.value)) {
-                            check = true;
-                          }
-                          validateAndProperties.push(check);
-                        }
-                      }
-                    }
-                  }
+                var formMaster;
+                switch (property.type) {
+                  case 4:
+                    validateAndProperties = processType4(isMulti, valueInput, property, validateAndProperties);
+                    break;
+                  case 3:
+                    formMaster = getFormMaster(field.name);
+                    validateAndProperties = processType3(isMulti, valueInput, property, validateAndProperties, formMaster);
+                    break;
+                  case 2:
+                    formMaster = getFormMaster(field.name);
+                    validateAndProperties = processType2(isMulti, valueInput, property, validateAndProperties, formMaster);
+                    break;
                 }
               });
 
@@ -281,6 +223,95 @@
       });
     }
 
+    function checkMulti(valueInput) {
+      console.log('checkMulti', (valueInput.constructor));
+      if (valueInput.constructor === Object) {
+        return 1;
+      }
+      if (valueInput.constructor === Array) {
+        return 2;
+      }
+      return 0;
+    }
+
+    function processType4(isMulti, valueInput, property, validateAndProperties) {
+      if (isMulti === 0) {
+        validateAndProperties.push(getConditonType4(valueInput, property));
+      } else {
+        var isEmpty = true;
+        for (var i in valueInput) {
+          if (valueInput[i]) {
+            isEmpty = false;
+            validateAndProperties.push(getConditonType4(valueInput[i], property));
+          }
+        }
+        if (isEmpty) {
+          validateAndProperties.push(false);
+        }
+      }
+      return validateAndProperties;
+    }
+
+    function processType3(isMulti, valueInput, property, validateAndProperties, formMaster) {
+      console.log('processType3', valueInput);
+      if (formMaster.parent_flag === 0) {
+        switch (isMulti) {
+          case 0:
+            validateAndProperties.push(checkPullDownAndCheckboxs(valueInput, property.value));
+            break;
+          case 1:
+            // this case (law: listcheckbox, properties is multi and pulldown)
+            // form4 - 4.構造
+            for (var i in valueInput) {
+              if (valueInput[i]) {
+                validateAndProperties.push(checkCheckboxs([valueInput[i]], property.value));
+              }
+            }
+            break;
+          case 2:
+            validateAndProperties.push(checkCheckboxs(valueInput, property.value));
+            break;
+        }
+      } else if (formMaster.parent_flag === 1) {
+        validateAndProperties.push(checkCheckboxsParent(valueInput, property.value, formMaster));
+      }
+
+      return validateAndProperties;
+    }
+
+    function processType2(isMulti, valueInput, property, validateAndProperties, formMaster) {
+      var isCorrect = false;
+      if (isMulti === 0) {
+        if (formMaster.mapping === 1) {
+          validateAndProperties.push(checkedEq(valueInput, property.value));
+        }
+        if (formMaster.mapping === 2) {
+          var listLaws = valueInput.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+          console.log('processType2', property, listLaws);
+          validateAndProperties.push(checkedContains(property.value, listLaws));
+        }
+      } else {
+        // valueInput have mutil properties.
+        console.log('valueInput', valueInput, isMulti);
+        for (var i in valueInput) {
+          if (formMaster.mapping === 1) {
+            validateAndProperties.push(checkedEq(valueInput[i], property.value));
+          }
+          if (formMaster.mapping === 3 && property.value) {
+            var check = false;
+            if (checkedEq(valueInput[i].class, property.value)) {
+              check = true;
+            } else if (checkedEq(valueInput[i].division, property.value)) {
+              check = true;
+            }
+            validateAndProperties.push(check);
+          }
+        }
+      }
+
+      return validateAndProperties;
+    }
+
     function getConditonType4(valueInput, property) {
       var strCondition = '';
       if (property.compare1 && property.value1) {
@@ -295,12 +326,28 @@
       return strCondition;
     }
 
-    function checkCheckboxs(listValue, strLaws) {
+    function checkPullDownAndCheckboxs(value, strLaws) {
       var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-
+      console.log('checkPullDownAndCheckboxs', value, listLaws);
       var isCorrect = false;
       listLaws.forEach(function (law) {
         if (!isCorrect) {
+          console.log(law);
+          if (value === law) {
+            isCorrect = true;
+          }
+        }
+      });
+      return isCorrect;
+    }
+
+    function checkCheckboxs(listValue, strLaws) {
+      var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+      console.log('checkCheckboxs', listValue, listLaws);
+      var isCorrect = false;
+      listLaws.forEach(function (law) {
+        if (!isCorrect) {
+          console.log(law);
           if (_.contains(listValue, law)) {
             isCorrect = true;
           }
@@ -385,6 +432,7 @@
 
     function checkedEq(valueInput, valueProperty) {
       var isCorrect = false;
+      console.log('checkedEq', valueInput, valueProperty);
       if (valueInput === valueProperty) {
         isCorrect = true;
       }
@@ -414,15 +462,22 @@
 
     /**
      * check AND in each array
+     * [true, true, false] => false
+     * [false, false, false] => false
+     * [true, true, true] => true
      * @param {*} conditions array [true, true, false] => false
      */
     function checkedAND(conditions) {
-      var isCorrect = true;
-      conditions.forEach(function (condition) {
-        if (!eval(condition)) {
-          isCorrect = false;
-        }
-      });
+      var isCorrect = false;
+      if (conditions.length > 0) {
+        isCorrect = true;
+        conditions.forEach(function (condition) {
+          if (!eval(condition)) {
+            isCorrect = false;
+          }
+        });
+      }
+
       return isCorrect;
     }
     // End controller
@@ -430,6 +485,7 @@
 
   angular.module('docs.admin').filter('contains', function () {
     return function (array, needle) {
+      if (!array) return 0;
       return array.indexOf(needle) >= 0;
     };
   });

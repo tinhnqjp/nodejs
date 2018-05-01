@@ -319,6 +319,66 @@
       vm.property.men4_10_3 = total_c3;
       vm.property.men4_10_4 = total_c4;
     }
+
+    /**
+     * spec for master property (parent_flag = 1):
+     * when click checked at checkbox child -> checkbox parent auto checked
+     * @param {*} property_p parent
+     * @param {*} property_c child
+     * @param {*} checked status checked
+     */
+    vm.checkboxSelectChild = function (property_p, property_c, checked, propertyValue) {
+      if (!propertyValue) {
+        propertyValue = [];
+      }
+
+      var idx = propertyValue.indexOf(property_p.name);
+      if (idx >= 0 && !checked && property_p.child) {
+        var idc = propertyValue.indexOf(property_c.name);
+        if (idc >= 0) {
+          propertyValue.splice(idc, 1);
+        }
+        var hasChildCheck = false;
+        property_p.child.forEach(function (c) {
+          var idc = propertyValue.indexOf(c.name);
+          if (idc >= 0) {
+            hasChildCheck = true;
+          }
+        });
+        if (!hasChildCheck) {
+          propertyValue.splice(idx, 1);
+        }
+      }
+    };
+
+    /**
+     * spec for master property (parent_flag = 1):
+     * when click checked at checkbox parent (false)-> checkbox child auto unchecked
+     * @param {*} property_p parent
+     * @param {*} checked status checked
+     */
+    vm.checkboxSelectParent = function (property_p, checked, propertyValue) {
+      var idx = propertyValue.indexOf(property_p.name);
+      if (idx >= 0 && !checked) {
+
+        if (property_p.child) {
+          propertyValue.splice(idx, 1);
+          property_p.child.forEach(function (c) {
+            var idc = propertyValue.indexOf(c.name);
+            if (idc >= 0) {
+              propertyValue.splice(idc, 1);
+            }
+          });
+        }
+      }
+    };
   // end controller
   }
+
+  angular.module('properties.admin').filter('contains', function () {
+    return function (array, needle) {
+      if (!array) return 0;
+      return array.indexOf(needle) >= 0;
+    };
+  });
 }());

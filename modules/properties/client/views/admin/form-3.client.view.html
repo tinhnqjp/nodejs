@@ -40,12 +40,12 @@
                 <div class="col-sm-11">
                     <div class="row" ng-repeat="ck in vm.data_men3_3">
                         <label class="checkbox-inline" >
-                            <input type="checkbox" checklist-model="vm.property.men3_3" checklist-value="ck.name">
+                            <input type="checkbox" ng-change="vm.checkboxSelectParent(ck, checked, vm.property.men3_3)" checklist-model="vm.property.men3_3" checklist-value="ck.name">
                             {{ ck.name }}&nbsp;
                         </label>
                         <div class="row mg20l" ng-if="ck.child" class="row" ng-repeat="ckc in ck.child">
                             <label class="checkbox-inline">
-                                <input type="checkbox" checklist-model="vm.property.men3_3" checklist-value="ckc.name">
+                                <input type="checkbox" ng-change="vm.checkboxSelectChild(ck, ckc, checked, vm.property.men3_3)" checklist-model="vm.property.men3_3" checklist-value="ckc.name" ng-disabled="!(vm.property.men3_3 | contains:ck.name)">
                                 {{ ckc.name }}&nbsp;
                             </label>
                         </div>

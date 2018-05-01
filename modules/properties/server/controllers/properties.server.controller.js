@@ -425,12 +425,12 @@ function importProperty(_property, masterProperties) {
     newDoc.men4_15 = getValueMen4_15(_property);
     newDoc.men4_16 = trim(_property.col_364);
     newDoc.men4_17 = trim(_property.col_365);
-    // newDoc.save(function (err) {
-    //   if (err) {
-    //     reject(err);
-    //   }
+    newDoc.save(function (err) {
+      if (err) {
+        reject(err);
+      }
     resolve(newDoc);
-    // });
+    });
   });
 }
 
