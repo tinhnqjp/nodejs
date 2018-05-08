@@ -78,6 +78,7 @@
 
         LawsApi.requestDetail(law._id)
           .then(function (res) {
+            console.log(res.data);
             vm.tmpLawDetails = res.data.law_details;
           })
           .catch(function (res) {

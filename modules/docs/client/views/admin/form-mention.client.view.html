@@ -1,4 +1,4 @@
-<form name="vm.form.mentionForm" ng-submit="vm.save(vm.form.mentionForm.$valid)" novalidate>
+<form name="vm.form.mentionForm" ng-submit="vm.saveMention(vm.form.mentionForm.$valid)" novalidate>
     <div id="content2" class="w3-container" style="padding-top:50px;">
             
         <div id="myTop" class="w3-container w3-top w3-theme w3-large">
@@ -10,11 +10,11 @@
         <button type="submit" class="btn btn-primary pull-right" id="btn_save_add">
             <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
         </button>
-        <a type="button" data-ui-sref="admin.mentions.list" class="mg15r btn btn-warning pull-right">
+        <a type="button" data-ui-sref="admin.docs.list" class="mg15r btn btn-warning pull-right">
             キャンセル
         </a>
         <div style="font-weight:bold; padding-top:10px;">
-            <a data-ui-sref="admin.mentions.list">一覧 </a> > ドキュメント登録
+            <a data-ui-sref="admin.docs.list">一覧 </a> > ドキュメント登録
         </div>
 
         <hr>
@@ -26,16 +26,6 @@
                     <div class="panel-heading">特記様式登録</div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-sm-6">
-                                <div class="input-group form-inline panel">
-                                    <span class="input-group-addon mw120">名称</span>
-                                    <input name="name" id="name" ng-model="vm.mention.name" type="text"
-                                    class="form-control" placeholder="名称" title="名称" required autofocu />
-                                    <div ng-messages="vm.form.mentionForm.name.$error" role="alert">
-                                        <p class="help-block error-text" ng-message="required">name is required.</p>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-sm-6">
                                 <a type="button" class="btn btn-success pull-left" id="add_btn" ng-click="vm.pushMention()">
                                     <span class="glyphicon glyphicon-plus"></span> 追加</a>
@@ -58,22 +48,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="item in vm.mention.contents track by $index">
+                                    <tr ng-repeat="item in vm.doc.mentions track by $index">
                                         <!-- process rowspan and colspan of item1 & item2 条項 -->
-                                        <td><input type="text" class="form-control" ng-model="vm.mention.contents[$index].clause"/></td>
+                                        <td><input type="text" class="form-control" ng-model="vm.doc.mentions[$index].clause"/></td>
                                         <!-- legal_text -->
-                                        <td><input type="text" class="form-control" ng-model="vm.mention.contents[$index].headline"/></td>
+                                        <td><input type="text" class="form-control" ng-model="vm.doc.mentions[$index].headline"/></td>
                                         <!-- checkbox form1_ha （ろ） -->
                                         <td style="text-align:center;">
-                                            <input type='checkbox' class="form-control" ng-model='vm.mention.contents[$index].time1_check'/>
+                                            <input type='checkbox' ng-model='vm.doc.mentions[$index].time1_check'/>
                                         </td>
                                         <!-- process rowspan of checkbox form1_ha （は） -->
                                         <td style="text-align:center;">
-                                            <input type='checkbox' class="form-control" ng-model='vm.mention.contents[$index].time2_check'/>
+                                            <input type='checkbox' ng-model='vm.doc.mentions[$index].time2_check'/>
                                         </td>
                                         <!-- process rowspan of checkbox item  最終チェック 項目-->
                                         <td style="text-align:center;">
-                                            <input type='checkbox' class="form-control" ng-model='vm.mention.contents[$index].final_check'/>
+                                            <input type='checkbox' ng-model='vm.doc.mentions[$index].final_check'/>
                                         </td>
                                         <td style="text-align:center;">
                                             <button type="button" ng-click="vm.removeMention(item)" class="btn btn-danger btn-sm">

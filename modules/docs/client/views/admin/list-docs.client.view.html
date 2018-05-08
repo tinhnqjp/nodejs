@@ -15,15 +15,19 @@
                     <th class="bg-primary">名称</th>
                     <th class="bg-primary">年度</th>
                     <th class="bg-primary">更新日時</th>
-                    <th class="bg-primary" colspan="4">チェックシート</th>
+                    <th class="bg-primary" colspan="5">チェックシート</th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="property in vm.properties">
+                    
                     <td style="text-align:center;">{{$index+1}}</td>
                     <td class="status_ok" data-ng-bind="property.men11"></td>
                     <td style="text-align:center;" data-ng-bind="property.men10 | date:'yyyy'"></td>
                     <td style="text-align:center" data-ng-bind="property.created | date:'yyyy/MM/dd'"></td>
+                    <td style="text-align:center; width:100px;">
+                        <button type="button" ng-click="vm.autoChecked({docId: property.doc})" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-ok"></i> 自動チェック</button>
+                    </td>
                     <td style="text-align:center; width:100px;">
                         <button name="1_doc_btn" class="btn btn-primary btn-sm" data-ui-sref="admin.docs.form1({docId: property.doc})">第一号様式</button>
                     </td>
@@ -34,7 +38,7 @@
                         <button name="7_doc_btn" class="btn btn-primary btn-sm" data-ui-sref="admin.docs.form7({docId: property.doc})">第七号様式</button>
                     </td>
                     <td style="text-align:center; width:100px;">
-                        <button name="7_doc_btn" class="btn btn-primary btn-sm">特記様式</button>
+                        <button name="7_doc_btn" class="btn btn-primary btn-sm" data-ui-sref="admin.docs.mention({docId: property.doc})">特記様式</button>
                     </td>
                 </tr>
             </tbody>

@@ -58,6 +58,9 @@
     this.autoChecked = function (docId) {
       return $http.post('/api/docs/' + docId + '/autoChecked', null, { ignoreLoadingBar: true });
     };
+    this.listMasterCheckSheetForm4 = function () {
+      return $http.get('/api/listMasterCheckSheetForm4', null, { ignoreLoadingBar: true });
+    };
     return this;
   }
 }());

@@ -4,6 +4,7 @@
  * Module dependencies
  */
 var path = require('path'),
+  mysql = require('mysql'),
   mongoose = require('mongoose'),
   Doc = mongoose.model('Doc'),
   Property = mongoose.model('Property'),
@@ -17,6 +18,7 @@ var path = require('path'),
 exports.create = function (req, res) {
   var doc = new Doc();
   doc.save();
+  // property
   var property = new Property(req.body);
   property.doc = doc;
 
@@ -161,40 +163,71 @@ var property_floor = [{ 'no4_id': '2', 'f_001': '1', 'f_002': '1', 'f_003': 'F1'
 { 'no4_id': '2', 'f_001': '1', 'f_002': '2', 'f_003': 'F2', 'f_004': '469.60', 'f_005': null, 'f_006': '469.60' },
 { 'no4_id': '2', 'f_001': '1', 'f_002': '3', 'f_003': 'F3', 'f_004': '469.60', 'f_005': null, 'f_006': '469.60' },
 { 'no4_id': '2', 'f_001': '1', 'f_002': '4', 'f_003': 'F4', 'f_004': '443.14', 'f_005': null, 'f_006': '443.14' },
-{ 'no4_id': '12', 'f_001': '1', 'f_002': '4', 'f_003': 'F4', 'f_004': '443.14', 'f_005': null, 'f_006': '443.14' }]
+{ 'no4_id': '12', 'f_001': '1', 'f_002': '4', 'f_003': 'F4', 'f_004': '443.14', 'f_005': null, 'f_006': '443.14' }];
 
 exports.requestPropertiesMysql = function (req, res) {
   var limit = Number(req.body.limit) || 10;
   var page = Number(req.body.page) || 1;
-  var properties = mergeInfoProperty(property_info_1, property_info_2);
-
-  res.json({
-    list: properties,
-    current: page,
-    total: properties.length
+  var query_from = ' FROM av_nice_property_info_1 as inf1 INNER JOIN av_nice_property_info_2 as inf2 ON' +
+   ' (inf1.property_id = inf2.property_id) and (inf1.application_id = inf2.application_id)';
+    // ' INNER JOIN av_nice_property_no3 as no3 ON inf1.property_id = no3.property_id' +
+    // ' INNER JOIN av_nice_property_no4 as no4 ON inf1.property_id = no4.property_id' +
+  var query_limit = ' LIMIT ?, ?';
+  var param = [page, limit];
+  var query_total = 'SELECT count(*) as total' + query_from;
+  var query_select = 'SELECT *' + query_from + query_limit;
+  var _total;
+  mysqlSelect(query_total, null)
+  .then(function (result_total) {
+    _total = result_total[0].total;
+    return mysqlSelect(query_select, param);
+  })
+  .then(function (result_select) {
+    res.json({
+      list: result_select,
+      current: page,
+      total: _total
+    });
+  })
+  .catch(function (err) {
+    console.log(err);
+    return res.status(422).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
 exports.importPropertyFormMysql = function (req, res) {
   var ids = req.body.ids;
+  // var ids = [28, 104, 200];
+  // var property_info = mergeInfoProperty(property_info_1, property_info_2);
+  // var property_info3 = mergeInfoProperty(property_info, property_no3);
+  // var properties = mergeInfoProperty(property_info3, property_no4);
+  var query_from = ' FROM av_nice_property_info_1 as inf1 INNER JOIN av_nice_property_info_2 as inf2' +
+   ' ON (inf1.property_id = inf2.property_id) and (inf1.application_id = inf2.application_id)' +
+   ' INNER JOIN av_nice_property_no3 as no3' +
+   ' ON (inf1.property_id = no3.property_id) and (inf1.application_id = no3.application_id)' +
+   ' INNER JOIN av_nice_property_no4 as no4' +
+   ' ON (inf1.property_id = no4.property_id) and (inf1.application_id = no4.application_id)';
+  var param = _.clone(ids);
+  var query_where = ' WHERE inf1.application_id IN (' + param.fill('?') + ')';
+  var query_select = 'SELECT * ' + query_from + query_where;
 
-  var property_info = mergeInfoProperty(property_info_1, property_info_2);
-  var property_info3 = mergeInfoProperty(property_info, property_no3);
-  var properties = mergeInfoProperty(property_info3, property_no4);
-  var property;
-  // ids.forEach(function (id) {
-  var id = '2';
-  property = _.find(properties, { property_id: id });
-  if (!property) {
-    return res.status(422).send({
-      message: errorHandler.getErrorMessage('property is nulllll')
-    });
-  }
+  var properties;
   var masterProperties;
-  listMasterProperties()
-  .then(function (_masterProperties) {
-    masterProperties = _masterProperties;
-    return importProperty(property, masterProperties);
+  mysqlSelect(query_select, ids)
+  .then(function (result_properties) {
+    properties = result_properties;
+    return listMasterProperties();
+  })
+  .then(function (master) {
+    masterProperties = master;
+
+    var promises = [];
+    properties.forEach(function (property) {
+      promises.push(importProperty(property, masterProperties));
+    });
+    return Promise.all(promises);
   })
   .then(function (result) {
     res.json(result);
@@ -204,7 +237,6 @@ exports.importPropertyFormMysql = function (req, res) {
       message: errorHandler.getErrorMessage(err)
     });
   });
-  // });
 };
 
 function mergeInfoProperty(array1, array2) {
@@ -213,203 +245,228 @@ function mergeInfoProperty(array1, array2) {
   });
 }
 
+function mysqlSelect(query, param) {
+  var pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'root',
+    password: 'mysql',
+    database: 'jaic_db'
+  });
+  return new Promise(function (resolve, reject) {
+    pool.getConnection(function (err, connection) {
+      if (err) {
+        reject(err);
+      }
+    });
+
+    pool.query(query, param, function (error, results, fields) {
+      if (error) {
+        reject(error);
+      }
+      return resolve(results);
+    });
+  });
+}
+
 function importProperty(_property, masterProperties) {
   return new Promise(function (resolve, reject) {
-    var newDoc = new Property();
+    var newPro = new Property();
     // 物件概要
-    newDoc.men10 = _property.col_005;
-    newDoc.men11 = trim(_property.col_067);
-    newDoc.men12 = trim(_property.col_070);
-    newDoc.men13 = trim(_property.col_107);
+    newPro.men10 = _property.col_005;
+    newPro.men11 = trim(_property.col_067);
+    newPro.men12 = trim(_property.col_070);
+    newPro.men13 = trim(_property.col_107);
+    newPro.men14 = trim(_property.col_003);
     // 第三面
-    newDoc.men3_1_1 = trim(_property.col_148);
-    newDoc.men3_1_2 = trim(_property.col_149);
-    newDoc.men3_2_1 = trim(_property.col_150);
-    newDoc.men3_2_2 = trim(_property.col_151);
-    newDoc.men3_3 = getValueMen3_3(_property);
-    newDoc.men3_4 = split(_property.col_158);
-    newDoc.men3_5_1 = getValueMen3_5_1(_property);
-    newDoc.men3_5_2 = getValueMen3_5_2(_property);
-    newDoc.men3_5_3 = trim(_property.col_165);
-    newDoc.men3_6_1 = toFloat(_property.col_166);
-    newDoc.men3_6_2 = toFloat(_property.col_167);
+    newPro.men3_1_1 = trim(_property.col_148);
+    newPro.men3_1_2 = trim(_property.col_149);
+    newPro.men3_2_1 = trim(_property.col_150);
+    newPro.men3_2_2 = trim(_property.col_151);
+    newPro.men3_3 = getValueMen3_3(_property);
+    newPro.men3_4 = split(_property.col_158);
+    newPro.men3_5_1 = getValueMen3_5_1(_property);
+    newPro.men3_5_2 = getValueMen3_5_2(_property);
+    newPro.men3_5_3 = trim(_property.col_165);
+    newPro.men3_6_1 = toFloat(_property.col_166);
+    newPro.men3_6_2 = toFloat(_property.col_167);
     // 7.敷地面積
-    newDoc.men3_7_1.c1 = toFloat(_property.col_169);
-    newDoc.men3_7_1.c2 = toFloat(_property.col_170);
-    newDoc.men3_7_1.c3 = toFloat(_property.col_171);
-    newDoc.men3_7_1.c4 = toFloat(_property.col_172);
-    newDoc.men3_7_1.c5 = toFloat(_property.col_173);
-    newDoc.men3_7_1.c6 = toFloat(_property.col_174);
-    newDoc.men3_7_1.c7 = toFloat(_property.col_175);
-    newDoc.men3_7_1.c8 = toFloat(_property.col_176);
+    newPro.men3_7_1.c1 = toFloat(_property.col_169);
+    newPro.men3_7_1.c2 = toFloat(_property.col_170);
+    newPro.men3_7_1.c3 = toFloat(_property.col_171);
+    newPro.men3_7_1.c4 = toFloat(_property.col_172);
+    newPro.men3_7_1.c5 = toFloat(_property.col_173);
+    newPro.men3_7_1.c6 = toFloat(_property.col_174);
+    newPro.men3_7_1.c7 = toFloat(_property.col_175);
+    newPro.men3_7_1.c8 = toFloat(_property.col_176);
     // ﾛ.用途地域等
-    newDoc.men3_7_2.c1 = trim(_property.col_177);
-    newDoc.men3_7_2.c2 = trim(_property.col_178);
-    newDoc.men3_7_2.c3 = trim(_property.col_179);
-    newDoc.men3_7_2.c4 = trim(_property.col_180);
+    newPro.men3_7_2.c1 = trim(_property.col_177);
+    newPro.men3_7_2.c2 = trim(_property.col_178);
+    newPro.men3_7_2.c3 = trim(_property.col_179);
+    newPro.men3_7_2.c4 = trim(_property.col_180);
     // ﾊ.建築基準法第52条第１項及び第２項の規定による建築物の容積率
-    newDoc.men3_7_5.c1 = toFloat(_property.col_181);
-    newDoc.men3_7_5.c2 = toFloat(_property.col_182);
-    newDoc.men3_7_5.c3 = toFloat(_property.col_183);
-    newDoc.men3_7_5.c4 = toFloat(_property.col_184);
+    newPro.men3_7_5.c1 = toFloat(_property.col_181);
+    newPro.men3_7_5.c2 = toFloat(_property.col_182);
+    newPro.men3_7_5.c3 = toFloat(_property.col_183);
+    newPro.men3_7_5.c4 = toFloat(_property.col_184);
     // ﾆ.建築基準法第53条第１項の規定による建築物の建蔽率
-    newDoc.men3_7_6.c1 = toFloat(_property.col_181);
-    newDoc.men3_7_6.c2 = toFloat(_property.col_182);
-    newDoc.men3_7_6.c3 = toFloat(_property.col_183);
-    newDoc.men3_7_6.c4 = toFloat(_property.col_184);
+    newPro.men3_7_6.c1 = toFloat(_property.col_181);
+    newPro.men3_7_6.c2 = toFloat(_property.col_182);
+    newPro.men3_7_6.c3 = toFloat(_property.col_183);
+    newPro.men3_7_6.c4 = toFloat(_property.col_184);
     // ﾎ.敷地面積の合計
-    newDoc.men3_7_7 = {
-      c1: newDoc.men3_7_1.c1 + newDoc.men3_7_1.c2 + newDoc.men3_7_1.c3 + newDoc.men3_7_1.c4,
-      c2: newDoc.men3_7_1.c5 + newDoc.men3_7_1.c6 + newDoc.men3_7_1.c7 + newDoc.men3_7_1.c8
+    newPro.men3_7_7 = {
+      c1: newPro.men3_7_1.c1 + newPro.men3_7_1.c2 + newPro.men3_7_1.c3 + newPro.men3_7_1.c4,
+      c2: newPro.men3_7_1.c5 + newPro.men3_7_1.c6 + newPro.men3_7_1.c7 + newPro.men3_7_1.c8
     };
     // ﾍ.敷地に建築可能な延べ面積を敷地面積で除した数値
-    newDoc.men3_7_3 = toFloat(_property.col_191);
+    newPro.men3_7_3 = toFloat(_property.col_191);
     // ﾊ.建築基準法第52条第１項及び第２項の規定による建築物の容積率
-    newDoc.men3_7_4 = toFloat(_property.col_193);
+    newPro.men3_7_4 = toFloat(_property.col_193);
     // 8.主要用途
-    newDoc.men3_8.c1 = {
+    newPro.men3_8.c1 = {
       class: getClassFromDivision(_property.col_198),
       division: trim(_property.col_198),
       text: trim(_property.col_199)
     };
-    newDoc.men3_9 = split(_property.col_201);
+    newPro.men3_9 = split(_property.col_201);
     // 10.建築面積
-    newDoc.men3_10_1 = toFloat(_property.col_209);
-    newDoc.men3_10_2 = toFloat(_property.col_210);
-    newDoc.men3_10_3 = toFloat(_property.col_211);
-    newDoc.men3_10_4 = toFloat(_property.col_212);
+    newPro.men3_10_1 = toFloat(_property.col_209);
+    newPro.men3_10_3 = toFloat(_property.col_210);
+    newPro.men3_10_4 = toFloat(_property.col_211);
+    newPro.men3_10_2 = toFloat(_property.col_212);
     // 11.延べ面積
-    newDoc.men3_11_1 = toFloat(_property.col_214);
-    newDoc.men3_11_4 = toFloat(_property.col_215);
-    newDoc.men3_11_5 = toFloat(_property.col_216);
+    newPro.men3_11_1 = toFloat(_property.col_214);
+    newPro.men3_11_4 = toFloat(_property.col_215);
+    newPro.men3_11_5 = toFloat(_property.col_216);
     // ｦ.延べ面積
-    newDoc.men3_11_2 = toFloat(_property.col_251);
+    newPro.men3_11_2 = toFloat(_property.col_251);
     // ﾜ.容積率
-    newDoc.men3_11_3 = toFloat(_property.col_216); // TODO
+    // newPro.men3_11_3 = // toFloat(_property.col_216); // TODO
     // ﾛ.地階の住宅又は老人ホーム、福祉ホームその他これらに類するものの部分
-    newDoc.men3_11_6 = {
+    newPro.men3_11_6 = {
       c1: toFloat(_property.col_217),
       c2: toFloat(_property.col_218),
       c3: toFloat(_property.col_219)
     };
-    newDoc.men3_11_7 = {
+    newPro.men3_11_7 = {
       c1: toFloat(_property.col_220),
       c2: toFloat(_property.col_221),
       c3: toFloat(_property.col_222)
     };
-    newDoc.men3_11_8 = {
+    newPro.men3_11_8 = {
       c1: toFloat(_property.col_223),
       c2: toFloat(_property.col_224),
       c3: toFloat(_property.col_225)
     };
-    newDoc.men3_11_9 = {
+    newPro.men3_11_9 = {
       c1: toFloat(_property.col_226),
       c2: toFloat(_property.col_227),
       c3: toFloat(_property.col_228)
     };
-    newDoc.men3_11_10 = {
+    newPro.men3_11_10 = {
       c1: toFloat(_property.col_229),
       c2: toFloat(_property.col_230),
       c3: toFloat(_property.col_231)
     };
-    newDoc.men3_11_11 = {
+    newPro.men3_11_11 = {
       c1: toFloat(_property.col_232),
       c2: toFloat(_property.col_233),
       c3: toFloat(_property.col_234)
     };
-    newDoc.men3_11_12 = {
+    newPro.men3_11_12 = {
       c1: toFloat(_property.col_235),
       c2: toFloat(_property.col_236),
       c3: toFloat(_property.col_237)
     };
-    newDoc.men3_11_13 = {
+    newPro.men3_11_13 = {
       c1: toFloat(_property.col_238),
       c2: toFloat(_property.col_239),
       c3: toFloat(_property.col_240)
     };
-    newDoc.men3_11_14 = {
+    newPro.men3_11_14 = {
       c1: toFloat(_property.col_241),
       c2: toFloat(_property.col_242),
       c3: toFloat(_property.col_243)
     };
-    newDoc.men3_11_15 = {
+    newPro.men3_11_15 = {
       c1: toFloat(_property.col_244),
       c2: toFloat(_property.col_245),
       c3: toFloat(_property.col_246)
     };
     // 12.建築物の数
-    newDoc.men3_12_1 = toFloat(_property.col_255);
-    newDoc.men3_12_2 = toFloat(_property.col_256);
+    newPro.men3_12_1 = toFloat(_property.col_255);
+    newPro.men3_12_2 = toFloat(_property.col_256);
     // 13.建築物の高さ等
-    newDoc.men3_13_1 = toFloat(_property.col_257);
-    newDoc.men3_13_2 = toFloat(_property.col_258);
-    newDoc.men3_13_3 = {
+    newPro.men3_13_1 = toFloat(_property.col_257);
+    newPro.men3_13_2 = toFloat(_property.col_258);
+    newPro.men3_13_3 = {
       c1: toFloat(_property.col_259),
       c2: toFloat(_property.col_261)
     };
-    newDoc.men3_13_4 = {
+    newPro.men3_13_4 = {
       c1: toFloat(_property.col_260),
       c2: toFloat(_property.col_262)
     };
-    newDoc.men3_13_5_1 = trim(_property.col_263);
-    newDoc.men3_13_5_2 = trim(_property.col_264);
-    newDoc.men3_13_6 = trim(_property.col_265);
-    newDoc.men3_13_7 = getValueMen3_13_7(_property);
+    newPro.men3_13_5_1 = trim(_property.col_263);
+    newPro.men3_13_5_2 = trim(_property.col_264);
+    newPro.men3_13_6 = trim(_property.col_265);
+    newPro.men3_13_7 = getValueMen3_13_7(_property);
     // 14.許可・認定等
-    newDoc.men3_14 = trim(_property.col_269);
+    newPro.men3_14 = trim(_property.col_269);
 
     // 第四面
-    newDoc.men4_1 = toFloat(_property.col_292);
-    newDoc.men4_2.c1 = {
+    newPro.men4_1 = toFloat(_property.col_292);
+    newPro.men4_2.c1 = {
       class: getClassFromDivision(_property.col_294),
       division: trim(_property.col_294),
       text: trim(_property.col_295)
     };
-    newDoc.men4_2.c2 = {
+    newPro.men4_2.c2 = {
       class: getClassFromDivision(_property.col_296),
       division: trim(_property.col_296),
       text: trim(_property.col_297)
     };
-    newDoc.men4_2.c3 = {
+    newPro.men4_2.c3 = {
       class: getClassFromDivision(_property.col_298),
       division: trim(_property.col_298),
       text: trim(_property.col_299)
     };
-    newDoc.men4_3 = getValueMen4_3(_property);
-    newDoc.men4_4 = {
+    newPro.men4_3 = getValueMen4_3(_property);
+    newPro.men4_4 = {
       c1: trim(_property.col_322),
       c2: trim(_property.col_323)
     };
     // 5.耐火建築物等
-    newDoc.men4_5 = getValueMen4_5(_property);
+    newPro.men4_5 = getValueMen4_5(_property);
     // 6.階数
-    newDoc.men4_6_1 = toFloat(_property.col_333);
-    newDoc.men4_6_2 = toFloat(_property.col_334);
-    newDoc.men4_6_3 = toFloat(_property.col_335);
-    newDoc.men4_6_4 = toFloat(_property.col_336);
+    newPro.men4_6_1 = toFloat(_property.col_333);
+    newPro.men4_6_2 = toFloat(_property.col_334);
+    newPro.men4_6_3 = toFloat(_property.col_335);
+    newPro.men4_6_4 = toFloat(_property.col_336);
     // 7.高さ
-    newDoc.men4_7_1 = toFloat(_property.col_337);
-    newDoc.men4_7_2 = toFloat(_property.col_338);
+    newPro.men4_7_1 = toFloat(_property.col_337);
+    newPro.men4_7_2 = toFloat(_property.col_338);
     // 8.建築設備の種類
-    newDoc.men4_8 = trim(_property.col_339);
-    newDoc.men4_9_1 = trim(_property.col_340);
-    newDoc.men4_9_2 = trim(_property.col_341);
-    // newDoc.men4_9_3 = trim(_property.col_341); // TODO
-    newDoc.men4_9_4 = toFloat(_property.col_346);
-    newDoc.men4_9_5 = getValueMen4_9_5(_property);
-    newDoc.men4_9_6 = toFloat(_property.col_349);
+    newPro.men4_8 = trim(_property.col_339);
+    newPro.men4_9_1 = trim(_property.col_340);
+    newPro.men4_9_2 = trim(_property.col_341);
+    // newPro.men4_9_3 = trim(_property.col_341); // TODO
+    newPro.men4_9_4 = toFloat(_property.col_346);
+    newPro.men4_9_5 = getValueMen4_9_5(_property);
+    newPro.men4_9_6 = toFloat(_property.col_349);
     // 10.床 面 積
-    // newDoc.men4_10_1 = toFloat(_property.col_349); // TODO
-    // newDoc.men4_10_2 = toFloat(_property.col_349); // TODO
-    // newDoc.men4_10_3 = toFloat(_property.col_349); // TODO
-    // newDoc.men4_10_4 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_1 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_2 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_3 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_4 = toFloat(_property.col_349); // TODO
     var listData = getDataFloor4_10(_property.property_id);
-    if(listData.length > 0) {
-      newDoc.men4_10_14 = getValueMen4_10_14(listData[0].f_001);
+    if (listData.length > 0) {
+      newPro.men4_10_14 = getValueMen4_10_14(listData[0].f_001);
       // list 5~13 (men4_10_5 ~ men4_10_13)
       var index = 5;
       listData.forEach(function (f) {
-        newDoc['men4_10_' + index] = {
+        newPro['men4_10_' + index] = {
           c1: f.f_002,
           c2: f.f_004,
           c3: f.f_005,
@@ -418,18 +475,25 @@ function importProperty(_property, masterProperties) {
         index++;
       });
     }
-    newDoc.men4_11 = trim(_property.col_353);
-    newDoc.men4_12 = trim(_property.col_354);
-    newDoc.men4_13 = trim(_property.col_355);
-    newDoc.men4_14 = trim(_property.col_356);
-    newDoc.men4_15 = getValueMen4_15(_property);
-    newDoc.men4_16 = trim(_property.col_364);
-    newDoc.men4_17 = trim(_property.col_365);
-    newDoc.save(function (err) {
+    newPro.men4_11 = trim(_property.col_353);
+    newPro.men4_12 = trim(_property.col_354);
+    newPro.men4_13 = trim(_property.col_355);
+    newPro.men4_14 = trim(_property.col_356);
+    newPro.men4_15 = getValueMen4_15(_property);
+    newPro.men4_16 = trim(_property.col_364);
+    newPro.men4_17 = trim(_property.col_365);
+    // save regulation
+    // Doc
+    var doc = new Doc();
+    doc.save();
+    // property
+    newPro.doc = doc;
+
+    newPro.save(function (err) {
       if (err) {
         reject(err);
       }
-    resolve(newDoc);
+      resolve(newPro);
     });
   });
 }
@@ -459,7 +523,7 @@ function split(string) {
   return string.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
 }
 
-// method create data for form 
+// method create data for form
 function getValueMen3_3(_property) {
   var out = [];
   if (_property.col_152 === '1') { out.push('都市計画区域内'); }
@@ -467,14 +531,14 @@ function getValueMen3_3(_property) {
   if (_property.col_154 === '1') { out.push('市街化調整区域'); }
   if (_property.col_155 === '1') { out.push('区域区分非設定'); }
   if (_property.col_156 === '1') { out.push('準都市計画区域内'); }
-  if (_property.col_157 === '1') { out.push('都市計画区域及び準都市計画区域外') }
+  if (_property.col_157 === '1') { out.push('都市計画区域及び準都市計画区域外'); }
   return out;
 }
 
 function getValueMen3_5_1(_property) {
   var out = [];
   if (_property.col_162 === '1') { out.push('内'); }
-  if (_property.col_163 === '1') { out.push('外') }
+  if (_property.col_163 === '1') { out.push('外'); }
   return out;
 }
 
@@ -482,6 +546,17 @@ function getValueMen3_5_2(_property) {
   var out = [];
   if (_property.col_164 === '1') { out.push('内'); }
   return out;
+}
+
+function percentRoundLogic(input, c1, c2) {
+  // =IF(AB271,ROUNDUP(BE280/AB271,4),IF(AB272,ROUNDUP(BE280/AB272,4),""))
+  // men3_7_7 ﾎ.敷地面積の合計
+  if (c1) {
+    return percent(input / c1);
+  } else if (c2) {
+    return percent(input / c2);
+  }
+  return 0;
 }
 
 function getValueMen3_13_7(_property) {
@@ -578,7 +653,7 @@ function getClassFromDivision(division) {
 
 
 function getDataFloor4_10(property_id) {
-  return _.filter(property_floor, {no4_id: property_id});
+  return _.filter(property_floor, { no4_id: property_id });
 }
 
 function getValueMen4_10_14(f_001) {

@@ -21,12 +21,20 @@ var DocSchema = new Schema({
   form1_ha: [],
   form1_item: [],
   form4_ro: [],
-  form4_ha: [],
+  form4_ha1: [],
+  form4_ha2: [],
   form4_item: [],
   property: {
     type: Schema.ObjectId,
     ref: 'Property'
-  }
+  },
+  mentions: [{
+    clause: { type: String, trim: true },
+    headline: { type: String, trim: true },
+    time1_check: { type: Boolean, default: false },
+    time2_check: { type: Boolean, default: false },
+    final_check: { type: Boolean, default: false }
+  }]
 });
 
 DocSchema.statics.seed = seed;

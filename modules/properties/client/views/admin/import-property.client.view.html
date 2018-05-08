@@ -30,7 +30,10 @@
             </thead>
             <tbody>
                 <tr data-ng-repeat="item in vm.listproperties">
-                    <td><input type='checkbox' checklist-model='vm.property.property_id' checklist-value="item.property_id"/></td>
+                    <td>
+                        {{item.application_id }}
+                        <input type='checkbox' checklist-model='vm.property.application_id' 
+                        checklist-value="item.application_id"/></td>
                     <td style="text-align:left;" data-ng-bind="item.col_005"></td>
                     <td style="text-align:left;" data-ng-bind="item.col_067"></td>
                     <td style="text-align:left;" data-ng-bind="item.col_070"></td>
@@ -48,7 +51,9 @@
             total-items="vm.totalItems"
             items-per-page="vm.pageSize"
             previous-text="前"
+            force-ellipses="true"
             next-text="次"
+            max-size=10
             ng-model="vm.currentPage" ng-click="vm.pageChanged()"></ul>
     </div>
     <!-- #入力Form -->

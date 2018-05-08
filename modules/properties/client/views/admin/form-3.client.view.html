@@ -15,7 +15,7 @@
             <div class="input-group form-inline panel col-sm-10">
                 <span class="input-group-addon">地域</span>
                 <select class="selectpicker form-control" name="men3_1_1" ng-options="o as o for o in vm.data_men3_1" ng-model="vm.property.men3_1_1">
-                </select>
+                    <option ng-selected="true" value=""></option></select>
                 <span class="input-group-addon">住所</span>
                 <input type="text" class="form-control" name="men3_1_2" ng-model="vm.property.men3_1_2"/>
             </div>
@@ -28,7 +28,7 @@
             <div class="input-group form-inline panel col-sm-10">
                 <span class="input-group-addon">地域</span>
                 <select class="selectpicker form-control" name="men3_2_1" ng-options="o as o for o in vm.data_men3_1" ng-model="vm.property.men3_2_1">
-                </select>
+                    <option ng-selected="true" value=""></option></select>
                 <span class="input-group-addon">住所</span>
                 <input type="text" class="form-control" name="men3_2_2" ng-model="vm.property.men3_2_2"/>
             </div>
@@ -79,8 +79,9 @@
                         <input type="checkbox" checklist-model="vm.property.men3_5_2" checklist-value="ck">{{ ck }}&nbsp;
                     </label>
                     </p>
-                    <select class="form-control" data-width="fit" ng-change="vm.changeSelect3_5()" name="men3_5_31" ng-model="vm.property.men3_5_31" ng-options="p as p for p in vm.data_men3_5_3">
-                    </select>
+                    <select class="form-control" data-width="fit" ng-change="vm.changeSelect3_5()" name="men3_5_31" ng-model="vm.property.men3_5_31"
+                    ng-options="p as p for p in vm.data_men3_5_3">
+                    <option ng-selected="true" value=""></option></select>
                     <br>
                     <textarea class="form-control" rows="3" name="men3_5_3" ng-model="vm.property.men3_5_3"></textarea>
                 </div>
@@ -202,19 +203,19 @@
                         </div>
                         <div class="col-sm-2">
                             <select ng-model="vm.property.men3_7_2.c1" class="form-control" 
-                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"><option ng-selected="true" value=""></option></select>
                         </div>
                         <div class="col-sm-2">
                             <select ng-model="vm.property.men3_7_2.c2" class="form-control" 
-                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"><option ng-selected="true" value=""></option></select>
                         </div>
                         <div class="col-sm-2">
                             <select ng-model="vm.property.men3_7_2.c3" class="form-control" 
-                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"><option ng-selected="true" value=""></option></select>
                         </div>
                         <div class="col-sm-2">
                             <select ng-model="vm.property.men3_7_2.c4" class="form-control" 
-                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"></select>
+                                ng-options="o as o for o in vm.data_men3_7_2" data-width="fit"><option ng-selected="true" value=""></option></select>
                         </div>
                     </div>
                     <div class="row">
@@ -368,11 +369,14 @@
                         <span class="input-group-addon">分類</span>
                         <select class="form-control" name="men3_8_c1_1" ng-model="vm.property.men3_8.c1.class" 
                         ng-change="vm.selectParent3_8('c1')"
-                        ng-options="o.name as o.name for o in vm.data_men3_8.c1.class" data-width="fit"></select>
-
+                        ng-options="o.name as o.name for o in vm.data_men3_8.c1.class" data-width="fit">
+                        <option ng-selected="true" value=""></option>
+                        </select>
                         <span class="input-group-addon">区分</span>
                         <select class="form-control" name="men3_8_c1_2" ng-model="vm.property.men3_8.c1.division"
-                        ng-options="o as o for o in vm.data_men3_8.c1.division" data-width="fit"></select>
+                        ng-options="o as o for o in vm.data_men3_8.c1.division" data-width="fit">
+                        <option ng-selected="true" value=""></option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -960,6 +964,7 @@
                         </div>
                         <div class="col-sm-4">
                             <select class="form-control" name="men3_13_5_1" ng-model="vm.property.men3_13_5_1">
+                                <option ng-selected="true" value=""></option>
                                 <option>鉄骨鉄筋コンクリート造</option>
                                 <option>鉄筋コンクリート造</option>
                                 <option>鉄骨造</option>
@@ -972,6 +977,7 @@
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon">一部</span>
                                 <select class="form-control" name="men3_13_5_2" ng-model="vm.property.men3_13_5_2">
+                                    <option ng-selected="true" value=""></option>
                                     <option>鉄骨鉄筋コンクリート造</option>
                                     <option>鉄筋コンクリート造</option>
                                     <option>鉄骨造</option>
@@ -993,12 +999,16 @@
                         <div class="col-sm-2">
                         </div>
                         <div class="col-sm-4">
-                            <label class="checkbox-inline">
-                                <input type="radio" name="men3_13_6" ng-model="vm.property.men3_13_6" value="有"> 有
-                            </label>
-                            <label class="checkbox-inline">
-                                <input type="radio" name="men3_13_6" ng-model="vm.property.men3_13_6" value="無"> 無
-                            </label>
+                            <div class="row">
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="men3_13_6" ng-model="vm.property.men3_13_6" value="有"> 有
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="men3_13_6" ng-model="vm.property.men3_13_6" value="無"> 無
+                                </label>
+                                <br>
+                            </div>
+                            <br>
                         </div>
                         <div class="col-sm-4">
                         </div>
@@ -1011,11 +1021,13 @@
                         </div>
                         <div class="col-sm-2">
                         </div>
-                        <div class="col-sm-10">
-                            <label class="col-sm-12" ng-repeat="ck in vm.data_men3_13_7">
-                                <input type="checkbox" checklist-model="vm.property.men3_13_7" checklist-value="ck">
-                                {{ ck }}&nbsp;
-                            </label>
+                        <div class="col-sm-9">
+                            <div class="row" ng-repeat="ck in vm.data_men3_13_7">
+                                <label class="checkbox-inline mg15l">
+                                    <input type="checkbox" checklist-model="vm.property.men3_13_7" checklist-value="ck">
+                                    {{ ck }}&nbsp;
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1026,8 +1038,10 @@
             <div class="form-group row">
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">14.許可・認定等</label>
                 <div class="col-sm-12">
-                    <select class="form-control" data-width="fit"  ng-change="vm.changeSelect3_14()" name="men3_14_1" ng-model="vm.property.men3_14_1" ng-options="p as p for p in vm.data_men3_14">
-                    </select>
+                    <select class="form-control" data-width="fit"  ng-change="vm.changeSelect3_14()" name="men3_14_1"
+                    ng-model="vm.property.men3_14_1" ng-options="p as p for p in vm.data_men3_14">
+                        <option ng-selected="true" value=""></option>
+                    
                     <br>
                     <textarea class="form-control" rows="3" name="men3_14" ng-model="vm.property.men3_14"></textarea>
                 </div>

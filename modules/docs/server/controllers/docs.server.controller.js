@@ -14,6 +14,7 @@ var path = require('path'),
   LawRegulation = mongoose.model('LawRegulation'),
   MasterLaw = mongoose.model('MasterLaw'),
   MasterProperties = mongoose.model('MasterProperties'),
+  MasterCheckSheetForm4 = mongoose.model('MasterCheckSheetForm4'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
@@ -131,5 +132,17 @@ exports.docByID = function (req, res, next, id) {
     }
     req.doc = doc;
     next();
+  });
+};
+
+exports.listMasterCheckSheetForm4 = function (req, res) {
+  MasterCheckSheetForm4.find().exec(function (err, list) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(list);
   });
 };

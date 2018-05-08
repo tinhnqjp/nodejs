@@ -15,7 +15,7 @@
     vm.form = {};
     vm.save = save;
     vm.submitted = false;
-    vm.currentPage = 13;
+    vm.currentPage = 1;
     vm.pageSize = 10;
     vm.listproperties = [];
     initData();
@@ -48,7 +48,7 @@
       //   return false;
       // }
       // return null;
-      PropertyApi.importPropertyFormMysql(vm.property.property_id)
+      PropertyApi.importPropertyFormMysql(vm.property.application_id)
         .then(function (res) {
           console.log(res.data);
           vm.busy = false;
@@ -61,6 +61,9 @@
         });
     }
 
+    vm.pageChanged = function () {
+      initData();
+    };
   // end controller
   }
 }());

@@ -75,7 +75,16 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="title_label">受付欄</label>
+                                        <label class="title_label">受付番号</label>
+                                        <div class="input-group form-inline panel">
+                                                <span class="input-group-addon">番号</span>
+                                            <input type="text" class="form-control" ng-model="vm.property.men14" ng-required="true" name="men14" maxlength="50"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="title_label">引受日</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">年/月/日</span>
                                             <input type="date" class="form-control" ng-model="vm.property.men10" ng-required="true"
@@ -88,28 +97,28 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="title_label">１．建築主の概要</label>
+                                        <label class="title_label">建築主の概要</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">氏名</span>
-                                            <input type="text" class="form-control" ng-model="vm.property.men11" name="men11" ng-required="true" autocomplete="men11" />
+                                            <input type="text" class="form-control" ng-model="vm.property.men11" name="men11" autocomplete="men11" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="title_label">２．代表者</label>
+                                        <label class="title_label">代表者</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">氏名</span>
-                                            <input type="text" class="form-control" ng-model="vm.property.men12" name="men12" ng-required="true" autocomplete="men12" />
+                                            <input type="text" class="form-control" ng-model="vm.property.men12" name="men12" autocomplete="men12" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="title_label">３．設計者</label>
+                                        <label class="title_label">設計者</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">氏名</span>
-                                            <input type="text" class="form-control" ng-model="vm.property.men13" name="men13" ng-required="true" autocomplete="men13" />
+                                            <input type="text" class="form-control" ng-model="vm.property.men13" name="men13" autocomplete="men13" />
                                         </div>
                                     </div>
                                 </div>

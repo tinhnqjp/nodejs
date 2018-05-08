@@ -132,7 +132,12 @@
     }
 
     function selectParent3_8(select) {
-      if (!vm.property.men3_8 || !vm.property.men3_8[select].class) {
+      if (!vm.property.men3_8 || !vm.property.men3_8[select]) {
+        return;
+      }
+      if (!vm.property.men3_8[select].class) {
+        vm.property.men3_8[select].division = null;
+        vm.data_men3_8[select].division = null;
         return;
       }
       var options = _.find(vm.data_men3_8[select].class, {
@@ -142,7 +147,12 @@
     }
 
     function selectParent4_2(select) {
-      if (!vm.property.men4_2 || !vm.property.men4_2[select].class) {
+      if (!vm.property.men4_2 || !vm.property.men4_2[select]) {
+        return;
+      }
+      if (!vm.property.men4_2[select].class) {
+        vm.property.men4_2[select].division = null;
+        vm.data_men4_2[select].division = null;
         return;
       }
       var options = _.find(vm.data_men4_2[select].class, {
