@@ -48,7 +48,7 @@
       }).state('admin.docs.form7', {
         url: '/:docId/form7',
         templateUrl: '/modules/docs/client/views/admin/form-7.client.view.html',
-        controller: 'Doc4AdminController',
+        controller: 'Doc7AdminController',
         controllerAs: 'vm',
         data: {
           roles: ['admin']

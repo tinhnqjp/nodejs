@@ -5,9 +5,9 @@
     .module('users.admin')
     .controller('UserListController', UserListController);
 
-  UserListController.$inject = ['AdminUsersService', '$scope', '$state', '$window', 'Authentication', 'Notification'];
+  UserListController.$inject = ['UsersAdminService', '$scope', '$state', '$window', 'Authentication', 'Notification'];
 
-  function UserListController(AdminUsersService, $scope, $state, $window, Authentication, Notification) {
+  function UserListController(UsersAdminService, $scope, $state, $window, Authentication, Notification) {
     var vm = this;
 
     vm.currentPage = 1;
@@ -24,7 +24,7 @@
 
     function getData() {
       var input = { page: vm.currentPage, limit: vm.pageSize };
-      AdminUsersService.get(input, function (output) {
+      UsersAdminService.get(input, function (output) {
         vm.users = output.users;
         vm.totalItems = output.total;
         vm.currentPage = output.current;

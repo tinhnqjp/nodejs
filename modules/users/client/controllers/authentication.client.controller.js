@@ -24,7 +24,7 @@
 
     // If user is signed in then redirect back home
     if (vm.authentication.user) {
-      $location.path('/admin/laws');
+      $location.path('/admin/properties');
     }
 
     function signup(isValid) {
@@ -83,7 +83,7 @@
       Notification.info({ message: 'Welcome ' + response.firstName });
       // And redirect to the previous or home page
       // $state.go($state.previous.state.name || 'home', $state.previous.params);
-      $window.location.href = ('/admin/laws');
+      $window.location.href = ('/admin/properties');
     }
 
     function onUserSigninError(response) {

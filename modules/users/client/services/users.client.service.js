@@ -70,14 +70,14 @@
     return Users;
   }
 
-  // TODO this should be Users service
   angular
     .module('users.services')
-    .factory('AdminUsersService', AdminUsersService);
+    .factory('UsersAdminService', UsersAdminService);
 
-  AdminUsersService.$inject = ['$resource', '$log'];
+    UsersAdminService.$inject = ['$resource', '$log'];
 
-  function AdminUsersService($resource, $log) {
+  function UsersAdminService($resource, $log) {
+
     var User = $resource('/api/users/:userId', {
       userId: '@_id'
     }, {
@@ -92,14 +92,13 @@
         return createOrUpdate(user);
       }
     });
-
     return User;
 
     function createOrUpdate(user) {
       if (user._id) {
-        return user.$update(onSuccess, onError);
+        return User.$update(onSuccess, onError);
       } else {
-        return user.$save(onSuccess, onError);
+        return User.$save(onSuccess, onError);
       }
 
       // Handle successful response

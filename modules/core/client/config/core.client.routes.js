@@ -35,12 +35,8 @@
       // })
       .state('home', {
         url: '/',
-        templateUrl: '/modules/laws/client/views/admin/list-laws.client.view.html',
-        controller: 'LawsAdminListController',
-        controllerAs: 'vm',
-        data: {
-          roles: ['admin']
-        }
+        controller: 'HomeController',
+        controllerAs: 'vm'
       })
       .state('not-found', {
         url: '/not-found',

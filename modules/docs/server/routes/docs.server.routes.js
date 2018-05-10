@@ -21,4 +21,5 @@ module.exports = function (app) {
   // Finish by binding the doc middleware
   app.param('docId', docs.docByID);
   app.route('/api/listMasterCheckSheetForm4').get(docs.listMasterCheckSheetForm4);
+  app.route('/api/listMasterCheckSheetForm7').get(docs.listMasterCheckSheetForm7);
 };

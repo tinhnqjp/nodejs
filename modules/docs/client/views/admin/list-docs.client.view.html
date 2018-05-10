@@ -12,9 +12,10 @@
             <thead>
                 <tr>
                     <th class="bg-primary" style="width:50px;">＃</th>
-                    <th class="bg-primary">名称</th>
-                    <th class="bg-primary">年度</th>
-                    <th class="bg-primary">更新日時</th>
+                    <th class="bg-primary">引受日</th>
+                    <th class="bg-primary">確認受付番号</th>
+                    <th class="bg-primary">建築場所都道府県</th>
+                    <th class="bg-primary">建築場所</th>
                     <th class="bg-primary" colspan="5">チェックシート</th>
                 </tr>
             </thead>
@@ -22,9 +23,10 @@
                 <tr data-ng-repeat="property in vm.properties">
                     
                     <td style="text-align:center;">{{$index+1}}</td>
-                    <td class="status_ok" data-ng-bind="property.men11"></td>
-                    <td style="text-align:center;" data-ng-bind="property.men10 | date:'yyyy'"></td>
-                    <td style="text-align:center" data-ng-bind="property.created | date:'yyyy/MM/dd'"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men10 | date:'yyyy/MM/dd'"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men14"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men3_1_1"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men3_1_2"></td>
                     <td style="text-align:center; width:100px;">
                         <button type="button" ng-click="vm.autoChecked({docId: property.doc})" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-ok"></i> 自動チェック</button>
                     </td>

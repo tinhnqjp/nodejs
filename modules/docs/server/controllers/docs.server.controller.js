@@ -15,6 +15,7 @@ var path = require('path'),
   MasterLaw = mongoose.model('MasterLaw'),
   MasterProperties = mongoose.model('MasterProperties'),
   MasterCheckSheetForm4 = mongoose.model('MasterCheckSheetForm4'),
+  MasterCheckSheetForm7 = mongoose.model('MasterCheckSheetForm7'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
@@ -137,6 +138,18 @@ exports.docByID = function (req, res, next, id) {
 
 exports.listMasterCheckSheetForm4 = function (req, res) {
   MasterCheckSheetForm4.find().exec(function (err, list) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(list);
+  });
+};
+
+exports.listMasterCheckSheetForm7 = function (req, res) {
+  MasterCheckSheetForm7.find().exec(function (err, list) {
     if (err) {
       return res.status(422).send({
         message: errorHandler.getErrorMessage(err)

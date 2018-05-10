@@ -41,6 +41,7 @@
       var law;
       var listChecksheet = [];
       var listCheckSheetForm4 = [];
+      var listCheckSheetForm7 = [];
       getlistMasterLaw()
       .then(function (_listMasterLaw) {
         vm.listMasterLaw = _listMasterLaw;
@@ -77,6 +78,10 @@
       })
       .then(function (_listCheckSheetForm4) {
         listCheckSheetForm4 = _listCheckSheetForm4;
+        return getMasterCheckSheetForm7();
+      })
+      .then(function (_listCheckSheetForm7) {
+        listCheckSheetForm7 = _listCheckSheetForm7;
         return DocsService.get({
           docId: doc.docId
         }).$promise;
@@ -87,9 +92,15 @@
         listChecksheet.forEach(function (item) {
           if (item.form1_ro && item.id) {
             _doc.form1_ro.push(item.id);
-            var filter = _.filter(listCheckSheetForm4, { form1: parseInt(item.id) });
-            filter.forEach(function (form4) {
+            // form4
+            var filterForm4 = _.filter(listCheckSheetForm4, { form1: parseInt(item.id, 10) });
+            filterForm4.forEach(function (form4) {
               _doc.form4_ha1.push(form4.id);
+            });
+            // form7
+            var filterForm7 = _.filter(listCheckSheetForm7, { form1: parseInt(item.id, 10) });
+            filterForm7.forEach(function (form7) {
+              _doc.form7_ro1.push(form7.id);
             });
           }
         });
@@ -124,6 +135,18 @@
     function getMasterCheckSheetForm4() {
       return new Promise(function (resolve, reject) {
         DocsApi.listMasterCheckSheetForm4()
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(function (res) {
+          reject(res.data.message);
+        });
+      });
+    }
+
+    function getMasterCheckSheetForm7() {
+      return new Promise(function (resolve, reject) {
+        DocsApi.listMasterCheckSheetForm7()
         .then(function (res) {
           resolve(res.data);
         })

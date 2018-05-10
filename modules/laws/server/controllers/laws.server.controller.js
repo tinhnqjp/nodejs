@@ -479,6 +479,21 @@ exports.listMasterLaw = function (req, res) {
   });
 };
 
+exports.listMasterLawTdfk = function (req, res) {
+  MasterLaw.find().exec(function (err, masterLawList) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    var masterLawDetailList = _.filter(masterLawList, {
+      'type': 'tdfk'
+    });
+    res.json(masterLawDetailList);
+  });
+};
+
 exports.requestLawsByYear = function (req, res) {
   var year = req.body.year;
   getLawsByYear(year)

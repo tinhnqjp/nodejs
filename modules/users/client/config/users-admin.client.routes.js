@@ -11,21 +11,17 @@
   function routeConfig($stateProvider) {
     $stateProvider
       .state('admin.users', {
+        abstract: true,
         url: '/users',
+        template: '<ui-view/>'
+      })
+      .state('admin.users.list', {
+        url: '',
         templateUrl: '/modules/users/client/views/admin/list-users.client.view.html',
         controller: 'UserListController',
-        controllerAs: 'vm'
-      })
-      .state('admin.user', {
-        url: '/users/:userId',
-        templateUrl: '/modules/users/client/views/admin/view-user.client.view.html',
-        controller: 'UserController',
         controllerAs: 'vm',
-        resolve: {
-          userResolve: getUser
-        },
         data: {
-          pageTitle: '{{ userResolve.displayName }}'
+          roles: ['admin']
         }
       })
       .state('admin.users.create', {
@@ -45,27 +41,26 @@
         templateUrl: '/modules/users/client/views/admin/edit-user.client.view.html',
         controller: 'UserController',
         controllerAs: 'vm',
+        data: {
+          roles: ['admin']
+        },
         resolve: {
           userResolve: getUser
-        },
-        data: {
-          roles: ['admin'],
-          pageTitle: '{{ userResolve.displayName }}'
         }
       });
 
-    getUser.$inject = ['$stateParams', 'AdminService'];
+    getUser.$inject = ['$stateParams', 'UsersAdminService'];
 
-    function getUser($stateParams, AdminService) {
-      return AdminService.get({
+    function getUser($stateParams, UsersAdminService) {
+      return UsersAdminService.get({
         userId: $stateParams.userId
       }).$promise;
     }
 
-    newUser.$inject = ['AdminUsersService'];
+    newUser.$inject = ['UsersAdminService'];
 
-    function newUser(AdminUsersService) {
-      return new AdminUsersService();
+    function newUser(UsersAdminService) {
+      return new UsersAdminService();
     }
   }
 }());

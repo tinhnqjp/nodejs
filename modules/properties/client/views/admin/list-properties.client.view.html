@@ -18,14 +18,20 @@
             <thead>
                 <tr>
                     <th class="bg-primary">＃</th>
-                    <th class="bg-primary">建築主概要</th>
+                    <th class="bg-primary">引受日</th>
+                    <th class="bg-primary">確認受付番号</th>
+                    <th class="bg-primary">建築場所都道府県</th>
+                    <th class="bg-primary">建築場所</th>
                     <th class="bg-primary">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="property in vm.properties">
                     <td style="text-align:center;">{{ $index+1 }}</td>
-                    <td style="text-align:left;" data-ng-bind="property.men11"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men10 | date:'yyyy/MM/dd'"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men14"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men3_1_1"></td>
+                    <td style="text-align:left;" data-ng-bind="property.men3_1_2"></td>
                     <td style="text-align:center;">
                         <button class="btn btn-info btn-sm" data-ui-sref="admin.properties.edit({propertyId: property._id})">
                         <i class="glyphicon glyphicon-pencil"></i> 編集</button>

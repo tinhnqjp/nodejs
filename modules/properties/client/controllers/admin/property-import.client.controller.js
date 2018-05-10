@@ -41,13 +41,11 @@
      * @param {*} isValid valid
      */
     function save(isValid) {
-      // if (!isValid || (!vm.property.property_id)) {
-      //   vm.submitted = true;
-      //   $scope.$broadcast('show-errors-check-validity', 'vm.form.propertyForm');
-      //   $scope.nofityError('まだインポートが選びません');
-      //   return false;
-      // }
-      // return null;
+      if (!vm.property.application_id) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.importForm');
+        $scope.nofityError('物件データが選択されていません');
+        return false;
+      }
       PropertyApi.importPropertyFormMysql(vm.property.application_id)
         .then(function (res) {
           console.log(res.data);

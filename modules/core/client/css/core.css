@@ -126,3 +126,7 @@ a:hover .header-profile-image {
 a {
   cursor: pointer!important;
 }
+
+.w3-main {
+  min-height: 95%;
+}

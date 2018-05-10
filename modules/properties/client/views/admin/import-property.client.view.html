@@ -6,7 +6,7 @@
         <strong style="font-size:20px;">物件データ管理</strong><br/>
     </div>
     <button type="submit" ng-click="vm.save(vm.form.importForm.$valid)" class="btn btn-primary pull-right">
-        <span class="glyphicon glyphicon-floppy-save"></span> インポート</a>
+        <span class="glyphicon glyphicon-download"></span> インポート</a>
     </button>
     <a type="button" data-ui-sref="admin.properties.list" class="mg15r btn btn-warning pull-right">
         キャンセル
@@ -21,23 +21,22 @@
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th class="bg-primary"></th>
                     <th class="bg-primary">＃</th>
-                    <th class="bg-primary">申請ID</th>
+                    <th class="bg-primary">引受日</th>
+                    <th class="bg-primary">確認受付番号</th>
                     <th class="bg-primary">建築場所都道府県</th>
                     <th class="bg-primary">建築場所</th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="item in vm.listproperties">
-                    <td>
-                        {{item.application_id }}
+                    <td style="text-align:center;">
                         <input type='checkbox' checklist-model='vm.property.application_id' 
                         checklist-value="item.application_id"/></td>
-                    <td style="text-align:left;" data-ng-bind="item.col_005"></td>
-                    <td style="text-align:left;" data-ng-bind="item.col_067"></td>
-                    <td style="text-align:left;" data-ng-bind="item.col_070"></td>
-                    <td style="text-align:left;" data-ng-bind="item.col_107"></td>
+                    <td style="text-align:left;" data-ng-bind="item.col_005 | date:'yyyy/MM/dd'"></td>
+                    <td style="text-align:left;" data-ng-bind="item.col_003"></td>
+                    <td style="text-align:left;" data-ng-bind="item.col_148"></td>
+                    <td style="text-align:left;" data-ng-bind="item.col_149"></td>
                 </tr>
                 <tr data-ng-if="vm.listproperties.$resolved && !vm.listproperties.length">
                     <td colspan="5">No properties yet, why don't you <a data-ui-sref="admin.properties.create">create one</a>?</td>

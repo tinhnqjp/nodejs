@@ -24,7 +24,8 @@
             <div class="col-xs-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">特記様式登録</div>
-                    <div class="panel-body">
+                    <!-- not tdfk -->
+                    <div class="panel-body" ng-if="!vm.isTdfk">
                         <div class="row">
                             <div class="col-sm-6">
                                 <a type="button" class="btn btn-success pull-left" id="add_btn" ng-click="vm.pushMention()">
@@ -33,7 +34,6 @@
                             </div>
                         </div>
                         <div>
-                            
                             <table class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
@@ -74,6 +74,50 @@
                             </table>
                         </div>
                     </div>
+                    <!-- end not tdfk -->
+                    <!-- tdfk -->
+                    <div class="panel-body" ng-if="vm.isTdfk">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="bg-primary" colspan="3" style="text-align:center;">（い）</th>
+                                    <th class="bg-primary" rowspan="2" style="text-align:center;">（ろ）</th>
+                                    <th class="bg-primary" rowspan="2" style="text-align:center;">（は）</th>
+                                    <th class="bg-primary" rowspan="2" width="120px" style="text-align:center;">最終チェック<br>項目</th>
+                                </tr>
+                                <tr>
+                                    <th class="bg-primary" colspan="2" style="text-align:center;">条項</th>
+                                    <th class="bg-primary" style="text-align:center;">見出し</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="lawData in vm.listMasterLaw">
+                                    <!-- process rowspan and colspan of item1 & item2 条項 -->
+                                    <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}">{{ lawData.item1 }}</td>
+                                    <td ng-if="lawData.rowspan > 0">{{ lawData.item2 }}</td>
+                                    <td ng-if="lawData.rowspan === 0 && !lawData.item2" colspan="2">{{ lawData.item1 }}</td>
+                                    <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item1 }}</td>
+                                    <td ng-if="lawData.rowspan === 0 && lawData.item2">{{ lawData.item2 }}</td>
+                                    <td ng-if="lawData.rowspan < 0">{{ lawData.item2 }}</td>
+                                    <!-- legal_text -->
+                                    <td>{{ lawData.legal_text }}</td>
+                                    <!-- checkbox formMen_ro （ろ） -->
+                                    <td style="text-align:center;">
+                                        <input type='checkbox' checklist-model='vm.doc.formMen_ro' checklist-value="lawData.id"/>
+                                    </td>
+                                    <!-- process rowspan of checkbox formMen_ha （は） -->
+                                    <td style="text-align:center;">
+                                        <input type='checkbox' checklist-model='vm.doc.formMen_ha' checklist-value="lawData.id"/>
+                                    </td>
+                                    <!-- process rowspan of checkbox formMen_item  最終チェック 項目-->
+                                    <td style="text-align:center;">
+                                        <input type='checkbox' checklist-model='vm.doc.formMen_item' checklist-value="lawData.id">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end tdfk -->
                 </div>
             </div>
         </div>

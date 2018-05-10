@@ -24,6 +24,9 @@ var DocSchema = new Schema({
   form4_ha1: [],
   form4_ha2: [],
   form4_item: [],
+  form7_ro1: [],
+  form7_ro2: [],
+  form7_item: [],
   property: {
     type: Schema.ObjectId,
     ref: 'Property'
@@ -34,7 +37,10 @@ var DocSchema = new Schema({
     time1_check: { type: Boolean, default: false },
     time2_check: { type: Boolean, default: false },
     final_check: { type: Boolean, default: false }
-  }]
+  }],
+  formMen_ro: [],
+  formMen_ha: [],
+  formMen_item: []
 });
 
 DocSchema.statics.seed = seed;

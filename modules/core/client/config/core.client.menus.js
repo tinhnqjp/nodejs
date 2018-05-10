@@ -33,7 +33,7 @@
     menuService.addMenuItem('nav', {
       title: 'アカウント管理',
       parrent_state: 'admin.users',
-      state: 'admin.users',
+      state: 'admin.users.list',
       roles: ['user']
     });
 

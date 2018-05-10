@@ -61,6 +61,9 @@
     this.listMasterCheckSheetForm4 = function () {
       return $http.get('/api/listMasterCheckSheetForm4', null, { ignoreLoadingBar: true });
     };
+    this.listMasterCheckSheetForm7 = function () {
+      return $http.get('/api/listMasterCheckSheetForm7', null, { ignoreLoadingBar: true });
+    };
     return this;
   }
 }());

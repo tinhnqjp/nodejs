@@ -30,7 +30,154 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <!-- <button>計算</button> -->
+                                <span style="font-weight:bold;">（共通事項）</span>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg-primary" colspan="5">（い）</th>
+                                            <th class="bg-primary" colspan="2">（ろ）</th>
+                                            <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-primary" colspan="4">検査箇所</th>
+                                            <th class="bg-primary">検査事項</th>
+                                            <th class="bg-primary" colspan="2">目視検査</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in vm.listTable1">
+                                            <td ng-if="row.rsp_item1 > 0" rowspan="{{ row.rsp_item1 }}" colspan="4">{{ row.item1 }}</td>
+                                            <td ng-if="row.rsp_item1 == 0" colspan="4">{{ row.item1 }}</td>
+
+                                            <td>{{ row.legal_text }}</td>
+                                            <td colspan="2" style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_ro1' checklist-value="row.id"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_item' checklist-value="row.id"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span style="font-weight:bold;">（木造の場合）</span>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg-primary" colspan="5">（い）</th>
+                                            <th class="bg-primary" colspan="2">（ろ）</th>
+                                            <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-primary" colspan="4">検査箇所</th>
+                                            <th class="bg-primary">検査事項</th>
+                                            <th class="bg-primary">目視<br>検査</th>
+                                            <th class="bg-primary">監理<br>報告</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in vm.listTable2">
+                                            <td ng-if="row.rsp_item1 > 0" rowspan="{{ row.rsp_item1 }}" colspan="3">{{ row.item1 }}</td>
+                                            <td ng-if="row.rsp_item1 == 0" colspan="3">{{ row.item1 }}</td>
+                                            <td ng-if="row.rsp_item4 > 0" rowspan="{{ row.rsp_item4 }}">{{ row.item4 }}</td>
+                                            <td ng-if="row.rsp_item4 == 0">{{ row.item4 }}</td>
+                                            <td >{{ row.legal_text }}</td>
+                                            <td style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_ro1' checklist-value="row.id"/>
+                                            </td>
+                                            <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_ro2' checklist-value="row.id"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_item' checklist-value="row.id"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span style="font-weight:bold;">（鉄骨造の場合）</span>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg-primary" colspan="5">（い）</th>
+                                            <th class="bg-primary" colspan="2">（ろ）</th>
+                                            <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-primary" colspan="4">検査箇所</th>
+                                            <th class="bg-primary">検査事項</th>
+                                            <th class="bg-primary">目視<br>検査</th>
+                                            <th class="bg-primary">監理<br>報告</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in vm.listTable3">
+                                            <td ng-if="row.rsp_item1 > 0" rowspan="{{ row.rsp_item1 }}">{{ row.item1 }}</td>
+                                            <td ng-if="row.rsp_item1 == 0">{{ row.item1 }}</td>
+
+                                            <td ng-if="row.rsp_item2 > 0 && row.item3" rowspan="{{ row.rsp_item2 }}">{{ row.item2 }}</td>
+                                            <td ng-if="row.rsp_item2 == 0 && row.item3">{{ row.item2 }}</td>
+
+                                            <td ng-if="row.rsp_item2 > 0 && !row.item3" rowspan="{{ row.rsp_item2 }}" colspan="2">{{ row.item2 }}</td>
+                                            <td ng-if="row.rsp_item2 == 0 && !row.item3" colspan="2">{{ row.item2 }}</td>
+
+                                            <td ng-if="row.rsp_item3 > 0" rowspan="{{ row.rsp_item3 }}">{{ row.item3 }}</td>
+                                            <td ng-if="row.rsp_item3 == 0 && row.item3">{{ row.item3 }}</td>
+
+                                            <td ng-if="row.rsp_item4 > 0" rowspan="{{ row.rsp_item4 }}">{{ row.item4 }}</td>
+                                            <td ng-if="row.rsp_item4 == 0">{{ row.item4 }}</td>
+                                            <td >{{ row.legal_text }}</td>
+                                            <td style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_ro1' checklist-value="row.id"/>
+                                            </td>
+                                            <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_ro2' checklist-value="row.id"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_item' checklist-value="row.id"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span style="font-weight:bold;">（鉄筋コンクリート造の場合）</span>
+                                <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="bg-primary" colspan="5">（い）</th>
+                                            <th class="bg-primary" colspan="2">（ろ）</th>
+                                            <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-primary" colspan="4">検査箇所</th>
+                                            <th class="bg-primary">検査事項</th>
+                                            <th class="bg-primary">目視<br>検査</th>
+                                            <th class="bg-primary">監理<br>報告</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in vm.listTable4">
+                                            <td ng-if="row.rsp_item1 > 0" rowspan="{{ row.rsp_item1 }}">{{ row.item1 }}</td>
+                                            <td ng-if="row.rsp_item1 == 0">{{ row.item1 }}</td>
+
+                                            <td ng-if="row.rsp_item2 > 0" rowspan="{{ row.rsp_item2 }}" colspan="2">{{ row.item2 }}</td>
+                                            <td ng-if="row.rsp_item2 == 0" colspan="2">{{ row.item2 }}</td>
+
+                                            <td ng-if="row.rsp_item4 > 0" rowspan="{{ row.rsp_item4 }}">{{ row.item4 }}</td>
+                                            <td ng-if="row.rsp_item4 == 0">{{ row.item4 }}</td>
+                                            <td >{{ row.legal_text }}</td>
+                                            <td style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_ro1' checklist-value="row.id"/>
+                                            </td>
+                                            <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_ro2' checklist-value="row.id"/>
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <input type='checkbox' checklist-model='vm.doc.form7_item' checklist-value="row.id"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
+                            <div ng-include="'/modules/docs/client/views/admin/form-7-data.client.view.html'" class="col-sm-12" 
+                                id="tableToExport" style="display: none"></div>
                         </div>
                     </div>
                 </div>
