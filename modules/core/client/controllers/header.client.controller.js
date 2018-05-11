@@ -24,4 +24,11 @@
       vm.isCollapsed = false;
     }
   }
+
+  angular.module('core').filter('contains', function () {
+    return function (array, needle) {
+      if (!array) return 0;
+      return array.indexOf(needle) >= 0;
+    };
+  });
 }());

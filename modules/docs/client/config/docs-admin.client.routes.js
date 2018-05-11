@@ -20,7 +20,7 @@
         controller: 'DocsAdminListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         }
       })
       .state('admin.docs.form1', {
@@ -29,7 +29,7 @@
         controller: 'Doc1AdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         },
         resolve: {
           docResolve: getDoc
@@ -40,7 +40,7 @@
         controller: 'Doc4AdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         },
         resolve: {
           docResolve: getDoc
@@ -51,7 +51,7 @@
         controller: 'Doc7AdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         },
         resolve: {
           docResolve: getDoc
@@ -62,7 +62,7 @@
         controller: 'MentionsAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         },
         resolve: {
           docResolve: getDoc

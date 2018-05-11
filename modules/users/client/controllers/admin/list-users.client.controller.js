@@ -34,7 +34,7 @@
     // remove user
     function remove(_user) {
       if ($window.confirm('Are you sure you want to delete?')) {
-        var user = new AdminUsersService({ _id: _user._id });
+        var user = new UsersAdminService({ _id: _user._id });
         user.$remove(function () {
           getData();
           Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> user deleted successfully!' });

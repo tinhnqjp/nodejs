@@ -38,8 +38,6 @@
       .catch(function (err) {
         $scope.nofityError('特記様式登録が失敗しました。' + err);
       });
-
-      
     }
     /**
      * save to database rules

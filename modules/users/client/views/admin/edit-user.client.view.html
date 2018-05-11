@@ -1,37 +1,84 @@
-<section>
-  <div class="page-header">
-    <h1>User <span ng-bind="vm.user.username"></span></h1>
-  </div>
-  <div class="col-md-12">
-    <form name="vm.userForm" ng-submit="vm.update(vm.userForm.$valid)" novalidate>
-      <fieldset>
-        <div class="form-group" show-errors>
-          <label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.user.firstName" placeholder="First Name" required autofocus />
-          <div ng-messages="vm.userForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">First name is required.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.user.lastName" placeholder="Last Name" required />
-          <div ng-messages="vm.userForm.lastName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Last name is required.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label class="control-label" for="roles">Roles</label>
-          <div class="controls">
-            <input class="form-control" type="text" name="roles" ng-model="vm.user.roles" id="roles" ng-list required />
-            <div ng-messages="vm.userForm.roles.$error" role="alert">
-              <p class="help-block error-text" ng-message="required">At least one role is required.</p>
+<div id="content2" class="w3-container" style="padding-top:50px;">
+    <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+      <span id="myIntro" class="w3-hide">アカウント管理</span>
+    </div>
+    <div>
+      <strong style="font-size:20px;">アカウント管理</strong>
+      <br/>
+    </div>
+    <button ng-click="vm.update(vm.userForm.$valid)" class="btn btn-primary pull-right">
+      <span class="glyphicon glyphicon-floppy-save"></span> サインアップ</button>
+    <a type="button" data-ui-sref="admin.users.list" class="mg15r btn btn-warning pull-right">
+      キャンセル
+    </a>
+    <div style="font-weight:bold; padding-top:10px;">
+      <a data-ui-sref="admin.users.list">一覧 </a> > アカウント登録
+    </div>
+    <hr>
+    <div>
+      <div class="col-md-12">
+        <form name="vm.userForm" ng-submit="vm.update(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
+          <fieldset>
+            <div class="form-group" show-errors>
+              <label for="firstName">姓</label>
+              <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.credentials.firstName" placeholder="姓" required autofocus>
+              <div ng-messages="vm.userForm.firstName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">*</p>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <input type="submit" value="Update" class="btn btn-default">
-        </div>
-      </fieldset>
-    </form>
-  </div>
-</section>
+            <div class="form-group" show-errors>
+              <label for="lastName">名</label>
+              <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.credentials.lastName" placeholder="名" required>
+              <div ng-messages="vm.userForm.lastName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">*</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label for="email">メールアドレス</label>
+              <input type="email" id="email" name="email" class="form-control" ng-model="vm.credentials.email" placeholder="メールアドレス" lowercase required>
+              <div ng-messages="vm.userForm.email.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">*</p>
+                <p class="help-block error-text" ng-message="email">*</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label for="username">ユーザー名</label>
+              <input type="text" id="username" name="username" class="form-control" ng-model="vm.credentials.username" ng-pattern="vm.usernameRegex" placeholder="ユーザー名" lowercase required>
+              <div ng-messages="vm.userForm.username.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">*</p>
+                <p class="help-block error-text" ng-message="pattern">Please enter a valid username: 3+ characters long, non restricted word, characters "_-.", no consecutive dots, does not begin or end with dots, letters a-z and numbers 0-9.</p>
+              </div>
+            </div>
+            <div class="form-group" show-errors>
+              <label for="password">パスワード</label>
+                <input type="password" id="password" name="password" class="form-control" ng-model="vm.credentials.password" placeholder="パスワード" uib-popover="{{vm.getPopoverMsg()}}" popover-trigger="outsideClick" password-validator>
+              <div ng-messages="vm.userForm.password.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">*</p>
+                <div ng-repeat="passwordError in passwordErrors">
+                  <p class="help-block error-text" ng-show="vm.userForm.password.$error.requirements">{{passwordError}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" ng-show="!vm.userForm.password.$error.required">
+              <label>パスワード要件</label>
+              <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></uib-progressbar>
+            </div>
+            <div class="form-group" show-errors>
+              <label for="roles">権限</label>
+              <select id="roles" name="roles" class="form-control" ng-model="vm.credentials.roles[0]">
+                <option value="user">一般ユーザ</option>
+                <option value="jaic">JAIC</option>
+                <option value="admin">SYSTEM</option>
+              </select>
+              <div ng-messages="vm.userForm.roles.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">*</p>
+              </div>
+            </div>
+            <div class="text-center form-group">
+              <button type="submit" class="btn btn-primary">サインアップ</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+</div>

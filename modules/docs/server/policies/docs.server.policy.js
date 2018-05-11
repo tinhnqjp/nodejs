@@ -25,10 +25,19 @@ exports.invokeRolesPolicies = function () {
     roles: ['user'],
     allows: [{
       resources: '/api/docs',
-      permissions: ['get']
+      permissions: ['*']
     }, {
       resources: '/api/docs/:docId',
-      permissions: ['get']
+      permissions: ['*']
+    }]
+  }, {
+    roles: ['jaic'],
+    allows: [{
+      resources: '/api/docs',
+      permissions: ['*']
+    }, {
+      resources: '/api/docs/:docId',
+      permissions: ['*']
     }]
   }, {
     roles: ['guest'],

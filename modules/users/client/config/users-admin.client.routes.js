@@ -21,16 +21,16 @@
         controller: 'UserListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic']
         }
       })
       .state('admin.users.create', {
         url: '/create',
-        templateUrl: '/modules/users/client/views/admin/edit-user.client.view.html',
-        controller: 'UserController',
+        templateUrl: '/modules/users/client/views/authentication/signup.client.view.html',
+        controller: 'AuthenticationController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic']
         },
         resolve: {
           userResolve: newUser
@@ -42,7 +42,7 @@
         controller: 'UserController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic']
         },
         resolve: {
           userResolve: getUser

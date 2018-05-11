@@ -20,7 +20,7 @@
         controller: 'PropertiesAdminListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         }
       })
       .state('admin.properties.import', {
@@ -29,7 +29,7 @@
         controller: 'PropertyImportsAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         },
         resolve: {
           propertyResolve: newProperty
@@ -41,7 +41,7 @@
         controller: 'PropertiesAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin', 'jaic', 'user']
         },
         resolve: {
           propertyResolve: newProperty
@@ -53,8 +53,7 @@
         controller: 'PropertiesAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin'],
-          pageTitle: '{{ propertyResolve.title }}'
+          roles: ['admin', 'jaic', 'user']
         },
         resolve: {
           propertyResolve: getProperty

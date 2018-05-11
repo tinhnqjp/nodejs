@@ -1,21 +1,22 @@
-<section>
-  <div class="page-header">
-    <h1>Settings</h1>
-  </div>
+<div id="content1" class="w3-container" style="padding-top:50px;">
+    <div id="myTop" class="w3-container w3-top w3-theme w3-large">
+    </div>
+    <div>
+        <strong style="font-size:20px;">ユーザ情報設定</strong><br/>
+    </div>
+
+    <hr>
   <div class="row">
     <nav class="col-sm-3 col-md-3">
       <ul class="nav nav-pills nav-stacked">
         <li ui-sref-active="active">
-          <a ui-sref="settings.profile">Edit Profile</a>
+          <a ui-sref="settings.profile">プロファイル編集</a>
         </li>
         <li ui-sref-active="active">
-          <a ui-sref="settings.picture">Change Profile Picture</a>
+          <a ui-sref="settings.picture">プロフィールの画像</a>
         </li>
         <li ui-sref-active="active" ng-show="vm.user.provider === 'local'">
-          <a ui-sref="settings.password">Change Password</a>
-        </li>
-        <li ui-sref-active="active">
-          <a ui-sref="settings.accounts">Manage Social Accounts</a>
+          <a ui-sref="settings.password">パスワード変更</a>
         </li>
       </ul>
     </nav>
@@ -23,4 +24,4 @@
       <div ui-view></div>
     </div>
   </div>
-</section>
+</div>

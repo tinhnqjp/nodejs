@@ -74,7 +74,7 @@
     .module('users.services')
     .factory('UsersAdminService', UsersAdminService);
 
-    UsersAdminService.$inject = ['$resource', '$log'];
+  UsersAdminService.$inject = ['$resource', '$log'];
 
   function UsersAdminService($resource, $log) {
 

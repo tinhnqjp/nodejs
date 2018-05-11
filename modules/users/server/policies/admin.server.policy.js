@@ -21,6 +21,15 @@ exports.invokeRolesPolicies = function () {
       resources: '/api/users/:userId',
       permissions: '*'
     }]
+  }, {
+    roles: ['jaic'],
+    allows: [{
+      resources: '/api/users',
+      permissions: '*'
+    }, {
+      resources: '/api/users/:userId',
+      permissions: '*'
+    }]
   }]);
 };
 

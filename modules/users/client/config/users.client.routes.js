@@ -18,7 +18,7 @@
         controller: 'SettingsController',
         controllerAs: 'vm',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin', 'jaic', 'user']
         }
       })
       .state('settings.profile', {
@@ -70,8 +70,10 @@
         controller: 'AuthenticationController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Signup'
+          pageTitle: 'Signup',
+          roles: ['admin']
         }
+        
       })
       .state('authentication.signin', {
         url: '/signin?err',

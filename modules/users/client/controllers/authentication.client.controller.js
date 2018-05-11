@@ -23,18 +23,17 @@
     }
 
     // If user is signed in then redirect back home
-    if (vm.authentication.user) {
-      $location.path('/admin/properties');
-    }
+    // if (vm.authentication.user) {
+    //   $location.path('/admin/properties');
+    // }
 
     function signup(isValid) {
-
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.userForm');
-
         return false;
       }
-
+      console.log(vm.credentials);
+      //return;
       UsersService.userSignup(vm.credentials)
         .then(onUserSignupSuccess)
         .catch(onUserSignupError);
@@ -67,10 +66,10 @@
 
     function onUserSignupSuccess(response) {
       // If successful we assign the response to the global user model
-      vm.authentication.user = response;
+      // vm.authentication.user = response;
       Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Signup successful!' });
       // And redirect to the previous or home page
-      $state.go($state.previous.state.name || 'home', $state.previous.params);
+      $state.go('admin.users.list');
     }
 
     function onUserSignupError(response) {
