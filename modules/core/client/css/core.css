@@ -130,3 +130,5 @@ a {
 .w3-main {
   min-height: 95%;
 }
+
+table.table-bordered tr td, table.table-bordered tr th { border: 1px solid gray };

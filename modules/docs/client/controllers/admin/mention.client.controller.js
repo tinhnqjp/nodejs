@@ -106,6 +106,26 @@
         });
       });
     }
+
+    /**
+     * down file excel checksheet
+     * @param {*} mendou form1, form4, form7
+     */
+    vm.download = function () {
+      var href = $scope.exportExcel('#tableToExport', 'チェックシート');
+      $scope.handleShowDownload({
+        href: href,
+        file: 'ダウンロード.xls',
+        text: 'ダウンロード'
+      });
+    };
     // controller
   }
+
+  angular.module('docs.admin').filter('contains', function () {
+    return function (array, needle) {
+      if (!array) return 0;
+      return array.indexOf(needle) >= 0;
+    };
+  });
 }());
