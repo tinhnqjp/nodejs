@@ -21,19 +21,23 @@ var PropertySchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Doc'
   },
+  application_id: { type: Number },
   // 引受日
-  men10: {
-    type: Date,
-    required: '受付欄が入力されていません。'
-  },
+  men10: { type: Date },
   // １．建築主の概要
   men11: { type: String, trim: true },
   // ２．代表者
   men12: { type: String, trim: true },
   // ３．設計者
   men13: { type: String, trim: true },
-  // 受付番号
+  // 事前受付番号
   men14: { type: String, trim: true },
+  // 物件名
+  men15: { type: String, trim: true },
+  // 確認受付日
+  men16: { type: Date },
+  // 確認受付番号
+  men17: { type: String, trim: true },
   men3_1_1: { type: String },
   men3_1_2: { type: String },
   men3_2_1: { type: String },

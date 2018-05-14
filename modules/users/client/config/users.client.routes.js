@@ -73,7 +73,6 @@
           pageTitle: 'Signup',
           roles: ['admin']
         }
-        
       })
       .state('authentication.signin', {
         url: '/signin?err',

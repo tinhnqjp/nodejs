@@ -41,7 +41,7 @@
         return false;
       }
       var user = vm.credentials;
-      
+
       user.$update(function () {
         $state.go('admin.users.list', {
           userId: user._id

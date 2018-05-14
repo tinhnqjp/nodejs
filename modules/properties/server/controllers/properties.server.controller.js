@@ -149,19 +149,35 @@ exports.requestPropertyByDoc = function (req, res) {
 exports.requestPropertiesMysql = function (req, res) {
   var limit = Number(req.body.limit) || 10;
   var page = Number(req.body.page) || 1;
+  var keyword = req.body.keyword || null;
   var query_from = ' FROM v_nice_property_info_1 as inf1 INNER JOIN v_nice_property_info_2 as inf2 ON' +
    ' (inf1.property_id = inf2.property_id) and (inf1.application_id = inf2.application_id)' +
-   ' INNER JOIN v_nice_property_no3 as no3 ON inf1.property_id = no3.property_id';
+   ' INNER JOIN v_nice_property_no3 as no3 ON (inf1.property_id = no3.property_id) and (inf1.application_id = no3.application_id)';
     // ' INNER JOIN v_nice_property_no4 as no4 ON inf1.property_id = no4.property_id' +
+  var query_where = keyword ? ' WHERE inf1.col_015 like ? or inf1.col_012 like ? or inf1.col_005 like ? ' +
+   ' or inf1.col_003 like ? or inf1.col_043 like ? or no3.col_148 like ? or no3.col_149 like ?' : '';
+  /*
+  受付日:col_015
+  事前受付番号:col_012
+  引受日:col_005
+  確認受付番号:col_003
+  物件名:col_043
+  建築場所都道府県:col_148
+  建築場所:col_149^-
+  */
+  var query_oder = ' ORDER BY inf1.application_id';
   var query_limit = ' LIMIT ?, ?';
-  var param = [page, limit];
-  var query_total = 'SELECT count(*) as total' + query_from;
-  var query_select = 'SELECT *' + query_from + query_limit;
+
+  var query_total = 'SELECT count(inf1.application_id) as total' + query_from + query_where;
+  var query_select = 'SELECT inf1.application_id, inf1.col_015, inf1.col_012, inf1.col_005, inf1.col_003, inf1.col_043, no3.col_148, no3.col_149' +
+   query_from + query_where + query_oder + query_limit;
   var _total;
-  mysqlSelect(query_total, null)
+  // param
+  var param = createParam(keyword, (page-1) * limit, limit);
+  mysqlSelect(query_total, param[0])
   .then(function (result_total) {
     _total = result_total[0].total;
-    return mysqlSelect(query_select, param);
+    return mysqlSelect(query_select, param[1]);
   })
   .then(function (result_select) {
     res.json({
@@ -187,6 +203,7 @@ exports.importPropertyFormMysql = function (req, res) {
    ' ON (inf1.property_id = no3.property_id) and (inf1.application_id = no3.application_id)' +
    ' INNER JOIN v_nice_property_no4 as no4' +
    ' ON (inf1.property_id = no4.property_id) and (inf1.application_id = no4.application_id)';
+  
   var param = _.clone(ids);
   var query_where = ' WHERE inf1.application_id IN (' + param.fill('?') + ')';
   var query_select = 'SELECT * ' + query_from + query_where;
@@ -218,7 +235,10 @@ exports.importPropertyFormMysql = function (req, res) {
     var promises = [];
     properties.forEach(function (property) {
       var list_floor = getDataFloor4_10(property_floor, property.no4_id);
-      promises.push(importProperty(property, masterProperties, list_floor));
+      checkUpdateOrCreate(property.application_id)
+      .then(function (propertyObj) {
+        promises.push(importProperty(propertyObj, property, masterProperties, list_floor));
+      });
     });
     return Promise.all(promises);
   })
@@ -231,6 +251,12 @@ exports.importPropertyFormMysql = function (req, res) {
     });
   });
 };
+
+function createParam(keyword, page, limit) {
+  var param_total = keyword ? _.fill(Array(7), '%' + keyword + '%') : [];
+  var param_select = _.concat(param_total, [page, limit]);
+  return [param_total, param_select];
+}
 
 function mergeInfoProperty(array1, array2) {
   return _.map(array1, function (p) {
@@ -262,15 +288,45 @@ function mysqlSelect(query, param) {
   });
 }
 
-function importProperty(_property, masterProperties, list_floor) {
+function checkUpdateOrCreate(application_id) {
   return new Promise(function (resolve, reject) {
-    var newPro = new Property();
+    Property.findOne({ application_id: application_id }).exec(function (err, property) {
+      if (err) {
+        reject(err);
+      }
+      if (property) {
+        resolve(property);
+      } else {
+        var newPro = new Property();
+        // save regulation
+        // Doc
+        var doc = new Doc();
+        doc.save();
+        // property
+        newPro.doc = doc;
+        resolve(newPro);
+      }
+    });
+  });
+}
+
+function importProperty(newPro, _property, masterProperties, list_floor) {
+  return new Promise(function (resolve, reject) {
     // 物件概要
+    newPro.application_id = _property.application_id;
     newPro.men10 = _property.col_005;
     newPro.men11 = trim(_property.col_067);
     newPro.men12 = trim(_property.col_070);
     newPro.men13 = trim(_property.col_107);
-    newPro.men14 = trim(_property.col_003);
+    newPro.men14 = trim(_property.col_012);
+    newPro.men15 = trim(_property.col_043);
+    newPro.men16 = trim(_property.col_015);
+    newPro.men17 = trim(_property.col_003);
+    // 受付日:col_015 = 016
+    // 事前受付番号:col_012 = 014
+    // 引受日:col_005 = 010
+    // 確認受付番号:col_003 = 017
+    // 物件名:col_043	= 015
     // 第三面
     newPro.men3_1_1 = trim(_property.col_148);
     newPro.men3_1_2 = trim(_property.col_149);
@@ -449,10 +505,10 @@ function importProperty(_property, masterProperties, list_floor) {
     newPro.men4_9_5 = getValueMen4_9_5(_property);
     newPro.men4_9_6 = toFloat(_property.col_349);
     // 10.床 面 積
-    newPro.men4_10_1 = toFloat(_property.col_349); // TODO
-    newPro.men4_10_2 = toFloat(_property.col_349); // TODO
-    newPro.men4_10_3 = toFloat(_property.col_349); // TODO
-    newPro.men4_10_4 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_1 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_2 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_3 = toFloat(_property.col_349); // TODO
+    // newPro.men4_10_4 = toFloat(_property.col_349); // TODO
 
     if (list_floor.length > 0) {
       newPro.men4_10_14 = getValueMen4_10_14(list_floor[0].f_001);
@@ -475,12 +531,6 @@ function importProperty(_property, masterProperties, list_floor) {
     newPro.men4_15 = getValueMen4_15(_property);
     newPro.men4_16 = trim(_property.col_364);
     newPro.men4_17 = trim(_property.col_365);
-    // save regulation
-    // Doc
-    var doc = new Doc();
-    doc.save();
-    // property
-    newPro.doc = doc;
 
     newPro.save(function (err) {
       if (err) {

@@ -32,8 +32,6 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.userForm');
         return false;
       }
-      console.log(vm.credentials);
-      //return;
       UsersService.userSignup(vm.credentials)
         .then(onUserSignupSuccess)
         .catch(onUserSignupError);
