@@ -10,19 +10,25 @@
   function PropertiesAdminListController($scope, PropertiesService) {
     var vm = this;
     vm.remove = remove;
+    vm.search = search;
     vm.currentPage = 1;
     vm.pageSize = 10;
-    getData();
+    vm.keyword = '';
+    vm.busyLoad = false;
+    initData();
     vm.pageChanged = function () {
-      getData();
+      initData();
     };
 
-    function getData() {
-      var input = { page: vm.currentPage, limit: vm.pageSize };
+    function initData() {
+      vm.busyLoad = true;
+      var input = { page: vm.currentPage, limit: vm.pageSize, keyword: vm.keyword };
       PropertiesService.get(input, function (output) {
+        vm.busyLoad = false;
         vm.properties = output.properties;
         vm.totalItems = output.total;
         vm.currentPage = output.current;
+        console.log(output.total);
       });
     }
 
@@ -33,12 +39,16 @@
         vm.busy = true;
         var property = new PropertiesService({ _id: _property._id });
         property.$remove(function () {
-          getData();
+          initData();
           vm.busy = false;
           $scope.nofitySuccess('物件データの削除が完了しました。');
         });
       });
     }
 
+    function search(isValid) {
+      initData();
+      console.log(vm.keyword);
+    }
   }
 }());

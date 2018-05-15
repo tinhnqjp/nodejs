@@ -2,16 +2,16 @@
   'use strict';
 
   angular
-    .module('docs.admin')
+    .module('properties.admin')
     .controller('Doc7AdminController', Doc7AdminController);
 
   Doc7AdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
-    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi'];
+    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi', '$stateParams'];
 
   function Doc7AdminController($scope, $state, $window, doc, Authentication,
-    Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi) {
+    Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi, $stateParams) {
     var vm = this;
-
+    vm.propertyId;
     vm.doc = doc;
     vm.authentication = Authentication;
     vm.listTable1 = [];
@@ -19,15 +19,19 @@
     vm.listTable3 = [];
     vm.listTable4 = [];
     vm.form = {};
+    vm.busyLoad = false;
     initData();
 
     /**
      * init method
      */
     function initData() {
+      vm.busyLoad = true;
+      vm.propertyId = $stateParams.propertyId;
       // load list data masterlaw
       DocsApi.listMasterCheckSheetForm7()
         .then(function (res) {
+          vm.busyLoad = false;
           var list = res.data;
           vm.listTable1 = _.filter(list, { table: 1 });
           vm.listTable2 = _.filter(list, { table: 2 });
@@ -35,6 +39,7 @@
           vm.listTable4 = _.filter(list, { table: 4 });
         })
         .catch(function (res) {
+          vm.busyLoad = false;
           $scope.nofityError('マスターデータのロードが失敗しました。');
         });
     }
@@ -54,10 +59,10 @@
         }
         vm.doc.createOrUpdate()
           .then(function (res) {
-            $scope.nofitySuccess('第一号様式データの保存が完了しました。');
+            $scope.nofitySuccess('第七号様式データの保存が完了しました。');
           })
           .catch(function (res) {
-            $scope.nofityError('第一号様式データの保存が失敗しました。' + res.data.message);
+            $scope.nofityError('第七号様式データの保存が失敗しました。' + res.data.message);
           });
       });
     };
@@ -79,7 +84,7 @@
     // End controller
   }
 
-  angular.module('docs.admin').filter('contains', function () {
+  angular.module('properties.admin').filter('contains', function () {
     return function (array, needle) {
       if (!array) return 0;
       return array.indexOf(needle) >= 0;

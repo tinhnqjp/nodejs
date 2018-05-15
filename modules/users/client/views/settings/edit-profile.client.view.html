@@ -3,28 +3,6 @@
     <form name="vm.userForm" ng-submit="vm.updateUserProfile(vm.userForm.$valid)" class="signin" novalidate autocomplete="off">
       <fieldset>
         <div class="form-group" show-errors>
-          <label for="firstName">姓</label>
-          <input type="text" id="firstName" name="firstName" class="form-control" ng-model="vm.user.firstName" placeholder="姓" required autofocus>
-          <div ng-messages="vm.userForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">*</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="lastName">名</label>
-          <input type="text" id="lastName" name="lastName" class="form-control" ng-model="vm.user.lastName" placeholder="名" required>
-          <div ng-messages="vm.userForm.lastName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">*</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
-          <label for="email">メールアドレス</label>
-          <input type="email" id="email" name="email" class="form-control" ng-model="vm.user.email" placeholder="メールアドレス" lowercase required>
-          <div ng-messages="vm.userForm.email.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">*</p>
-            <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
-          </div>
-        </div>
-        <div class="form-group" show-errors>
           <label for="username">ユーザー名</label>
           <input type="text" id="username" name="username" class="form-control" ng-model="vm.user.username" placeholder="ユーザー名" lowercase required>
           <div ng-messages="vm.userForm.username.$error" role="alert">

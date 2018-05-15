@@ -146,7 +146,7 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
 
     if (!req.user) {
       if (!existingUser) {
-        var possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ? providerUserProfile.email.split('@')[0] : '');
+        var possibleUsername = providerUserProfile.username;
 
         User.findUniqueUsername(possibleUsername, null, function (availableUsername) {
           user = new User({
@@ -158,11 +158,6 @@ exports.saveOAuthUserProfile = function (req, providerUserProfile, done) {
             provider: providerUserProfile.provider,
             providerData: providerUserProfile.providerData
           });
-
-          // Email intentionally added later to allow defaults (sparse settings) to be applid.
-          // Handles case where no email is supplied.
-          // See comment: https://github.com/meanjs/mean/pull/1495#issuecomment-246090193
-          user.email = providerUserProfile.email;
 
           // And save the user
           user.save(function (err) {

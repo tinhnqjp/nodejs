@@ -16,10 +16,11 @@ var path = require('path'),
  * Create an property
  */
 exports.create = function (req, res) {
+  var property = new Property(req.body);
   var doc = new Doc();
+  doc.property = property;
   doc.save();
   // property
-  var property = new Property(req.body);
   property.doc = doc;
 
   property.save(function (err) {
@@ -89,11 +90,30 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var limit = Number(req.query.limit) || 10;
   var page = Number(req.query.page) || 1;
-  Property.find()
+  var keyword = req.query.keyword.trim() || null;
+  var condition = {};
+
+  if (Date.parse(keyword)) {
+    var date = new Date(trim(keyword));
+    condition =  { $or: [
+      { 'men16': date },
+      { 'men10': date }
+    ]};
+  } else if (keyword) {
+    var regex = new RegExp(trim(keyword), 'i');
+    condition =  { $or: [
+      { 'men14': regex },
+      { 'men17': regex },
+      { 'men15': regex },
+      { 'men3_1_1': regex },
+      { 'men3_1_2': regex }
+    ]};
+  }
+  Property.find(condition)
   .skip((limit * page) - limit)
   .limit(limit)
   .sort('-created').exec(function (err, properties) {
-    Property.count().exec(function (err, count) {
+    Property.count(condition).exec(function (err, count) {
       if (err) {
         return res.status(422).send({
           message: errorHandler.getErrorMessage(err)
@@ -173,7 +193,7 @@ exports.requestPropertiesMysql = function (req, res) {
    query_from + query_where + query_oder + query_limit;
   var _total;
   // param
-  var param = createParam(keyword, (page-1) * limit, limit);
+  var param = createParam(keyword, (page - 1) * limit, limit);
   mysqlSelect(query_total, param[0])
   .then(function (result_total) {
     _total = result_total[0].total;
@@ -203,7 +223,7 @@ exports.importPropertyFormMysql = function (req, res) {
    ' ON (inf1.property_id = no3.property_id) and (inf1.application_id = no3.application_id)' +
    ' INNER JOIN v_nice_property_no4 as no4' +
    ' ON (inf1.property_id = no4.property_id) and (inf1.application_id = no4.application_id)';
-  
+
   var param = _.clone(ids);
   var query_where = ' WHERE inf1.application_id IN (' + param.fill('?') + ')';
   var query_select = 'SELECT * ' + query_from + query_where;
@@ -298,9 +318,10 @@ function checkUpdateOrCreate(application_id) {
         resolve(property);
       } else {
         var newPro = new Property();
-        // save regulation
         // Doc
         var doc = new Doc();
+        // save regulation
+        doc.property = newPro;
         doc.save();
         // property
         newPro.doc = doc;

@@ -16,7 +16,6 @@
                   <tr>
                       <th class="bg-primary">ユーザー名</th>
                       <th class="bg-primary">権限</th>
-                      <th class="bg-primary">メールアドレス</th>
                       <th class="bg-primary">操作</th>
                   </tr>
               </thead>
@@ -24,7 +23,6 @@
                   <tr data-ng-repeat="user in vm.users">
                       <td style="text-align:center;" data-ng-bind="user.username"></td>
                       <td style="text-align:left;" data-ng-bind="user.roles"></td>
-                      <td style="text-align:left;" data-ng-bind="user.email"></td>
                       <td style="text-align:center;">
                           <button class="btn btn-info btn-sm" data-ui-sref="admin.users.edit({userId: user._id})">
                           <i class="glyphicon glyphicon-pencil"></i> 編集</button>

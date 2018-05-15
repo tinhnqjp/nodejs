@@ -22,4 +22,5 @@ module.exports = function (app) {
   app.param('docId', docs.docByID);
   app.route('/api/listMasterCheckSheetForm4').get(docs.listMasterCheckSheetForm4);
   app.route('/api/listMasterCheckSheetForm7').get(docs.listMasterCheckSheetForm7);
+  app.route('/api/requestDocByPropertyId').post(docs.requestDocByPropertyId);
 };

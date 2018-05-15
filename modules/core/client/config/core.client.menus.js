@@ -25,12 +25,6 @@
       roles: ['admin']
     });
     menuService.addMenuItem('nav', {
-      title: 'チェックシート管理',
-      parrent_state: 'admin.docs',
-      state: 'admin.docs.list',
-      roles: ['admin', 'jaic', 'user']
-    });
-    menuService.addMenuItem('nav', {
       title: 'アカウント管理',
       parrent_state: 'admin.users',
       state: 'admin.users.list',

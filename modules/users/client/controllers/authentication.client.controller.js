@@ -23,9 +23,9 @@
     }
 
     // If user is signed in then redirect back home
-    // if (vm.authentication.user) {
-    //   $location.path('/admin/properties');
-    // }
+    if (vm.authentication.user && $location.path() === '/authentication/signin') {
+      $location.path('/admin/properties');
+    }
 
     function signup(isValid) {
       if (!isValid) {

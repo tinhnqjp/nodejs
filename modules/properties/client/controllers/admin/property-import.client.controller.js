@@ -34,7 +34,6 @@
       PropertyApi.requestPropertiesMysql(input)
       .then(function (res) {
         vm.busyLoad = false;
-        console.log(res.data);
         vm.listproperties = res.data.list;
         vm.totalItems = res.data.total;
         vm.currentPage = res.data.current;
@@ -86,7 +85,7 @@
         vm.property.application_id = [];
         vm.listproperties.forEach(function (item) {
           vm.property.application_id.push(item.application_id);
-        });  
+        });
       }
     };
   // end controller

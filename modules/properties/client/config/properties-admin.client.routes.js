@@ -29,7 +29,7 @@
         controller: 'PropertyImportsAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic']
         },
         resolve: {
           propertyResolve: newProperty
@@ -58,6 +58,50 @@
         resolve: {
           propertyResolve: getProperty
         }
+      }).state('admin.properties.form1', {
+        url: '/:propertyId/form1',
+        templateUrl: '/modules/properties/client/views/admin/doc-form-1.client.view.html',
+        controller: 'Doc1AdminController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin', 'jaic', 'user']
+        },
+        resolve: {
+          docResolve: getDoc
+        }
+      }).state('admin.properties.form4', {
+        url: '/:propertyId/form4',
+        templateUrl: '/modules/properties/client/views/admin/doc-form-4.client.view.html',
+        controller: 'Doc4AdminController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin', 'jaic', 'user']
+        },
+        resolve: {
+          docResolve: getDoc
+        }
+      }).state('admin.properties.form7', {
+        url: '/:propertyId/form7',
+        templateUrl: '/modules/properties/client/views/admin/doc-form-7.client.view.html',
+        controller: 'Doc7AdminController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin', 'jaic', 'user']
+        },
+        resolve: {
+          docResolve: getDoc
+        }
+      }).state('admin.properties.mention', {
+        url: '/:propertyId/mention',
+        templateUrl: '/modules/properties/client/views/admin/doc-form-mention.client.view.html',
+        controller: 'MentionsAdminController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin', 'jaic', 'user']
+        },
+        resolve: {
+          docResolve: getDoc
+        }
       });
   }
 
@@ -75,4 +119,35 @@
   function newProperty(PropertiesService) {
     return new PropertiesService();
   }
+
+  getDoc.$inject = ['$stateParams', 'DocsService', 'PropertiesService'];
+
+  function getDoc($stateParams, DocsService, PropertiesService) {
+    return new Promise(function (resolve, reject) {
+      getPropertyPromise(PropertiesService, $stateParams.propertyId)
+      .then(function (_property) {
+        return getDocPromise(DocsService, _property.doc);
+      }).then(function (_doc) {
+        resolve(_doc);
+      });
+    });
+  }
+
+  function getPropertyPromise(PropertiesService, propertyId) {
+    return new Promise(function (resolve, reject) {
+      var property = PropertiesService.get({
+        propertyId: propertyId
+      }).$promise;
+      resolve(property);
+    });
+  }
+  function getDocPromise(DocsService, docId) {
+    return new Promise(function (resolve, reject) {
+      var doc = DocsService.get({
+        docId: docId
+      }).$promise;
+      resolve(doc);
+    });
+  }
+
 }());

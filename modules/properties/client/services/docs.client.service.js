@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('docs.services')
+    .module('properties.services')
     .factory('DocsService', DocsService)
     .factory('DocsApi', DocsApi);
 
@@ -63,6 +63,9 @@
     };
     this.listMasterCheckSheetForm7 = function () {
       return $http.get('/api/listMasterCheckSheetForm7', null, { ignoreLoadingBar: true });
+    };
+    this.requestDocByPropertyId = function (propertyId) {
+      return $http.post('/api/requestDocByPropertyId', { propertyId: propertyId }, { ignoreLoadingBar: true });
     };
     return this;
   }

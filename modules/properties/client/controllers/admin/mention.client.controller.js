@@ -2,24 +2,28 @@
   'use strict';
 
   angular
-    .module('docs.admin')
+    .module('properties.admin')
     .controller('MentionsAdminController', MentionsAdminController);
 
   MentionsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
-    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'PropertyApi', 'LawsApi'];
+    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'PropertyApi', 'LawsApi', '$stateParams'];
 
   function MentionsAdminController($scope, $state, $window, doc, Authentication,
-    Notification, Excel, $timeout, DocsApi, PropertyApi, LawsApi) {
+    Notification, Excel, $timeout, DocsApi, PropertyApi, LawsApi, $stateParams) {
     var vm = this;
+    vm.propertyId;
     vm.doc = doc;
     vm.authentication = Authentication;
     vm.form = {};
     vm.listMasterLaw = [];
     vm.isTdfk = false;
     vm.property = {};
-    getData();
+    vm.busyLoad = false;
+    initData();
 
-    function getData() {
+    function initData() {
+      vm.busyLoad = true;
+      vm.propertyId = $stateParams.propertyId;
       if (!vm.doc.mentions) {
         vm.doc.mentions = [];
       }
@@ -32,10 +36,11 @@
         }
       })
       .then(function (_list) {
+        vm.busyLoad = false;
         vm.listMasterLaw = _list;
-        console.log(_list);
       })
       .catch(function (err) {
+        vm.busyLoad = false;
         $scope.nofityError('特記様式登録が失敗しました。' + err);
       });
     }
@@ -54,10 +59,10 @@
 
         vm.doc.createOrUpdate()
           .then(function (res) {
-            $scope.nofitySuccess('第一号様式データの保存が完了しました。');
+            $scope.nofitySuccess('特記様式データの保存が完了しました。');
           })
           .catch(function (res) {
-            $scope.nofityError('第一号様式データの保存が失敗しました。' + res.data.message);
+            $scope.nofityError('特記様式データの保存が失敗しました。' + res.data.message);
           });
       });
     };
@@ -120,7 +125,7 @@
     // controller
   }
 
-  angular.module('docs.admin').filter('contains', function () {
+  angular.module('properties.admin').filter('contains', function () {
     return function (array, needle) {
       if (!array) return 0;
       return array.indexOf(needle) >= 0;

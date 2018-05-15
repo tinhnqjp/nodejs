@@ -46,7 +46,6 @@ exports.update = function (req, res) {
   user.lastName = req.body.lastName;
   user.displayName = user.firstName + ' ' + user.lastName;
   user.username = req.body.username;
-  user.email = req.body.email;
   user.roles = req.body.roles;
 
   if (req.body.password) {

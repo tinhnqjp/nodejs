@@ -24,13 +24,6 @@ var validateLocalStrategyProperty = function (property) {
 };
 
 /**
- * A Validation function for local strategy email
- */
-var validateLocalStrategyEmail = function (email) {
-  return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email, { require_tld: false }));
-};
-
-/**
  * A Validation function for username
  * - at least 3 characters
  * - only a-z0-9_-.
@@ -55,29 +48,18 @@ var UserSchema = new Schema({
   firstName: {
     type: String,
     trim: true,
-    default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your first name']
+    default: ''
+    // validate: [validateLocalStrategyProperty, 'Please fill in your first name']
   },
   lastName: {
     type: String,
     trim: true,
-    default: '',
-    validate: [validateLocalStrategyProperty, 'Please fill in your last name']
+    default: ''
+    // validate: [validateLocalStrategyProperty, 'Please fill in your last name']
   },
   displayName: {
     type: String,
     trim: true
-  },
-  email: {
-    type: String,
-    index: {
-      unique: true,
-      sparse: true // For this to work on a previously indexed field, the index must be dropped & the application restarted.
-    },
-    lowercase: true,
-    trim: true,
-    default: '',
-    validate: [validateLocalStrategyEmail, 'Please fill a valid email address']
   },
   username: {
     type: String,

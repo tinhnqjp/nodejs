@@ -2,19 +2,20 @@
     <div id="content2" class="w3-container" style="padding-top:50px;">
             
         <div id="myTop" class="w3-container w3-top w3-theme w3-large">
-            <span id="myIntro" class="w3-hide">チェックシート管理</span>
+            <span id="myIntro" class="w3-hide">物件データ管理</span>
         </div>
         <div>
-            <strong style="font-size:20px;">チェックシート管理</strong><br/>
+            <strong style="font-size:20px;">物件データ管理</strong><br/>
         </div>
         <button type="submit" class="btn btn-primary pull-right" id="btn_save_add">
-            <span class="glyphicon glyphicon-floppy-save"></span> 保存</a>
+            <span class="glyphicon glyphicon-floppy-save"></span> 保存
         </button>
-        <a type="button" data-ui-sref="admin.docs.list" class="mg15r btn btn-warning pull-right">
+        <a data-ui-sref="admin.properties.edit({propertyId: vm.propertyId})" class="mg15r btn btn-warning pull-right">
             キャンセル
         </a>
         <div style="font-weight:bold; padding-top:10px;">
-            <a data-ui-sref="admin.docs.list">一覧 </a> > 第一号様式
+            <a data-ui-sref="admin.properties.list">一覧 </a> > <a data-ui-sref="admin.properties.edit({propertyId: vm.propertyId})">物件登録</a> > 第一号様式
+            <span ng-if="vm.busyLoad" class="fa fa-spinner fa-spin"></span>
         </div>
 
         <hr>
@@ -79,7 +80,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div ng-include="'/modules/docs/client/views/admin/form-1-data.client.view.html'" ng-if="vm.listMasterLaw" class="col-sm-12" 
+                            <div ng-include="'/modules/properties/client/views/admin/doc-form-1-export.client.view.html'" ng-if="vm.listMasterLaw" class="col-sm-12" 
                                 id="tableToExport" style="display: none"></div>
                         </div>
                     </div>

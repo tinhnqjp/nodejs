@@ -2,33 +2,37 @@
   'use strict';
 
   angular
-    .module('docs.admin')
-    .controller('Doc4AdminController', Doc4AdminController);
+    .module('properties.admin')
+    .controller('Doc1AdminController', Doc1AdminController);
 
-  Doc4AdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
-    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi'];
+  Doc1AdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
+    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi', '$stateParams'];
 
-  function Doc4AdminController($scope, $state, $window, doc, Authentication,
-    Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi) {
+  function Doc1AdminController($scope, $state, $window, doc, Authentication,
+    Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi, $stateParams) {
     var vm = this;
-
+    vm.propertyId;
     vm.doc = doc;
     vm.authentication = Authentication;
-    vm.listMasterCheckSheetForm4 = [];
+    vm.listMasterLaw = [];
+    vm.listMasterProperties = [];
     vm.form = {};
+    vm.busyLoad = false;
     initData();
-
     /**
      * init method
      */
     function initData() {
+      vm.busyLoad = true;
+      vm.propertyId = $stateParams.propertyId;
       // load list data masterlaw
-      DocsApi.listMasterCheckSheetForm4()
+      LawsApi.listMasterLaw()
         .then(function (res) {
-          vm.listMasterCheckSheetForm4 = res.data;
-          console.log(vm.listMasterCheckSheetForm4);
+          vm.busyLoad = false;
+          vm.listMasterLaw = res.data;
         })
         .catch(function (res) {
+          vm.busyLoad = false;
           $scope.nofityError('マスターデータのロードが失敗しました。');
         });
     }
@@ -38,12 +42,11 @@
      * @param {*} isValid check validation
      */
     vm.save = function (isValid) {
-      console.log(vm.doc);
       $scope.handleShowConfirm({
         message: '保存します。よろしいですか？'
       }, function () {
         if (!isValid) {
-          $scope.$broadcast('show-errors-check-validity', 'vm.form.docForm');
+          $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
           return false;
         }
         vm.doc.createOrUpdate()
@@ -58,7 +61,6 @@
 
     /**
      * down file excel checksheet
-     * @param {*} mendou form1, form4, form7
      */
     vm.download = function () {
       var href = $scope.exportExcel('#tableToExport', 'チェックシート');
@@ -69,15 +71,15 @@
       });
     };
 
-
     // End controller
   }
 
-  angular.module('docs.admin').filter('contains', function () {
+  angular.module('properties.admin').filter('contains', function () {
     return function (array, needle) {
       if (!array) return 0;
       return array.indexOf(needle) >= 0;
     };
   });
+
 
 }());

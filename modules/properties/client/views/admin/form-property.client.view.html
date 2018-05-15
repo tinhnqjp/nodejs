@@ -11,6 +11,8 @@
     <a type="button" data-ui-sref="admin.properties.list" class="mg15r btn btn-warning pull-right">
         キャンセル
     </a>
+    <button type="button" ng-if="vm.property._id" ng-click="vm.autoChecked(vm.property._id)"
+         class="btn btn-info mg15r pull-right"><i class="glyphicon glyphicon-ok"></i> 自動チェック</button>
     <div style="font-weight:bold; padding-top:10px;">
         <a data-ui-sref="admin.properties.list">一覧 </a> > 物件登録
     </div>
@@ -41,32 +43,8 @@
             border-color: #ccc;
             border-top-color: transparent;
         }
-        .title_label {
-            font-weight:bold;
-            font-size:20px;
-        }
-        .sub_title_label {
-            font-weight:bold;
-        }
-        .space {
-            margin:10px;
-        }
-        .help-block {
-            display: inline;
-            font-size: small
-        }
     </style>
     <form name="vm.form.propertyForm" ng-submit="vm.save(vm.form.propertyForm.$valid)" autocomplete="on" novalidate>
-        <div class="row" ng-if="vm.submitted && vm.form.propertyForm.$error">
-            <div class="col-sm-12" style="margin-bottom: 15px">
-                <lu  class="alert-danger">
-                    <li ng-if="vm.submitted && vm.form.propertyForm.men10.$error.required">受付欄が入力されていません</li>
-                    <li ng-if="vm.submitted && vm.form.propertyForm.men10.$error.date">受付欄がDATE FORMAT</li>
-                    <li ng-if="vm.submitted && vm.form.propertyForm.men11.$error.required">１．建築主の概要が入力されていません</li>
-                    <li ng-if="vm.submitted && vm.form.propertyForm.men12.$error.required">２．代表者が入力されていません</li>
-                </lu>
-            </div>
-        </div>
         <uib-tabset type="tabs" class="w3-bar"  active="0">
             <uib-tab index="0" heading="物件概要" class="tablink">
                 <div class="row gamen" id="men1">
@@ -78,7 +56,7 @@
                                         <label class="title_label">事前受付番号</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">番号</span>
-                                            <input type="text" class="form-control" ng-model="vm.property.men14" ng-required="true" name="men14" maxlength="50"/>
+                                            <input type="text" class="form-control" ng-model="vm.property.men14" name="men14" maxlength="50"/>
                                         </div>
                                     </div>
                                 </div>
@@ -87,7 +65,7 @@
                                         <label class="title_label">確認受付番号</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">番号</span>
-                                            <input type="text" class="form-control" ng-model="vm.property.men17" ng-required="true" name="men17" maxlength="50"/>
+                                            <input type="text" class="form-control" ng-model="vm.property.men17" name="men17" maxlength="50"/>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +74,7 @@
                                         <label class="title_label">物件名</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">氏名</span>
-                                            <input type="text" class="form-control" ng-model="vm.property.men15" ng-required="true" name="men15" maxlength="50"/>
+                                            <input type="text" class="form-control" ng-model="vm.property.men15" name="men15" maxlength="50"/>
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +83,7 @@
                                         <label class="title_label">確認受付日</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">年/月/日</span>
-                                            <input type="date" class="form-control" ng-model="vm.property.men16" ng-required="true"
+                                            <input type="date" class="form-control" ng-model="vm.property.men16"
                                             autocomplete="men16" name="men16"/>
                                             <span class="input-group-addon add-on flat">
                                                 <i class="glyphicon glyphicon-calendar"></i>
@@ -118,7 +96,7 @@
                                         <label class="title_label">引受日</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">年/月/日</span>
-                                            <input type="date" class="form-control" ng-model="vm.property.men10" ng-required="true"
+                                            <input type="date" class="form-control" ng-model="vm.property.men10"
                                             autocomplete="men10" name="men10"/>
                                             <span class="input-group-addon add-on flat">
                                                 <i class="glyphicon glyphicon-calendar"></i>
@@ -164,6 +142,18 @@
             <uib-tab index="2" heading="第四面" class="tablink">
                 <div class="row gamen" ng-include="'/modules/properties/client/views/admin/form-4.client.view.html'"></div>
             </uib-tab>
+            <li ng-if="vm.property._id" class="tablink uib-tab nav-item ng-scope ng-isolate-scope" heading="第一号様式">
+                <a data-ui-sref="admin.properties.form1({propertyId: vm.property._id})" class="btn btn-success btn-sm">第一号様式</a>
+            </li>
+            <li ng-if="vm.property._id" class="tablink uib-tab nav-item ng-scope ng-isolate-scope" heading="第四号様式">
+                <a data-ui-sref="admin.properties.form4({propertyId: vm.property._id})" class="btn btn-success btn-sm">第四号様式</a>
+            </li>
+            <li ng-if="vm.property._id" class="tablink uib-tab nav-item ng-scope ng-isolate-scope" heading="第七号様式">
+                <a data-ui-sref="admin.properties.form7({propertyId: vm.property._id})" class="btn btn-success btn-sm">第七号様式</a>
+            </li>
+            <li ng-if="vm.property._id" class="tablink uib-tab nav-item ng-scope ng-isolate-scope" heading="特記様式">
+                <a data-ui-sref="admin.properties.mention({propertyId: vm.property._id})" class="btn btn-success btn-sm">特記様式</a>
+            </li>
         </uib-tabset>
     </form>
     <!-- #入力Form -->

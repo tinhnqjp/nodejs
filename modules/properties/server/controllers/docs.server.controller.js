@@ -159,3 +159,16 @@ exports.listMasterCheckSheetForm7 = function (req, res) {
     res.json(list);
   });
 };
+
+exports.requestDocByPropertyId = function (req, res) {
+  var propertyId = req.body.propertyId;
+  Doc.findOne({ property: propertyId }).exec(function (err, doc) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(doc);
+  });
+};
