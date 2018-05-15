@@ -5,10 +5,11 @@
     .module('properties.admin')
     .controller('PropertiesAdminListController', PropertiesAdminListController);
 
-  PropertiesAdminListController.$inject = ['$scope', 'PropertiesService'];
+  PropertiesAdminListController.$inject = ['$scope', 'Authentication', 'PropertiesService'];
 
-  function PropertiesAdminListController($scope, PropertiesService) {
+  function PropertiesAdminListController($scope, Authentication, PropertiesService) {
     var vm = this;
+    vm.user = Authentication.user;
     vm.remove = remove;
     vm.search = search;
     vm.currentPage = 1;

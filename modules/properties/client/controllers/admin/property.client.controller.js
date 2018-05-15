@@ -57,10 +57,10 @@
     function initData() {
       // convert to date
       if (vm.property.men10) {
-        vm.property.men10 = new Date(vm.property.men10);  
+        vm.property.men10 = new Date(vm.property.men10);
       }
       if (vm.property.men16) {
-        vm.property.men16 = new Date(vm.property.men16);  
+        vm.property.men16 = new Date(vm.property.men16);
       }
       // sum men3_7_5
       vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
@@ -544,7 +544,7 @@
         LawsApi.requestLawsByYear(year)
         .then(function (res) {
           if (!res.data) {
-            reject("法令情報が見つかりません");
+            reject('法令情報が見つかりません');
           }
           resolve(res.data);
         })

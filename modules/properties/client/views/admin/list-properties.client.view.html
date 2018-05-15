@@ -20,7 +20,7 @@
             <span ng-if="vm.busyLoad" class="fa fa-spinner fa-spin"></span>
             探索</button>
 
-        <a class="btn btn-info pull-right" data-ui-sref="admin.properties.import"><i class="glyphicon glyphicon-allow-down"></i> インポート選択</a>
+        <a class="btn btn-info pull-right" ng-if="vm.user.roles[0] !== 'user'" data-ui-sref="admin.properties.import"><i class="glyphicon glyphicon-allow-down"></i> インポート選択</a>
         <hr>
     </form>
     <div class="table-responsive">

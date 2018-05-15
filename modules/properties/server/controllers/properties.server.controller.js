@@ -95,19 +95,19 @@ exports.list = function (req, res) {
 
   if (Date.parse(keyword)) {
     var date = new Date(trim(keyword));
-    condition =  { $or: [
+    condition = { $or: [
       { 'men16': date },
       { 'men10': date }
-    ]};
+    ] };
   } else if (keyword) {
     var regex = new RegExp(trim(keyword), 'i');
-    condition =  { $or: [
+    condition = { $or: [
       { 'men14': regex },
       { 'men17': regex },
       { 'men15': regex },
       { 'men3_1_1': regex },
       { 'men3_1_2': regex }
-    ]};
+    ] };
   }
   Property.find(condition)
   .skip((limit * page) - limit)
