@@ -62,11 +62,12 @@
           $scope.nofityError('物件データが選択されていません');
           return false;
         }
-        PropertyApi.importPropertyFormMysql(vm.property.application_id)
+        // change request from list to a value
+        PropertyApi.importPropertyFormMysql([vm.property.application_id])
           .then(function (res) {
             console.log(res.data);
             vm.busy = false;
-            // $state.go('admin.properties.list');
+            $state.go('admin.properties.edit', { propertyId: res.data[0]._id });
             $scope.nofitySuccess('物件データの保存が完了しました。');
           })
           .catch(function (res) {
@@ -80,14 +81,6 @@
       initData();
     };
 
-    vm.toggleAll = function () {
-      if (vm.isAllSelected) {
-        vm.property.application_id = [];
-        vm.listproperties.forEach(function (item) {
-          vm.property.application_id.push(item.application_id);
-        });
-      }
-    };
   // end controller
   }
 }());

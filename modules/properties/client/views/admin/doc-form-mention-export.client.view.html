@@ -1,8 +1,25 @@
 <style>
     .bg-primary { background-color:#286090; color: white }
 </style>
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4" style="font-size: 20px; font-weight: bold">建築主　：	{{ vm.property.men15 }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4" style="font-size: 20px; font-weight: bold">第　 {{ vm.property.men17 }}　　号</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4"></td>
+    </tr>
+</table>
 <!-- <button>計算</button> -->
-<table border="1" class="table table-striped table-bordered table-hover">
+<table border="1" class="table table-striped table-bordered table-hover" style="font-family: ＭＳ 明朝;">
     <thead>
         <tr>
             <th class="bg-primary" colspan="3" style="text-align:center;">（い）</th>
@@ -24,24 +41,24 @@
             <!-- checkbox form1_ha （ろ） -->
             <td style="text-align:center;">
                 <span ng-if="vm.doc.mentions[$index].time1_check">☑</span>
-                <span ng-if="!vm.doc.mentions[$index].time1_check">☐</span>
+                <span ng-if="!vm.doc.mentions[$index].time1_check">□</span>
             </td>
             <!-- process rowspan of checkbox form1_ha （は） -->
             <td style="text-align:center;">
                 <span ng-if="vm.doc.mentions[$index].time2_check">☑</span>
-                <span ng-if="!vm.doc.mentions[$index].time2_check">☐</span>
+                <span ng-if="!vm.doc.mentions[$index].time2_check">□</span>
             </td>
             <!-- process rowspan of checkbox item  最終チェック 項目-->
             <td style="text-align:center;">
                 <span ng-if="vm.doc.mentions[$index].final_check">☑</span>
-                <span ng-if="!vm.doc.mentions[$index].final_check">☐</span>
+                <span ng-if="!vm.doc.mentions[$index].final_check">□</span>
             </td>
         </tr>
     </tbody>
 </table>
 <br>
 <span style="font-weight:bold;" ng-if="vm.isTdfk">条例（東京都）</span>
-<table border="1" class="table table-striped table-bordered table-hover" ng-if="vm.isTdfk">
+<table border="1" class="table table-striped table-bordered table-hover" ng-if="vm.isTdfk" style="font-family: ＭＳ 明朝;">
     <thead>
         <tr>
             <th class="bg-primary" colspan="3" style="text-align:center;">（い）</th>
@@ -68,17 +85,17 @@
             <!-- checkbox formMen_ro （ろ） -->
             <td style="text-align:center;">
                 <span ng-if="vm.doc.formMen_ro | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.formMen_ro | contains:lawData.id)">☐</span>
+                <span ng-if="!(vm.doc.formMen_ro | contains:lawData.id)">□</span>
             </td>
             <!-- process rowspan of checkbox formMen_ha （は） -->
             <td style="text-align:center;">
                 <span ng-if="vm.doc.formMen_ha | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.formMen_ha | contains:lawData.id)">☐</span>
+                <span ng-if="!(vm.doc.formMen_ha | contains:lawData.id)">□</span>
             </td>
             <!-- process rowspan of checkbox formMen_item  最終チェック 項目-->
             <td style="text-align:center;">
                 <span ng-if="vm.doc.formMen_item | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.formMen_item | contains:lawData.id)">☐</span>
+                <span ng-if="!(vm.doc.formMen_item | contains:lawData.id)">□</span>
             </td>
         </tr>
     </tbody>

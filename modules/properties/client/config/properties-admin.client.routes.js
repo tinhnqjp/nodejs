@@ -67,6 +67,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
+          propertyResolve: getProperty,
           docResolve: getDoc
         }
       }).state('admin.properties.form4', {
@@ -78,6 +79,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
+          propertyResolve: getProperty,
           docResolve: getDoc
         }
       }).state('admin.properties.form7', {
@@ -89,6 +91,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
+          propertyResolve: getProperty,
           docResolve: getDoc
         }
       }).state('admin.properties.mention', {
@@ -100,6 +103,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
+          propertyResolve: getProperty,
           docResolve: getDoc
         }
       });
@@ -120,9 +124,12 @@
     return new PropertiesService();
   }
 
-  getDoc.$inject = ['$stateParams', 'DocsService', 'PropertiesService'];
+  getDoc.$inject = ['$location', '$stateParams', 'DocsService', 'PropertiesService'];
 
-  function getDoc($stateParams, DocsService, PropertiesService) {
+  function getDoc($location, $stateParams, DocsService, PropertiesService) {
+    if (!$stateParams.propertyId) {
+      $location.path( '/admin/properties' );
+    }
     return new Promise(function (resolve, reject) {
       getPropertyPromise(PropertiesService, $stateParams.propertyId)
       .then(function (_property) {

@@ -454,14 +454,14 @@
         })
         .then(function (_doc) {
           _doc.form1_ro = [];
-          _doc.form4_ha1 = [];
+          _doc.form4_ro = [];
           listChecksheet.forEach(function (item) {
             if (item.form1_ro && item.id) {
               _doc.form1_ro.push(item.id);
               // form4
               var filterForm4 = _.filter(listCheckSheetForm4, { form1: parseInt(item.id, 10) });
               filterForm4.forEach(function (form4) {
-                _doc.form4_ha1.push(form4.id);
+                _doc.form4_ro.push(form4.id);
               });
               // form7
               var filterForm7 = _.filter(listCheckSheetForm7, { form1: parseInt(item.id, 10) });

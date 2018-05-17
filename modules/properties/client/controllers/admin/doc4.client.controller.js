@@ -5,14 +5,15 @@
     .module('properties.admin')
     .controller('Doc4AdminController', Doc4AdminController);
 
-  Doc4AdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
+  Doc4AdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'propertyResolve',
     'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi', '$stateParams'];
 
-  function Doc4AdminController($scope, $state, $window, doc, Authentication,
+  function Doc4AdminController($scope, $state, $window, doc, property, Authentication,
     Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi, $stateParams) {
     var vm = this;
     vm.propertyId;
     vm.doc = doc;
+    vm.property = property;
     vm.authentication = Authentication;
     vm.listMasterCheckSheetForm4 = [];
     vm.form = {};
@@ -72,8 +73,35 @@
         text: 'ダウンロード'
       });
     };
-
-
+    vm.checkha = function (id) {
+      console.log(id);
+    };
+    vm.checkParent = function (id) {
+      if (!vm.doc.form4_ha1) {
+        vm.doc.form4_ha1 = [];
+      }
+      vm.doc.form4_ro.forEach(function (value) {
+        if (value === id) {
+          var obj = _.find(vm.listMasterCheckSheetForm4, { id: value });
+          if (obj.rowspan_ck_ha1 === 0) {
+            vm.doc.form4_ha1.push(id);
+          } else {
+            var i = value;
+            var ck_ha1 = 0;
+            while (ck_ha1 <= 0) {
+              obj = _.find(vm.listMasterCheckSheetForm4, { id: i + '' });
+              ck_ha1 = parseInt(obj.rowspan_ck_ha1);
+              if (ck_ha1 > 0) {
+                vm.doc.form4_ha1.push(i);
+              } else {
+                i = i - 1;
+              }
+            }
+          }
+        }
+      });
+      // console.log(vm.doc.form4_ro);
+    };
     // End controller
   }
 

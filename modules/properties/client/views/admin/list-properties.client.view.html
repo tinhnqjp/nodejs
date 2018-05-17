@@ -20,9 +20,14 @@
             <span ng-if="vm.busyLoad" class="fa fa-spinner fa-spin"></span>
             探索</button>
 
-        <a class="btn btn-info pull-right" ng-if="vm.user.roles[0] !== 'user'" data-ui-sref="admin.properties.import"><i class="glyphicon glyphicon-allow-down"></i> インポート選択</a>
+        <a class="btn btn-info pull-right" ng-if="vm.user.roles[0] !== 'user'" data-ui-sref="admin.properties.import"><i class="glyphicon glyphicon-allow-down"></i> NICE選択</a>
         <hr>
     </form>
+    <style>
+        .margin3 {
+            margin: 3px
+        }
+    </style>
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover">
             <thead>
@@ -48,10 +53,10 @@
                     <td style="text-align:left;" data-ng-bind="property.men15"></td>
                     <td style="text-align:left;" data-ng-bind="property.men3_1_1"></td>
                     <td style="text-align:left;" data-ng-bind="property.men3_1_2"></td>
-                    <td style="text-align:center;">
-                        <button class="btn btn-info btn-sm" data-ui-sref="admin.properties.edit({propertyId: property._id})">
+                    <td style="text-align:center; width: 170px">
+                        <button class="btn btn-info btn-sm margin3" data-ui-sref="admin.properties.edit({propertyId: property._id})">
                         <i class="glyphicon glyphicon-pencil"></i> 編集</button>
-                        <button class="btn btn-danger btn-sm" ng-click="vm.remove(property)">
+                        <button class="btn btn-danger btn-sm margin3" ng-click="vm.remove(property)">
                         <i class="glyphicon glyphicon-trash"></i> 削除</button>
                     </td>
                 </tr>

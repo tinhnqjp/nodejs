@@ -33,13 +33,15 @@
 
     // remove user
     function remove(_user) {
-      if ($window.confirm('Are you sure you want to delete?')) {
+      $scope.handleShowConfirm({
+        message: 'このアカウントを削除します。よろしいですか？'
+      }, function () {
         var user = new UsersAdminService({ _id: _user._id });
         user.$remove(function () {
           getData();
-          Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> user deleted successfully!' });
+          $scope.nofitySuccess('アカウントの削除が完了しました。');
         });
-      }
+      });
     }
   }
 }());

@@ -5,14 +5,15 @@
     .module('properties.admin')
     .controller('MentionsAdminController', MentionsAdminController);
 
-  MentionsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
+  MentionsAdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'propertyResolve',
     'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'PropertyApi', 'LawsApi', '$stateParams'];
 
-  function MentionsAdminController($scope, $state, $window, doc, Authentication,
+  function MentionsAdminController($scope, $state, $window, doc, property, Authentication,
     Notification, Excel, $timeout, DocsApi, PropertyApi, LawsApi, $stateParams) {
     var vm = this;
     vm.propertyId;
     vm.doc = doc;
+    vm.property = property;
     vm.authentication = Authentication;
     vm.form = {};
     vm.listMasterLaw = [];

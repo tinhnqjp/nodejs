@@ -67,20 +67,47 @@ exports.update = function (req, res) {
   });
 };
 
+function removeDoc(_docId) {
+  return new Promise(function (resolve, reject) {
+    var remove = Doc.remove({ _id: _docId });
+    remove.exec(function (err) {
+      if (err) {
+        reject(err);
+      }
+      resolve(true);
+    });
+  });
+}
+
+function removeProperty(property) {
+  return new Promise(function (resolve, reject) {
+    property.remove(function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+}
+
 /**
  * Delete an property
  */
 exports.delete = function (req, res) {
   var property = req.property;
-
-  property.remove(function (err) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(property);
-    }
+  var docId = property.doc;
+  removeProperty(property)
+  .then(function (result) {
+    return removeDoc(docId);
+  })
+  .then(function (result) {
+    res.json(true);
+  })
+  .catch(function (err) {
+    return res.status(422).send({
+      message: errorHandler.getErrorMessage(err)
+    });
   });
 };
 
@@ -90,7 +117,7 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   var limit = Number(req.query.limit) || 10;
   var page = Number(req.query.page) || 1;
-  var keyword = req.query.keyword.trim() || null;
+  var keyword = req.query.keyword || null;
   var condition = {};
 
   if (Date.parse(keyword)) {
@@ -254,11 +281,7 @@ exports.importPropertyFormMysql = function (req, res) {
 
     var promises = [];
     properties.forEach(function (property) {
-      var list_floor = getDataFloor4_10(property_floor, property.no4_id);
-      checkUpdateOrCreate(property.application_id)
-      .then(function (propertyObj) {
-        promises.push(importProperty(propertyObj, property, masterProperties, list_floor));
-      });
+      promises.push(setupImportProperty(property, property_floor, masterProperties));
     });
     return Promise.all(promises);
   })
@@ -299,11 +322,33 @@ function mysqlSelect(query, param) {
       }
     });
 
+    pool.on('release', function (connection) {
+      console.log('Connection %d released', connection.threadId);
+    });
+
+    pool.on('enqueue', function () {
+      console.log('Waiting for available connection slot');
+    });
+
     pool.query(query, param, function (error, results, fields) {
       if (error) {
         reject(error);
       }
-      return resolve(results);
+      resolve(results);
+    });
+  });
+}
+
+function setupImportProperty(property, property_floor, masterProperties) {
+  return new Promise(function (resolve, reject) {
+    var list_floor = getDataFloor4_10(property_floor, property.no4_id);
+    checkUpdateOrCreate(property.application_id)
+    .then(function (propertyObj) {
+      var result = importProperty(propertyObj, property, masterProperties, list_floor);
+      resolve(result);
+    })
+    .catch(function (err) {
+      reject(err);
     });
   });
 }
@@ -553,11 +598,12 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men4_16 = trim(_property.col_364);
     newPro.men4_17 = trim(_property.col_365);
 
-    newPro.save(function (err) {
+    newPro.save(function (err, result) {
       if (err) {
         reject(err);
+      } else {
+        resolve(result);
       }
-      resolve(newPro);
     });
   });
 }

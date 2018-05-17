@@ -5,14 +5,15 @@
     .module('properties.admin')
     .controller('Doc1AdminController', Doc1AdminController);
 
-  Doc1AdminController.$inject = ['$scope', '$state', '$window', 'docResolve',
+  Doc1AdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'propertyResolve',
     'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi', '$stateParams'];
 
-  function Doc1AdminController($scope, $state, $window, doc, Authentication,
+  function Doc1AdminController($scope, $state, $window, doc, property, Authentication,
     Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi, $stateParams) {
     var vm = this;
     vm.propertyId;
     vm.doc = doc;
+    vm.property = property;
     vm.authentication = Authentication;
     vm.listMasterLaw = [];
     vm.listMasterProperties = [];

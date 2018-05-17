@@ -1,8 +1,26 @@
 <style>
     .bg-primary { background-color:#286090; color: white }
 </style>
+<div>
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4" style="font-size: 20px; font-weight: bold">建築主　：	{{ vm.property.men15 }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4" style="font-size: 20px; font-weight: bold">第　 {{ vm.property.men17 }}　　号</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4"></td>
+    </tr>
+</table>
 <!-- <button>計算</button> -->
-<table border="1" class="table table-striped table-bordered table-hover">
+<table border="1" class="table table-striped table-bordered table-hover" style="font-family: ＭＳ 明朝;">
     <thead>
         <tr>
             <th class="bg-primary" colspan="3" style="text-align:center;">（い）</th>
@@ -29,28 +47,28 @@
             <!-- checkbox form1_ha （ろ） -->
             <td style="text-align:center;">
                 <span ng-if="vm.doc.form1_ro | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.form1_ro | contains:lawData.id)">☐</span>
+                <span ng-if="!(vm.doc.form1_ro | contains:lawData.id)">□</span>
             </td>                                                                          
 
             <!-- process rowspan of checkbox form1_ha （は） -->
             <td ng-if="lawData.rowspan_ck_ha > 0" rowspan="{{ lawData.rowspan_ck_ha }}" style="text-align:center;">
                 <span ng-if="vm.doc.form1_ha | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.form1_ha | contains:lawData.id)">☐</span>
+                <span ng-if="!(vm.doc.form1_ha | contains:lawData.id)">□</span>
             </td>
             <td ng-if="lawData.rowspan_ck_ha === 0" style="text-align:center;">
                 <span ng-if="vm.doc.form1_ha | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.form1_ha | contains:lawData.id)">☐</span>
+                <span ng-if="!(vm.doc.form1_ha | contains:lawData.id)">□</span>
             </td>
             
             <!-- process rowspan of checkbox item  最終チェック 項目-->
             <td style="text-align:center;">
                 <div ng-if="lawData.total_ck_item > 1" ng-repeat="n in range(1, lawData.total_ck_item)" ng-init="itemValue = lawData.id+ '_' + n">
                     <span ng-if="vm.doc.form1_item | contains:itemValue">☑</span>
-                    <span ng-if="!(vm.doc.form1_item | contains:itemValue)">☐</span>
+                    <span ng-if="!(vm.doc.form1_item | contains:itemValue)">□</span>
                 </div>
                 <div ng-if="!lawData.total_ck_item || lawData.total_ck_item <= 1">
                     <span ng-if="vm.doc.form1_item | contains:lawData.id">☑</span>
-                    <span ng-if="!(vm.doc.form1_item | contains:lawData.id)">☐</span>
+                    <span ng-if="!(vm.doc.form1_item | contains:lawData.id)">□</span>
                 </div>
             </td>
         </tr>
@@ -104,3 +122,4 @@
   <td class=xl1530323></td>
  </tr>
 </table>
+</div>

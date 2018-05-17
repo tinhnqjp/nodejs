@@ -24,7 +24,7 @@
     }
 
     function getPopoverMsg() {
-      var popoverMsg = 'Please enter a passphrase or password with ' + owaspPasswordStrengthTest.configs.minLength + ' or more characters, numbers, lowercase, uppercase, and special characters.';
+      var popoverMsg = '大小を含む10文字以上の英数字、および記号文字（!,@,#,=,<,&など）の入力が必要です。';
 
       return popoverMsg;
     }

@@ -8,13 +8,13 @@
     <button type="submit" ng-click="vm.save(vm.form.importForm.$valid)" class="btn btn-primary pull-right">
         <span ng-if="!vm.busy" class="glyphicon glyphicon-download"></span>
         <span ng-if="vm.busy" class="fa fa-spinner fa-spin"></span>
-         インポート
+         選択
     </button>
     <a type="button" data-ui-sref="admin.properties.list" class="mg15r btn btn-warning pull-right">
         キャンセル
     </a>
     <div style="font-weight:bold; padding-top:10px;">
-        <a data-ui-sref="admin.properties.list">一覧 </a> > インポート選択 <span ng-if="vm.busyLoad" class="fa fa-spinner fa-spin"></span>
+        <a data-ui-sref="admin.properties.list">一覧 </a> > NICE選択 <span ng-if="vm.busyLoad" class="fa fa-spinner fa-spin"></span>
     </div>
     <hr>
     <!-- #コントロールボタン -->
@@ -30,25 +30,30 @@
              探索</button>
         <hr>
     </form>
+    <style>
+        .bg-warning {
+            background-color: orange;
+        }
+    </style>
     <form name="vm.form.importForm" ng-submit="vm.save(vm.form.importForm.$valid)" autocomplete="on" novalidate>
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th class="bg-primary"><input type="checkbox" ng-click="vm.toggleAll()" ng-model="vm.isAllSelected"></th>
-                    <th class="bg-primary">受付日</th>
-                    <th class="bg-primary">事前受付番号</th>
-                    <th class="bg-primary">引受日</th>
-                    <th class="bg-primary">確認受付番号</th>
-                    <th class="bg-primary">物件名</th>
-                    <th class="bg-primary">建築場所都道府県</th>
-                    <th class="bg-primary">建築場所</th>
+                    <th class="bg-warning">#</th>
+                    <th class="bg-warning">受付日</th>
+                    <th class="bg-warning">事前受付番号</th>
+                    <th class="bg-warning">引受日</th>
+                    <th class="bg-warning">確認受付番号</th>
+                    <th class="bg-warning">物件名</th>
+                    <th class="bg-warning">建築場所都道府県</th>
+                    <th class="bg-warning">建築場所</th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="item in vm.listproperties">
                     <td style="text-align:center;">
-                        <input type='checkbox' checklist-model='vm.property.application_id' 
-                        checklist-value="item.application_id"/></td>
+                        <input type='radio' name="application_id" ng-model='vm.property.application_id' ng-value="item.application_id"/>
+                    </td>
                     <td style="text-align:left;" data-ng-bind="item.col_015 | date:'yyyy/MM/dd'"></td>
                     <td style="text-align:left;" data-ng-bind="item.col_012"></td>
                     <td style="text-align:left;" data-ng-bind="item.col_005 | date:'yyyy/MM/dd'"></td>

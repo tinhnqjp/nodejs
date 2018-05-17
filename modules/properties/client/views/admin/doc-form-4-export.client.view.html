@@ -1,8 +1,25 @@
 <style>
     .bg-primary { background-color:#286090; color: white }
 </style>
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4" style="font-size: 20px; font-weight: bold">建築主　：	{{ vm.property.men15 }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4" style="font-size: 20px; font-weight: bold">第　 {{ vm.property.men17 }}　　号</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td colspan="4"></td>
+    </tr>
+</table>
 <!-- <button>計算</button> -->
-<table border="1" class="table table-striped table-bordered">
+<table border="1" class="table table-striped table-bordered" style="font-family: ＭＳ 明朝;">
     <thead>
         <tr>
             <th class="bg-primary" colspan="3" style="text-align:center;">（い）</th>
@@ -29,29 +46,41 @@
             <td>{{ row.legal_text }}</td>
             <td style="text-align:center;">
                 <span ng-if="(vm.doc.form4_ro | contains:row.id) && row.ck_ro > 0">☑</span>
-                <span ng-if="!(vm.doc.form4_ro | contains:row.id) && row.ck_ro > 0">☐</span>
+                <span ng-if="!(vm.doc.form4_ro | contains:row.id) && row.ck_ro > 0">□</span>
             </td>
             <!-- process rowspan of checkbox form4_ha1 （は） -->
             <td ng-if="row.rowspan_ck_ha1 > 0" rowspan="{{ row.rowspan_ck_ha1 }}" style="text-align:center;">
                 <span ng-if="vm.doc.form4_ha1 | contains:row.id">☑</span>
-                <span ng-if="!(vm.doc.form4_ha1 | contains:row.id)">☐</span>
+                <span ng-if="!(vm.doc.form4_ha1 | contains:row.id)">□</span>
             </td>
             <td ng-if="row.rowspan_ck_ha1 === 0" style="text-align:center;">
                 <span ng-if="vm.doc.form4_ha1 | contains:row.id">☑</span>
-                <span ng-if="!(vm.doc.form4_ha1 | contains:row.id)">☐</span>
+                <span ng-if="!(vm.doc.form4_ha1 | contains:row.id)">□</span>
             </td>
             <!-- process rowspan of checkbox form4_ha2（は） -->
             <td ng-if="row.rowspan_ck_ha2 > 0" rowspan="{{ row.rowspan_ck_ha2 }}" style="text-align:center;">
                 <span ng-if="(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
-                <span ng-if="!(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☐</span>
+                <span ng-if="!(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
             </td>
             <td ng-if="row.rowspan_ck_ha2 === 0" style="text-align:center;">
                 <span ng-if="(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
-                <span ng-if="!(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☐</span>
+                <span ng-if="!(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
             </td>
             <td>
                 <span ng-if="vm.doc.form4_item | contains:row.id">☑</span>
-                <span ng-if="!(vm.doc.form4_item | contains:row.id)">☐</span>
+                <span ng-if="!(vm.doc.form4_item | contains:row.id)">□</span>
+            </td>
+        </tr>
+        <tr><td colspan="7"></td></tr>
+        <tr>
+            <td colspan="3">工事監理の状況</td>
+            <td colspan="3" style="text-align:center;">
+                <span ng-if="vm.doc.form4_ro | contains:146">☑</span>
+                <span ng-if="!(vm.doc.form4_ro | contains:146)">□</span>
+            </td>
+            <td style="text-align:center;">
+                <span ng-if="vm.doc.form4_item | contains:146">☑</span>
+                <span ng-if="!(vm.doc.form4_item | contains:146)">□</span>
             </td>
         </tr>
     </tbody>
