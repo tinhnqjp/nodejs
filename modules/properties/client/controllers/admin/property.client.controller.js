@@ -6,10 +6,10 @@
     .controller('PropertiesAdminController', PropertiesAdminController);
 
   PropertiesAdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'Authentication',
-    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi', 'DocsService', 'DocsApi'];
+    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi'];
 
   function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification,
-    PropertiesService, LawsApi, PropertyApi, DocsService, DocsApi) {
+    PropertiesService, LawsApi, PropertyApi) {
     var vm = this;
 
     vm.property = property;
@@ -448,30 +448,26 @@
         })
         .then(function (_listCheckSheetForm7) {
           listCheckSheetForm7 = _listCheckSheetForm7;
-          return DocsService.get({
-            docId: property.doc
-          }).$promise;
-        })
-        .then(function (_doc) {
-          _doc.form1_ro = [];
-          _doc.form4_ro = [];
+          
+          vm.property.doc.form1_ro = [];
+          vm.property.doc.form4_ro = [];
           listChecksheet.forEach(function (item) {
             if (item.form1_ro && item.id) {
-              _doc.form1_ro.push(item.id);
+              vm.property.doc.form1_ro.push(item.id);
               // form4
               var filterForm4 = _.filter(listCheckSheetForm4, { form1: parseInt(item.id, 10) });
               filterForm4.forEach(function (form4) {
-                _doc.form4_ro.push(form4.id);
+                vm.property.doc.form4_ro.push(form4.id);
               });
               // form7
               var filterForm7 = _.filter(listCheckSheetForm7, { form1: parseInt(item.id, 10) });
               filterForm7.forEach(function (form7) {
-                _doc.form7_ro1.push(form7.id);
+                vm.property.doc.form7_ro1.push(form7.id);
               });
             }
           });
-          console.log(_doc);
-          _doc.createOrUpdate()
+          console.log(vm.property.doc);
+          vm.property.createOrUpdate()
           .then(function (res) {
             $scope.nofitySuccess('自動チェックが完了しました。');
           })
@@ -501,7 +497,7 @@
 
     function getMasterCheckSheetForm4() {
       return new Promise(function (resolve, reject) {
-        DocsApi.listMasterCheckSheetForm4()
+        PropertyApi.listMasterCheckSheetForm4()
         .then(function (res) {
           resolve(res.data);
         })
@@ -513,7 +509,7 @@
 
     function getMasterCheckSheetForm7() {
       return new Promise(function (resolve, reject) {
-        DocsApi.listMasterCheckSheetForm7()
+        PropertyApi.listMasterCheckSheetForm7()
         .then(function (res) {
           resolve(res.data);
         })
@@ -524,7 +520,7 @@
     }
 
     /**
-     * request api get property by doc id
+     * request api get property
      * @param {*} propertyId
      */
     function getFormProperty(propertyId) {

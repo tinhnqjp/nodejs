@@ -18,8 +18,26 @@ var PropertySchema = new Schema({
     default: Date.now
   },
   doc: {
-    type: Schema.ObjectId,
-    ref: 'Doc'
+    form1_ro: [],
+    form1_ha: [],
+    form1_item: [],
+    form4_ro: [],
+    form4_ha1: [],
+    form4_ha2: [],
+    form4_item: [],
+    form7_ro1: [],
+    form7_ro2: [],
+    form7_item: [],
+    mentions: [{
+      clause: { type: String, trim: true },
+      headline: { type: String, trim: true },
+      time1_check: { type: Boolean, default: false },
+      time2_check: { type: Boolean, default: false },
+      final_check: { type: Boolean, default: false }
+    }],
+    formMen_ro: [],
+    formMen_ha: [],
+    formMen_item: []
   },
   application_id: { type: Number },
   // 引受日

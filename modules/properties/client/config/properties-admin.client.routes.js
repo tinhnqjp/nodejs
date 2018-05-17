@@ -67,8 +67,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
-          propertyResolve: getProperty,
-          docResolve: getDoc
+          propertyResolve: getProperty
         }
       }).state('admin.properties.form4', {
         url: '/:propertyId/form4',
@@ -79,8 +78,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
-          propertyResolve: getProperty,
-          docResolve: getDoc
+          propertyResolve: getProperty
         }
       }).state('admin.properties.form7', {
         url: '/:propertyId/form7',
@@ -91,8 +89,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
-          propertyResolve: getProperty,
-          docResolve: getDoc
+          propertyResolve: getProperty
         }
       }).state('admin.properties.mention', {
         url: '/:propertyId/mention',
@@ -103,8 +100,7 @@
           roles: ['admin', 'jaic', 'user']
         },
         resolve: {
-          propertyResolve: getProperty,
-          docResolve: getDoc
+          propertyResolve: getProperty
         }
       });
   }
@@ -122,39 +118,6 @@
 
   function newProperty(PropertiesService) {
     return new PropertiesService();
-  }
-
-  getDoc.$inject = ['$location', '$stateParams', 'DocsService', 'PropertiesService'];
-
-  function getDoc($location, $stateParams, DocsService, PropertiesService) {
-    if (!$stateParams.propertyId) {
-      $location.path( '/admin/properties' );
-    }
-    return new Promise(function (resolve, reject) {
-      getPropertyPromise(PropertiesService, $stateParams.propertyId)
-      .then(function (_property) {
-        return getDocPromise(DocsService, _property.doc);
-      }).then(function (_doc) {
-        resolve(_doc);
-      });
-    });
-  }
-
-  function getPropertyPromise(PropertiesService, propertyId) {
-    return new Promise(function (resolve, reject) {
-      var property = PropertiesService.get({
-        propertyId: propertyId
-      }).$promise;
-      resolve(property);
-    });
-  }
-  function getDocPromise(DocsService, docId) {
-    return new Promise(function (resolve, reject) {
-      var doc = DocsService.get({
-        docId: docId
-      }).$promise;
-      resolve(doc);
-    });
   }
 
 }());

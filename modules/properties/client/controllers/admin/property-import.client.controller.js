@@ -63,11 +63,11 @@
           return false;
         }
         // change request from list to a value
-        PropertyApi.importPropertyFormMysql([vm.property.application_id])
+        PropertyApi.importPropertyFormMysql(vm.property.application_id)
           .then(function (res) {
             console.log(res.data);
             vm.busy = false;
-            $state.go('admin.properties.edit', { propertyId: res.data[0]._id });
+            $state.go('admin.properties.edit', { propertyId: res.data._id });
             $scope.nofitySuccess('物件データの保存が完了しました。');
           })
           .catch(function (res) {

@@ -6,9 +6,10 @@
 var path = require('path'),
   mysql = require('mysql'),
   mongoose = require('mongoose'),
-  Doc = mongoose.model('Doc'),
   Property = mongoose.model('Property'),
   MasterProperties = mongoose.model('MasterProperties'),
+  MasterCheckSheetForm4 = mongoose.model('MasterCheckSheetForm4'),
+  MasterCheckSheetForm7 = mongoose.model('MasterCheckSheetForm7'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
@@ -17,12 +18,6 @@ var path = require('path'),
  */
 exports.create = function (req, res) {
   var property = new Property(req.body);
-  var doc = new Doc();
-  doc.property = property;
-  doc.save();
-  // property
-  property.doc = doc;
-
   property.save(function (err) {
     if (err) {
       return res.status(422).send({
@@ -67,18 +62,6 @@ exports.update = function (req, res) {
   });
 };
 
-function removeDoc(_docId) {
-  return new Promise(function (resolve, reject) {
-    var remove = Doc.remove({ _id: _docId });
-    remove.exec(function (err) {
-      if (err) {
-        reject(err);
-      }
-      resolve(true);
-    });
-  });
-}
-
 function removeProperty(property) {
   return new Promise(function (resolve, reject) {
     property.remove(function (err) {
@@ -96,11 +79,7 @@ function removeProperty(property) {
  */
 exports.delete = function (req, res) {
   var property = req.property;
-  var docId = property.doc;
   removeProperty(property)
-  .then(function (result) {
-    return removeDoc(docId);
-  })
   .then(function (result) {
     res.json(true);
   })
@@ -180,19 +159,6 @@ exports.propertyByID = function (req, res, next, id) {
   });
 };
 
-exports.requestPropertyByDoc = function (req, res) {
-  var doc = req.body.doc;
-  Property.findOne({ doc: doc }).exec(function (err, property) {
-    if (err) {
-      return res.status(422).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
-
-    res.json(property);
-  });
-};
-
 exports.requestPropertiesMysql = function (req, res) {
   var limit = Number(req.body.limit) || 10;
   var page = Number(req.body.page) || 1;
@@ -242,8 +208,7 @@ exports.requestPropertiesMysql = function (req, res) {
 };
 
 exports.importPropertyFormMysql = function (req, res) {
-  var ids = req.body.ids;
-  // var ids = [200];
+  var id = req.body.id;
   var query_from = ' FROM v_nice_property_info_1 as inf1 INNER JOIN v_nice_property_info_2 as inf2' +
    ' ON (inf1.property_id = inf2.property_id) and (inf1.application_id = inf2.application_id)' +
    ' INNER JOIN v_nice_property_no3 as no3' +
@@ -251,44 +216,39 @@ exports.importPropertyFormMysql = function (req, res) {
    ' INNER JOIN v_nice_property_no4 as no4' +
    ' ON (inf1.property_id = no4.property_id) and (inf1.application_id = no4.application_id)';
 
-  var param = _.clone(ids);
-  var query_where = ' WHERE inf1.application_id IN (' + param.fill('?') + ')';
+  var query_where = ' WHERE inf1.application_id = ?';
   var query_select = 'SELECT * ' + query_from + query_where;
 
-  var properties;
+  var property;
   var property_floor;
-  var masterProperties;
-  mysqlSelect(query_select, ids)
-  .then(function (result_properties) {
-    properties = result_properties;
-
+  var newProperty;
+  mysqlSelect(query_select, id)
+  .then(function (result_property) {
+    if (result_property.length === 0) {
+      return res.status(422).send({
+        message: 'application_id dont find'
+      });
+    }
+    property = result_property[0];
     // get list data floor
-    var no4_ids = [];
-    properties.forEach(function (property) {
-      no4_ids.push(property.no4_id);
-    });
-    var param_floor = _.clone(no4_ids);
-    var query_where_floor = ' WHERE no4_id IN (' + param_floor.fill('?') + ')';
+    var no4_id = property.no4_id;
+    var query_where_floor = ' WHERE no4_id = ? ';
     var query_select_floor = 'SELECT * FROM v_nice_property_floor ' + query_where_floor;
-    return mysqlSelect(query_select_floor, no4_ids);
+    return mysqlSelect(query_select_floor, no4_id);
   })
   .then(function (result_floor) {
     property_floor = result_floor;
     return listMasterProperties();
   })
-  .then(function (master) {
-    masterProperties = master;
-
-    var promises = [];
-    properties.forEach(function (property) {
-      promises.push(setupImportProperty(property, property_floor, masterProperties));
-    });
-    return Promise.all(promises);
+  .then(function (masterProperties) {
+    console.log("propertypropertyproperty", property);
+    return setupImportProperty(property, property_floor, masterProperties);
   })
-  .then(function (result) {
-    res.json(result);
+  .then(function (_property) {
+    return res.json(_property);
   })
   .catch(function (err) {
+    console.log("B", err);
     return res.status(422).send({
       message: errorHandler.getErrorMessage(err)
     });
@@ -309,7 +269,7 @@ function mergeInfoProperty(array1, array2) {
 
 function mysqlSelect(query, param) {
   var pool = mysql.createPool({
-    connectionLimit: 10,
+    connectionLimit: 1000,
     host: 'localhost',
     user: 'jaic',
     password: 'phHMsxf2',
@@ -334,6 +294,7 @@ function mysqlSelect(query, param) {
       if (error) {
         reject(error);
       }
+      
       resolve(results);
     });
   });
@@ -342,10 +303,13 @@ function mysqlSelect(query, param) {
 function setupImportProperty(property, property_floor, masterProperties) {
   return new Promise(function (resolve, reject) {
     var list_floor = getDataFloor4_10(property_floor, property.no4_id);
+    console.log("setupImportProperty list_floor", list_floor);
     checkUpdateOrCreate(property.application_id)
     .then(function (propertyObj) {
-      var result = importProperty(propertyObj, property, masterProperties, list_floor);
-      resolve(result);
+      return importProperty(propertyObj, property, masterProperties, list_floor);
+    })
+    .then(function (result) {
+      return resolve(result);
     })
     .catch(function (err) {
       reject(err);
@@ -354,23 +318,18 @@ function setupImportProperty(property, property_floor, masterProperties) {
 }
 
 function checkUpdateOrCreate(application_id) {
+  console.log(application_id);
   return new Promise(function (resolve, reject) {
     Property.findOne({ application_id: application_id }).exec(function (err, property) {
       if (err) {
+        console.log("1 err:", err);
         reject(err);
       }
       if (property) {
+        console.log("2 property:", property);
         resolve(property);
       } else {
-        var newPro = new Property();
-        // Doc
-        var doc = new Doc();
-        // save regulation
-        doc.property = newPro;
-        doc.save();
-        // property
-        newPro.doc = doc;
-        resolve(newPro);
+        resolve();
       }
     });
   });
@@ -378,6 +337,9 @@ function checkUpdateOrCreate(application_id) {
 
 function importProperty(newPro, _property, masterProperties, list_floor) {
   return new Promise(function (resolve, reject) {
+    if (!newPro) {
+      newPro = new Property();
+    }
     // 物件概要
     newPro.application_id = _property.application_id;
     newPro.men10 = _property.col_005;
@@ -608,6 +570,7 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
   });
 }
 
+
 function trim(string) {
   if (!string) { return ''; }
   return string.trim();
@@ -774,3 +737,27 @@ function getValueMen4_10_14(f_001) {
   if (f_001 === '4') { out = ('M'); }
   return out;
 }
+
+exports.listMasterCheckSheetForm4 = function (req, res) {
+  MasterCheckSheetForm4.find().exec(function (err, list) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(list);
+  });
+};
+
+exports.listMasterCheckSheetForm7 = function (req, res) {
+  MasterCheckSheetForm7.find().exec(function (err, list) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(list);
+  });
+};

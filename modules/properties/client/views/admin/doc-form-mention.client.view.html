@@ -51,22 +51,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="item in vm.doc.mentions track by $index">
+                                    <tr ng-repeat="item in vm.property.doc.mentions track by $index">
                                         <!-- process rowspan and colspan of item1 & item2 条項 -->
-                                        <td><input type="text" class="form-control" ng-model="vm.doc.mentions[$index].clause"/></td>
+                                        <td><input type="text" class="form-control" ng-model="vm.property.doc.mentions[$index].clause"/></td>
                                         <!-- legal_text -->
-                                        <td><input type="text" class="form-control" ng-model="vm.doc.mentions[$index].headline"/></td>
+                                        <td><input type="text" class="form-control" ng-model="vm.property.doc.mentions[$index].headline"/></td>
                                         <!-- checkbox form1_ha （ろ） -->
                                         <td style="text-align:center;">
-                                            <input type='checkbox' ng-model='vm.doc.mentions[$index].time1_check'/>
+                                            <input type='checkbox' ng-model='vm.property.doc.mentions[$index].time1_check'/>
                                         </td>
                                         <!-- process rowspan of checkbox form1_ha （は） -->
                                         <td style="text-align:center;">
-                                            <input type='checkbox' ng-model='vm.doc.mentions[$index].time2_check'/>
+                                            <input type='checkbox' ng-model='vm.property.doc.mentions[$index].time2_check'/>
                                         </td>
                                         <!-- process rowspan of checkbox item  最終チェック 項目-->
                                         <td style="text-align:center;">
-                                            <input type='checkbox' ng-model='vm.doc.mentions[$index].final_check'/>
+                                            <input type='checkbox' ng-model='vm.property.doc.mentions[$index].final_check'/>
                                         </td>
                                         <td style="text-align:center;">
                                             <button type="button" ng-click="vm.removeMention(item)" class="btn btn-danger btn-sm">
@@ -107,15 +107,15 @@
                                     <td>{{ lawData.legal_text }}</td>
                                     <!-- checkbox formMen_ro （ろ） -->
                                     <td style="text-align:center;">
-                                        <input type='checkbox' checklist-model='vm.doc.formMen_ro' checklist-value="lawData.id"/>
+                                        <input type='checkbox' checklist-model='vm.property.doc.formMen_ro' checklist-value="lawData.id"/>
                                     </td>
                                     <!-- process rowspan of checkbox formMen_ha （は） -->
                                     <td style="text-align:center;">
-                                        <input type='checkbox' checklist-model='vm.doc.formMen_ha' checklist-value="lawData.id"/>
+                                        <input type='checkbox' checklist-model='vm.property.doc.formMen_ha' checklist-value="lawData.id"/>
                                     </td>
                                     <!-- process rowspan of checkbox formMen_item  最終チェック 項目-->
                                     <td style="text-align:center;">
-                                        <input type='checkbox' checklist-model='vm.doc.formMen_item' checklist-value="lawData.id">
+                                        <input type='checkbox' checklist-model='vm.property.doc.formMen_item' checklist-value="lawData.id">
                                     </td>
                                 </tr>
                             </tbody>

@@ -33,25 +33,25 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="item in vm.doc.mentions track by $index">
+        <tr ng-repeat="item in vm.property.doc.mentions track by $index">
             <!-- process rowspan and colspan of item1 & item2 条項 -->
-            <td colspan="2">{{ vm.doc.mentions[$index].clause }}</td>
+            <td colspan="2">{{ vm.property.doc.mentions[$index].clause }}</td>
             <!-- legal_text -->
-            <td>{{ vm.doc.mentions[$index].headline }}</td>
+            <td>{{ vm.property.doc.mentions[$index].headline }}</td>
             <!-- checkbox form1_ha （ろ） -->
             <td style="text-align:center;">
-                <span ng-if="vm.doc.mentions[$index].time1_check">☑</span>
-                <span ng-if="!vm.doc.mentions[$index].time1_check">□</span>
+                <span ng-if="vm.property.doc.mentions[$index].time1_check">☑</span>
+                <span ng-if="!vm.property.doc.mentions[$index].time1_check">□</span>
             </td>
             <!-- process rowspan of checkbox form1_ha （は） -->
             <td style="text-align:center;">
-                <span ng-if="vm.doc.mentions[$index].time2_check">☑</span>
-                <span ng-if="!vm.doc.mentions[$index].time2_check">□</span>
+                <span ng-if="vm.property.doc.mentions[$index].time2_check">☑</span>
+                <span ng-if="!vm.property.doc.mentions[$index].time2_check">□</span>
             </td>
             <!-- process rowspan of checkbox item  最終チェック 項目-->
             <td style="text-align:center;">
-                <span ng-if="vm.doc.mentions[$index].final_check">☑</span>
-                <span ng-if="!vm.doc.mentions[$index].final_check">□</span>
+                <span ng-if="vm.property.doc.mentions[$index].final_check">☑</span>
+                <span ng-if="!vm.property.doc.mentions[$index].final_check">□</span>
             </td>
         </tr>
     </tbody>
@@ -84,18 +84,18 @@
             <td>{{ lawData.legal_text }}</td>
             <!-- checkbox formMen_ro （ろ） -->
             <td style="text-align:center;">
-                <span ng-if="vm.doc.formMen_ro | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.formMen_ro | contains:lawData.id)">□</span>
+                <span ng-if="vm.property.doc.formMen_ro | contains:lawData.id">☑</span>
+                <span ng-if="!(vm.property.doc.formMen_ro | contains:lawData.id)">□</span>
             </td>
             <!-- process rowspan of checkbox formMen_ha （は） -->
             <td style="text-align:center;">
-                <span ng-if="vm.doc.formMen_ha | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.formMen_ha | contains:lawData.id)">□</span>
+                <span ng-if="vm.property.doc.formMen_ha | contains:lawData.id">☑</span>
+                <span ng-if="!(vm.property.doc.formMen_ha | contains:lawData.id)">□</span>
             </td>
             <!-- process rowspan of checkbox formMen_item  最終チェック 項目-->
             <td style="text-align:center;">
-                <span ng-if="vm.doc.formMen_item | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.formMen_item | contains:lawData.id)">□</span>
+                <span ng-if="vm.property.doc.formMen_item | contains:lawData.id">☑</span>
+                <span ng-if="!(vm.property.doc.formMen_item | contains:lawData.id)">□</span>
             </td>
         </tr>
     </tbody>

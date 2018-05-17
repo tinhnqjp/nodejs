@@ -5,14 +5,13 @@
     .module('properties.admin')
     .controller('Doc7AdminController', Doc7AdminController);
 
-  Doc7AdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'propertyResolve',
-    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi', '$stateParams'];
+  Doc7AdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve',
+    'Authentication', 'Notification', 'Excel', '$timeout', 'LawsApi', 'PropertyApi', '$stateParams'];
 
-  function Doc7AdminController($scope, $state, $window, doc, property, Authentication,
-    Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi, $stateParams) {
+  function Doc7AdminController($scope, $state, $window, property, Authentication,
+    Notification, Excel, $timeout, LawsApi, PropertyApi, $stateParams) {
     var vm = this;
-    vm.propertyId;
-    vm.doc = doc;
+    vm.propertyId = null;
     vm.property = property;
     vm.authentication = Authentication;
     vm.listTable1 = [];
@@ -31,7 +30,7 @@
       vm.busyLoad = true;
       vm.propertyId = $stateParams.propertyId;
       // load list data masterlaw
-      DocsApi.listMasterCheckSheetForm7()
+      PropertyApi.listMasterCheckSheetForm7()
         .then(function (res) {
           vm.busyLoad = false;
           var list = res.data;
@@ -59,7 +58,7 @@
      * @param {*} isValid check validation
      */
     vm.save = function (isValid) {
-      console.log(vm.doc);
+      console.log(vm.property.doc);
       $scope.handleShowConfirm({
         message: '保存します。よろしいですか？'
       }, function () {
@@ -67,7 +66,7 @@
           $scope.$broadcast('show-errors-check-validity', 'vm.form.docForm');
           return false;
         }
-        vm.doc.createOrUpdate()
+        vm.property.createOrUpdate()
           .then(function (res) {
             $scope.nofitySuccess('第七号様式データの保存が完了しました。');
           })

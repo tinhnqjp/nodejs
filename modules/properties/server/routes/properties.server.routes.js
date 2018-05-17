@@ -21,7 +21,8 @@ module.exports = function (app) {
   // Finish by binding the property middleware
   app.param('propertyId', properties.propertyByID);
 
-  app.route('/api/requestPropertyByDoc').post(properties.requestPropertyByDoc);
   app.route('/api/importPropertyFormMysql').post(properties.importPropertyFormMysql);
   app.route('/api/requestPropertiesMysql').post(properties.requestPropertiesMysql);
+  app.route('/api/listMasterCheckSheetForm4').get(properties.listMasterCheckSheetForm4);
+  app.route('/api/listMasterCheckSheetForm7').get(properties.listMasterCheckSheetForm7);
 };

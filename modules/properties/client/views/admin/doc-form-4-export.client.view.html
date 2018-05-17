@@ -45,42 +45,42 @@
             <!-- legal_text -->
             <td>{{ row.legal_text }}</td>
             <td style="text-align:center;">
-                <span ng-if="(vm.doc.form4_ro | contains:row.id) && row.ck_ro > 0">☑</span>
-                <span ng-if="!(vm.doc.form4_ro | contains:row.id) && row.ck_ro > 0">□</span>
+                <span ng-if="(vm.property.doc.form4_ro | contains:row.id) && row.ck_ro > 0">☑</span>
+                <span ng-if="!(vm.property.doc.form4_ro | contains:row.id) && row.ck_ro > 0">□</span>
             </td>
             <!-- process rowspan of checkbox form4_ha1 （は） -->
             <td ng-if="row.rowspan_ck_ha1 > 0" rowspan="{{ row.rowspan_ck_ha1 }}" style="text-align:center;">
-                <span ng-if="vm.doc.form4_ha1 | contains:row.id">☑</span>
-                <span ng-if="!(vm.doc.form4_ha1 | contains:row.id)">□</span>
+                <span ng-if="vm.property.doc.form4_ha1 | contains:row.id">☑</span>
+                <span ng-if="!(vm.property.doc.form4_ha1 | contains:row.id)">□</span>
             </td>
             <td ng-if="row.rowspan_ck_ha1 === 0" style="text-align:center;">
-                <span ng-if="vm.doc.form4_ha1 | contains:row.id">☑</span>
-                <span ng-if="!(vm.doc.form4_ha1 | contains:row.id)">□</span>
+                <span ng-if="vm.property.doc.form4_ha1 | contains:row.id">☑</span>
+                <span ng-if="!(vm.property.doc.form4_ha1 | contains:row.id)">□</span>
             </td>
             <!-- process rowspan of checkbox form4_ha2（は） -->
             <td ng-if="row.rowspan_ck_ha2 > 0" rowspan="{{ row.rowspan_ck_ha2 }}" style="text-align:center;">
-                <span ng-if="(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
-                <span ng-if="!(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
+                <span ng-if="(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
+                <span ng-if="!(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
             </td>
             <td ng-if="row.rowspan_ck_ha2 === 0" style="text-align:center;">
-                <span ng-if="(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
-                <span ng-if="!(vm.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
+                <span ng-if="(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
+                <span ng-if="!(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
             </td>
             <td>
-                <span ng-if="vm.doc.form4_item | contains:row.id">☑</span>
-                <span ng-if="!(vm.doc.form4_item | contains:row.id)">□</span>
+                <span ng-if="vm.property.doc.form4_item | contains:row.id">☑</span>
+                <span ng-if="!(vm.property.doc.form4_item | contains:row.id)">□</span>
             </td>
         </tr>
         <tr><td colspan="7"></td></tr>
         <tr>
             <td colspan="3">工事監理の状況</td>
             <td colspan="3" style="text-align:center;">
-                <span ng-if="vm.doc.form4_ro | contains:146">☑</span>
-                <span ng-if="!(vm.doc.form4_ro | contains:146)">□</span>
+                <span ng-if="vm.property.doc.form4_ro | contains:146">☑</span>
+                <span ng-if="!(vm.property.doc.form4_ro | contains:146)">□</span>
             </td>
             <td style="text-align:center;">
-                <span ng-if="vm.doc.form4_item | contains:146">☑</span>
-                <span ng-if="!(vm.doc.form4_item | contains:146)">□</span>
+                <span ng-if="vm.property.doc.form4_item | contains:146">☑</span>
+                <span ng-if="!(vm.property.doc.form4_item | contains:146)">□</span>
             </td>
         </tr>
     </tbody>

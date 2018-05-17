@@ -46,29 +46,29 @@
             <td>{{ lawData.legal_text }}</td>
             <!-- checkbox form1_ha （ろ） -->
             <td style="text-align:center;">
-                <span ng-if="vm.doc.form1_ro | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.form1_ro | contains:lawData.id)">□</span>
+                <span ng-if="vm.property.doc.form1_ro | contains:lawData.id">☑</span>
+                <span ng-if="!(vm.property.doc.form1_ro | contains:lawData.id)">□</span>
             </td>                                                                          
 
             <!-- process rowspan of checkbox form1_ha （は） -->
             <td ng-if="lawData.rowspan_ck_ha > 0" rowspan="{{ lawData.rowspan_ck_ha }}" style="text-align:center;">
-                <span ng-if="vm.doc.form1_ha | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.form1_ha | contains:lawData.id)">□</span>
+                <span ng-if="vm.property.doc.form1_ha | contains:lawData.id">☑</span>
+                <span ng-if="!(vm.property.doc.form1_ha | contains:lawData.id)">□</span>
             </td>
             <td ng-if="lawData.rowspan_ck_ha === 0" style="text-align:center;">
-                <span ng-if="vm.doc.form1_ha | contains:lawData.id">☑</span>
-                <span ng-if="!(vm.doc.form1_ha | contains:lawData.id)">□</span>
+                <span ng-if="vm.property.doc.form1_ha | contains:lawData.id">☑</span>
+                <span ng-if="!(vm.property.doc.form1_ha | contains:lawData.id)">□</span>
             </td>
             
             <!-- process rowspan of checkbox item  最終チェック 項目-->
             <td style="text-align:center;">
                 <div ng-if="lawData.total_ck_item > 1" ng-repeat="n in range(1, lawData.total_ck_item)" ng-init="itemValue = lawData.id+ '_' + n">
-                    <span ng-if="vm.doc.form1_item | contains:itemValue">☑</span>
-                    <span ng-if="!(vm.doc.form1_item | contains:itemValue)">□</span>
+                    <span ng-if="vm.property.doc.form1_item | contains:itemValue">☑</span>
+                    <span ng-if="!(vm.property.doc.form1_item | contains:itemValue)">□</span>
                 </div>
                 <div ng-if="!lawData.total_ck_item || lawData.total_ck_item <= 1">
-                    <span ng-if="vm.doc.form1_item | contains:lawData.id">☑</span>
-                    <span ng-if="!(vm.doc.form1_item | contains:lawData.id)">□</span>
+                    <span ng-if="vm.property.doc.form1_item | contains:lawData.id">☑</span>
+                    <span ng-if="!(vm.property.doc.form1_item | contains:lawData.id)">□</span>
                 </div>
             </td>
         </tr>

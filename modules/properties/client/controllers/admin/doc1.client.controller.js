@@ -5,14 +5,13 @@
     .module('properties.admin')
     .controller('Doc1AdminController', Doc1AdminController);
 
-  Doc1AdminController.$inject = ['$scope', '$state', '$window', 'docResolve', 'propertyResolve',
-    'Authentication', 'Notification', 'Excel', '$timeout', 'DocsApi', 'LawsApi', 'PropertyApi', '$stateParams'];
+  Doc1AdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve',
+    'Authentication', 'Notification', 'Excel', '$timeout', 'LawsApi', 'PropertyApi', '$stateParams'];
 
-  function Doc1AdminController($scope, $state, $window, doc, property, Authentication,
-    Notification, Excel, $timeout, DocsApi, LawsApi, PropertyApi, $stateParams) {
+  function Doc1AdminController($scope, $state, $window, property, Authentication,
+    Notification, Excel, $timeout, LawsApi, PropertyApi, $stateParams) {
     var vm = this;
     vm.propertyId;
-    vm.doc = doc;
     vm.property = property;
     vm.authentication = Authentication;
     vm.listMasterLaw = [];
@@ -50,7 +49,7 @@
           $scope.$broadcast('show-errors-check-validity', 'vm.form.lawRulesForm');
           return false;
         }
-        vm.doc.createOrUpdate()
+        vm.property.createOrUpdate()
           .then(function (res) {
             $scope.nofitySuccess('第一号様式データの保存が完了しました。');
           })

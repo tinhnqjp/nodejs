@@ -54,14 +54,17 @@
 
   PropertyApi.$inject = ['$http'];
   function PropertyApi($http) {
-    this.requestPropertyByDoc = function (doc) {
-      return $http.post('/api/requestPropertyByDoc', { doc: doc }, { ignoreLoadingBar: true });
-    };
-    this.importPropertyFormMysql = function (ids) {
-      return $http.post('/api/importPropertyFormMysql', { ids: ids }, { ignoreLoadingBar: true });
+    this.importPropertyFormMysql = function (id) {
+      return $http.post('/api/importPropertyFormMysql', { id: id }, { ignoreLoadingBar: true });
     };
     this.requestPropertiesMysql = function (input) {
       return $http.post('/api/requestPropertiesMysql', input, { ignoreLoadingBar: true });
+    };
+    this.listMasterCheckSheetForm4 = function () {
+      return $http.get('/api/listMasterCheckSheetForm4', null, { ignoreLoadingBar: true });
+    };
+    this.listMasterCheckSheetForm7 = function () {
+      return $http.get('/api/listMasterCheckSheetForm7', null, { ignoreLoadingBar: true });
     };
     return this;
   }
