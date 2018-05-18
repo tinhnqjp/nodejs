@@ -62,14 +62,8 @@
             
             <!-- process rowspan of checkbox item  最終チェック 項目-->
             <td style="text-align:center;">
-                <div ng-if="lawData.total_ck_item > 1" ng-repeat="n in range(1, lawData.total_ck_item)" ng-init="itemValue = lawData.id+ '_' + n">
-                    <span ng-if="vm.property.doc.form1_item | contains:itemValue">☑</span>
-                    <span ng-if="!(vm.property.doc.form1_item | contains:itemValue)">□</span>
-                </div>
-                <div ng-if="!lawData.total_ck_item || lawData.total_ck_item <= 1">
-                    <span ng-if="vm.property.doc.form1_item | contains:lawData.id">☑</span>
-                    <span ng-if="!(vm.property.doc.form1_item | contains:lawData.id)">□</span>
-                </div>
+                <span ng-if="vm.property.doc.form1_item | contains:lawData.id">☑</span>
+                <span ng-if="!(vm.property.doc.form1_item | contains:lawData.id)">□</span>
             </td>
         </tr>
     </tbody>

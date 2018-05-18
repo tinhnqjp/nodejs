@@ -68,13 +68,7 @@
                                             
                                             <!-- process rowspan of checkbox item  最終チェック 項目-->
                                             <td style="text-align:center;">
-                                                <div ng-if="lawData.total_ck_item > 1" ng-repeat="n in range(1, lawData.total_ck_item)" ng-init="itemValue = lawData.id+ '_' + n">
-                                                    <input type='checkbox' checklist-model='vm.property.doc.form1_item' checklist-value="itemValue">
-                                                    <hr ng-show="!$last">
-                                                </div>
-                                                <div ng-if="!lawData.total_ck_item || lawData.total_ck_item <= 1">
-                                                    <input type='checkbox' checklist-model='vm.property.doc.form1_item' checklist-value="lawData.id">
-                                                </div>
+                                                <input type='checkbox' checklist-model='vm.property.doc.form1_item' checklist-value="lawData.id">
                                             </td>
                                         </tr>
                                     </tbody>
