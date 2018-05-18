@@ -107,3 +107,7 @@ a {
 }
 
 table.table-bordered tr td, table.table-bordered tr th { border: 1px solid gray }
+
+body.ngdialog-open {
+  overflow: visible;
+}

@@ -267,25 +267,23 @@
                     <hr>
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group row" id="men4_10">
                 <label for="txtTodo" class="col-sm-12 col-form-label title_label">10.床 面 積</label>
-                <div class="col-sm-2"></div>
                 <div class="col-sm-10">
                     <div class="row">
-                        <div class="col-sm-2">階種別</div>
+                        <div class="col-sm-2">ｲ.階 別</div>
                         <div class="col-sm-2">
-                            <select class="selectpicker form-control" name="men4_10_14"
-                             ng-options="o.id as o.name for o in vm.data_men4_10" ng-model="vm.property.men4_10_14">
-                             <option ng-selected="true" value=""></option></select>
+                            <a type="button" class="btn btn-success pull-right" id="add_btn" ng-click="vm.pushFloor()">
+                                <span class="glyphicon glyphicon-plus"></span> 追加</a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="col-sm-2"></div>
                 <div class="col-sm-10">
                     <!-- header -->
                     <div class="row txt_yaku">
                         <label for="txtTodo" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-2"></div>
                         <div class="col-sm-2"></div>
                         <div class="col-sm-2">
                             (申請部分)
@@ -298,300 +296,71 @@
                         </div>
                     </div>
                     <!-- header end-->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label">ｲ.階 別</label>
+                    <div class="row txt_yaku" ng-repeat="item in vm.property.men4_10_5 track by $index">
+                        <label class="col-sm-2 col-form-label" >
+                            <button type="button" ng-click="vm.removeFloor($index)" class="btn btn-danger btn-sm pull-right"><i class="glyphicon glyphicon-trash"></i> 削除</button>
+                        </label>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_1" ng-model="vm.property.men4_10_5.c1"/>
+                                <select class="selectpicker form-control" name="men4_10_14"
+                                    ng-options="o.id as o.name for o in vm.data_men4_10" ng-model="vm.property.men4_10_5[$index].c0">
+                                    <option ng-selected="true" value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group form-inline panel">
+                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_5[$index].c0 }}</span>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" ng-model="vm.property.men4_10_5[$index].c1" />
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_2" ng-model="vm.property.men4_10_5.c2"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" ng-model="vm.property.men4_10_5[$index].c2"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_3" ng-model="vm.property.men4_10_5.c3"/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" ng-model="vm.property.men4_10_5[$index].c3"/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_5_4" ng-model="vm.property.men4_10_5.c4"  readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.2 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_1" ng-model="vm.property.men4_10_6.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_2" ng-model="vm.property.men4_10_6.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_3" ng-model="vm.property.men4_10_6.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_6_4" ng-model="vm.property.men4_10_6.c4" readonly/>
+                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" ng-model="vm.property.men4_10_5[$index].c4"  readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                     </div>
-                    <!-- No.2 end-->
-                    <!-- No.3 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_1" ng-model="vm.property.men4_10_7.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_2" ng-model="vm.property.men4_10_7.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_3" ng-model="vm.property.men4_10_7.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_7_4" ng-model="vm.property.men4_10_7.c4" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.3 end-->
-                    <!-- No.4 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_1" ng-model="vm.property.men4_10_8.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_2" ng-model="vm.property.men4_10_8.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_3" ng-model="vm.property.men4_10_8.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_8_4" ng-model="vm.property.men4_10_8.c4" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.4 end-->
-                    <!-- No.5 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_1" ng-model="vm.property.men4_10_9.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_2" ng-model="vm.property.men4_10_9.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_3" ng-model="vm.property.men4_10_9.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_9_4" ng-model="vm.property.men4_10_9.c4" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.5 end-->
-                    <!-- No.6 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_10_1" ng-model="vm.property.men4_10_10.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_10_2" ng-model="vm.property.men4_10_10.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_10_3" ng-model="vm.property.men4_10_10.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_10_4" ng-model="vm.property.men4_10_10.c4" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.6 end-->
-                    <!-- No.7 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_11_1" ng-model="vm.property.men4_10_11.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_11_2" ng-model="vm.property.men4_10_11.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_11_3" ng-model="vm.property.men4_10_11.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_11_4" ng-model="vm.property.men4_10_11.c4" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.7 end-->
-                    <!-- No.8 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_12_1" ng-model="vm.property.men4_10_12.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_12_2" ng-model="vm.property.men4_10_12.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_12_3" ng-model="vm.property.men4_10_12.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_12_4" ng-model="vm.property.men4_10_12.c4" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.8 end-->
-                    <!-- No.9 -->
-                    <div class="row txt_yaku">
-                        <label for="txtTodo" class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_13_1" ng-model="vm.property.men4_10_13.c1"/>
-                                <span class="input-group-addon add-on flat">階</span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_13_2" ng-model="vm.property.men4_10_13.c2"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_13_3" ng-model="vm.property.men4_10_13.c3"/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_13_4" ng-model="vm.property.men4_10_13.c4" readonly/>
-                                <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
-                            </div>
-                        </div>
-                    </div>
-                    <!-- No.9 end-->
                     <!-- goukei -->
                     <div class="row txt_yaku">
                         <hr>
                         <label for="txtTodo" class="col-sm-2 col-form-label">ﾛ.合 計</label>
+                        <div class="col-sm-2"></div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
                                 <span class="input-group-addon add-on flat">{{ vm.property.men4_10_14 }}</span>
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_1" ng-model="vm.property.men4_10_1" readonly/>
+                                <input type="number" class="form-control" name="men4_10_1" ng-model="vm.property.men4_10_1" readonly/>
                                 <span class="input-group-addon add-on flat">階</span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_2" ng-model="vm.property.men4_10_2" readonly/>
+                                <input type="number" class="form-control" name="men4_10_2" ng-model="vm.property.men4_10_2" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_3" ng-model="vm.property.men4_10_3" readonly/>
+                                <input type="number" class="form-control" name="men4_10_3" ng-model="vm.property.men4_10_3" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>
                         <div class="col-sm-2">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" ng-blur="vm.goukei_4_10()" name="men4_10_4" ng-model="vm.property.men4_10_4" readonly/>
+                                <input type="number" class="form-control" name="men4_10_4" ng-model="vm.property.men4_10_4" readonly/>
                                 <span class="input-group-addon add-on flat">m<sup>2</sup></span> 
                             </div>
                         </div>

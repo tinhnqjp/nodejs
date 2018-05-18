@@ -6,7 +6,8 @@
     .controller('PropertiesAdminController', PropertiesAdminController);
 
   PropertiesAdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'Authentication',
-    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi'];
+    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi'
+  ];
 
   function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification,
     PropertiesService, LawsApi, PropertyApi) {
@@ -29,6 +30,7 @@
     vm.data_men3_8;
     vm.data_men3_9;
     vm.data_men3_14;
+    vm.data_men3_13_5 = ['鉄骨鉄筋コンクリート造', '鉄筋コンクリート造', '鉄骨造', '補強コンクリートブロック造', '組積造', '木造'];
     vm.data_men3_13_7 = ['道路高さ制限不適用', '隣地高さ制限不適用', '北側高さ制限不適用'];
     // form 4
     vm.data_men4_2;
@@ -62,6 +64,24 @@
       if (vm.property.men16) {
         vm.property.men16 = new Date(vm.property.men16);
       }
+      if (vm.property.men3_15) {
+        vm.property.men3_15 = new Date(vm.property.men3_15);
+      }
+      if (vm.property.men3_16) {
+        vm.property.men3_16 = new Date(vm.property.men3_16);
+      }
+      if (vm.property.men3_17) {
+        if (vm.property.men3_17.c1.date) {
+          vm.property.men3_17.c1.date = new Date(vm.property.men3_17.c1.date);
+        }
+        if (vm.property.men3_17.c2.date) {
+          vm.property.men3_17.c2.date = new Date(vm.property.men3_17.c2.date);
+        }
+        if (vm.property.men3_17.c3.date) {
+          vm.property.men3_17.c3.date = new Date(vm.property.men3_17.c3.date);
+        }
+      }
+
       // sum men3_7_5
       vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
       // get data from master properties
@@ -78,7 +98,10 @@
           vm.data_men3_7_2 = getOptionsFormMaster(3, 7, 2);
           var data_men3_8_tmp = getOptionsFormMaster(3, 8);
           vm.data_men3_8 = {
-            c1: { class: _.clone(data_men3_8_tmp), division: [] }
+            c1: {
+              class: _.clone(data_men3_8_tmp),
+              division: []
+            }
           };
           vm.selectParent3_8('c1');
 
@@ -88,9 +111,18 @@
           // men4_2
           var data_men4_2_tmp = getOptionsFormMaster(4, 2);
           vm.data_men4_2 = {
-            c1: { class: _.clone(data_men4_2_tmp), division: [] },
-            c2: { class: _.clone(data_men4_2_tmp), division: [] },
-            c3: { class: _.clone(data_men4_2_tmp), division: [] }
+            c1: {
+              class: _.clone(data_men4_2_tmp),
+              division: []
+            },
+            c2: {
+              class: _.clone(data_men4_2_tmp),
+              division: []
+            },
+            c3: {
+              class: _.clone(data_men4_2_tmp),
+              division: []
+            }
           };
           // init for pulldown men4_2
           vm.selectParent4_2('c1');
@@ -118,7 +150,10 @@
      * @param {*} _kokoumoku
      */
     function getOptionsFormMaster(_bukken, _daikoumoku, _kokoumoku) {
-      var condition = { bukken: _bukken, daikoumoku: _daikoumoku };
+      var condition = {
+        bukken: _bukken,
+        daikoumoku: _daikoumoku
+      };
       if (_kokoumoku) {
         condition.kokoumoku = _kokoumoku;
       }
@@ -306,35 +341,52 @@
     }
 
     function toFloat(value) {
-      if (!value) { return 0; }
+      if (!value) {
+        return 0;
+      }
       return parseFloat(value);
     }
+
+    vm.removeFloor = function (index) {
+      $scope.handleShowConfirm({
+        message: 'このデータを削除します。よろしいですか？'
+      }, function () {
+        vm.property.men4_10_5.splice(index, 1);
+      });
+    };
+
+    vm.pushFloor = function () {
+      if (!vm.property.men4_10_5) {
+        vm.property.men4_10_5 = [];
+      }
+      vm.property.men4_10_5.push({
+        c0: null,
+        c1: null,
+        c2: null,
+        c3: null,
+        c4: null
+      });
+    };
 
     /**
      * sum all of men4_10
      */
     function goukei_4_10() {
-      // 階別合計 men4_10_5 ~ men4_10_13
-      var form = 'men4_10_';
       var total_c1 = 0;
       var total_c2 = 0;
       var total_c3 = 0;
       var total_c4 = 0;
-      for (var index = 5; index <= 13; index++) {
-        var form_name = form + index;
-        if (vm.property[form_name]) {
-
-          var c1 = getChild(vm.property[form_name], 'c1');
-          var c2 = getChild(vm.property[form_name], 'c2');
-          var c3 = getChild(vm.property[form_name], 'c3');
-          var c4 = c2 + c3;
-          vm.property[form_name].c4 = c4;
+      if (vm.property.men4_10_5 && vm.property.men4_10_5.length > 0) {
+        vm.property.men4_10_5.forEach(function (item) {
+          total_c1 += item.c1;
+          total_c2 += item.c2;
+          total_c3 += item.c3;
+          var c4 = item.c2 + item.c3;
+          item.c4 = c4;
           total_c4 += c4;
-          total_c1 += c1;
-          total_c2 += c2;
-          total_c3 += c3;
-        }
+        });
       }
+
       vm.property.men4_10_1 = total_c1;
       vm.property.men4_10_2 = total_c2;
       vm.property.men4_10_3 = total_c3;
@@ -409,75 +461,81 @@
         var listCheckSheetForm4 = [];
         var listCheckSheetForm7 = [];
         getlistMasterLaw()
-        .then(function (_listMasterLaw) {
-          vm.listMasterLaw = _listMasterLaw;
-          // get law by year
-          return getFormProperty(propertyId);
-        })
-        .then(function (_property) {
-          property = _property;
-          var _year = new Date(property.men10).getFullYear();
-          return getLawsByYear(_year);
-        })
-        .then(function (_law) {
-          law = _law;
-          return getMasterProperties();
-        })
-        .then(function (_listMaster) {
-          vm.listMasterProperties = _listMaster;
-          var _promises = [];
-          // each law data
-          law.law_details.law_details.forEach(function (lawData) {
-            if (lawData.law_rules.length) {
-              _promises.push(checkRules(property, lawData));
-            }
-          });
-          return Promise.all(_promises);
-        })
-        .then(function (checkList) {
-          // maping list master law with result check each law data
-          listChecksheet = _.map(checkList, function (element) {
-            var treasure = _.findWhere(vm.listMasterLaw, { _id: element.master_law });
-            return _.extend(element, treasure);
-          });
-          return getMasterCheckSheetForm4();
-        })
-        .then(function (_listCheckSheetForm4) {
-          listCheckSheetForm4 = _listCheckSheetForm4;
-          return getMasterCheckSheetForm7();
-        })
-        .then(function (_listCheckSheetForm7) {
-          listCheckSheetForm7 = _listCheckSheetForm7;
-
-          vm.property.doc.form1_ro = [];
-          vm.property.doc.form4_ro = [];
-          listChecksheet.forEach(function (item) {
-            if (item.form1_ro && item.id) {
-              vm.property.doc.form1_ro.push(item.id);
-              // form4
-              var filterForm4 = _.filter(listCheckSheetForm4, { form1: parseInt(item.id, 10) });
-              filterForm4.forEach(function (form4) {
-                vm.property.doc.form4_ro.push(form4.id);
-              });
-              // form7
-              var filterForm7 = _.filter(listCheckSheetForm7, { form1: parseInt(item.id, 10) });
-              filterForm7.forEach(function (form7) {
-                vm.property.doc.form7_ro1.push(form7.id);
-              });
-            }
-          });
-          console.log(vm.property.doc);
-          vm.property.createOrUpdate()
-          .then(function (res) {
-            $scope.nofitySuccess('自動チェックが完了しました。');
+          .then(function (_listMasterLaw) {
+            vm.listMasterLaw = _listMasterLaw;
+            // get law by year
+            return getFormProperty(propertyId);
           })
-          .catch(function (res) {
-            $scope.nofityError('自動チェックが失敗しました。' + res.data.message);
+          .then(function (_property) {
+            property = _property;
+            var _year = new Date(property.men10).getFullYear();
+            return getLawsByYear(_year);
+          })
+          .then(function (_law) {
+            law = _law;
+            return getMasterProperties();
+          })
+          .then(function (_listMaster) {
+            vm.listMasterProperties = _listMaster;
+            var _promises = [];
+            // each law data
+            law.law_details.law_details.forEach(function (lawData) {
+              if (lawData.law_rules.length) {
+                _promises.push(checkRules(property, lawData));
+              }
+            });
+            return Promise.all(_promises);
+          })
+          .then(function (checkList) {
+            // maping list master law with result check each law data
+            listChecksheet = _.map(checkList, function (element) {
+              var treasure = _.findWhere(vm.listMasterLaw, {
+                _id: element.master_law
+              });
+              return _.extend(element, treasure);
+            });
+            return getMasterCheckSheetForm4();
+          })
+          .then(function (_listCheckSheetForm4) {
+            listCheckSheetForm4 = _listCheckSheetForm4;
+            return getMasterCheckSheetForm7();
+          })
+          .then(function (_listCheckSheetForm7) {
+            listCheckSheetForm7 = _listCheckSheetForm7;
+
+            vm.property.doc.form1_ro = [];
+            vm.property.doc.form4_ro = [];
+            listChecksheet.forEach(function (item) {
+              if (item.form1_ro && item.id) {
+                vm.property.doc.form1_ro.push(item.id);
+                // form4
+                var filterForm4 = _.filter(listCheckSheetForm4, {
+                  form1: parseInt(item.id, 10)
+                });
+                filterForm4.forEach(function (form4) {
+                  vm.property.doc.form4_ro.push(form4.id);
+                });
+                // form7
+                var filterForm7 = _.filter(listCheckSheetForm7, {
+                  form1: parseInt(item.id, 10)
+                });
+                filterForm7.forEach(function (form7) {
+                  vm.property.doc.form7_ro1.push(form7.id);
+                });
+              }
+            });
+            console.log(vm.property.doc);
+            vm.property.createOrUpdate()
+              .then(function (res) {
+                $scope.nofitySuccess('自動チェックが完了しました。');
+              })
+              .catch(function (res) {
+                $scope.nofityError('自動チェックが失敗しました。' + res.data.message);
+              });
+          })
+          .catch(function (err) {
+            $scope.nofityError('自動チェックが失敗しました。' + err);
           });
-        })
-        .catch(function (err) {
-          $scope.nofityError('自動チェックが失敗しました。' + err);
-        });
       });
     };
 
@@ -498,24 +556,24 @@
     function getMasterCheckSheetForm4() {
       return new Promise(function (resolve, reject) {
         PropertyApi.listMasterCheckSheetForm4()
-        .then(function (res) {
-          resolve(res.data);
-        })
-        .catch(function (res) {
-          reject(res.data.message);
-        });
+          .then(function (res) {
+            resolve(res.data);
+          })
+          .catch(function (res) {
+            reject(res.data.message);
+          });
       });
     }
 
     function getMasterCheckSheetForm7() {
       return new Promise(function (resolve, reject) {
         PropertyApi.listMasterCheckSheetForm7()
-        .then(function (res) {
-          resolve(res.data);
-        })
-        .catch(function (res) {
-          reject(res.data.message);
-        });
+          .then(function (res) {
+            resolve(res.data);
+          })
+          .catch(function (res) {
+            reject(res.data.message);
+          });
       });
     }
 
@@ -525,7 +583,9 @@
      */
     function getFormProperty(propertyId) {
       return new Promise(function (resolve, reject) {
-        var result = PropertiesService.get({ propertyId: propertyId }).$promise;
+        var result = PropertiesService.get({
+          propertyId: propertyId
+        }).$promise;
         resolve(result);
       });
     }
@@ -538,15 +598,15 @@
       return new Promise(function (resolve, reject) {
         console.log('year', year);
         LawsApi.requestLawsByYear(year)
-        .then(function (res) {
-          if (!res.data) {
-            reject('法令情報が見つかりません');
-          }
-          resolve(res.data);
-        })
-        .catch(function (res) {
-          reject(res.data.message);
-        });
+          .then(function (res) {
+            if (!res.data) {
+              reject('法令情報が見つかりません');
+            }
+            resolve(res.data);
+          })
+          .catch(function (res) {
+            reject(res.data.message);
+          });
       });
     }
 
@@ -556,12 +616,12 @@
     function getMasterProperties() {
       return new Promise(function (resolve, reject) {
         LawsApi.listMasterProperties()
-        .then(function (res) {
-          resolve(res.data);
-        })
-        .catch(function (res) {
-          reject(res.data.message);
-        });
+          .then(function (res) {
+            resolve(res.data);
+          })
+          .catch(function (res) {
+            reject(res.data.message);
+          });
       });
     }
 
@@ -587,7 +647,7 @@
             } else {
               // multi object
               var isMulti = checkMulti(valueInput);
-                // AND with properties
+              // AND with properties
               var validateAndProperties = [];
               field.properties.forEach(function (property) {
                 var formMaster;
@@ -619,7 +679,10 @@
         console.log('validateOrRules', validateOrRules);
         var result = checkedOR(validateOrRules);
         console.log('checkedOR', result);
-        resolve({ master_law: lawData.master_law, form1_ro: result });
+        resolve({
+          master_law: lawData.master_law,
+          form1_ro: result
+        });
       });
     }
 
@@ -783,12 +846,21 @@
             var childs = [];
             option.child.forEach(function (child) {
               if (_.contains(listLaws, child.name)) {
-                childs.push({ name: child.name });
+                childs.push({
+                  name: child.name
+                });
               }
             });
-            newjson.push({ name: option.name, child: childs, hasChild: true });
+            newjson.push({
+              name: option.name,
+              child: childs,
+              hasChild: true
+            });
           } else {
-            newjson.push({ name: option.name, hasChild: false });
+            newjson.push({
+              name: option.name,
+              hasChild: false
+            });
           }
         }
       });
@@ -803,12 +875,21 @@
             var childs = [];
             option.child.forEach(function (child) {
               if (_.contains(listValue, child.name)) {
-                childs.push({ name: child.name });
+                childs.push({
+                  name: child.name
+                });
               }
             });
-            intersects.push({ name: option.name, child: childs, hasChild: true });
+            intersects.push({
+              name: option.name,
+              child: childs,
+              hasChild: true
+            });
           } else {
-            intersects.push({ name: option.name, hasChild: false });
+            intersects.push({
+              name: option.name,
+              hasChild: false
+            });
           }
         }
       });
@@ -817,7 +898,10 @@
 
     function getFormMaster(_men) {
       var _dataField = _men.split('_');
-      var condition = { bukken: parseInt(_dataField[0], 10), daikoumoku: parseInt(_dataField[1], 10) };
+      var condition = {
+        bukken: parseInt(_dataField[0], 10),
+        daikoumoku: parseInt(_dataField[1], 10)
+      };
       if (_dataField[2]) {
         condition.kokoumoku = parseInt(_dataField[2], 10);
       }
@@ -853,11 +937,15 @@
     function checkedOR(conditions) {
       var isCorrect = false;
       conditions.forEach(function (condition) {
-        if (eval(condition)) {
+        if (exeEval(condition)) {
           isCorrect = true;
         }
       });
       return isCorrect;
+    }
+
+    function exeEval(string) {
+      return eval(string);
     }
 
     /**
@@ -872,7 +960,7 @@
       if (conditions.length > 0) {
         isCorrect = true;
         conditions.forEach(function (condition) {
-          if (!eval(condition)) {
+          if (!exeEval(condition)) {
             isCorrect = false;
           }
         });
@@ -880,13 +968,28 @@
 
       return isCorrect;
     }
-  // end controller
+    // end controller
   }
 
   angular.module('properties.admin').filter('contains', function () {
     return function (array, needle) {
       if (!array) return 0;
       return array.indexOf(needle) >= 0;
+    };
+  });
+  angular.module('properties.admin').directive('firebaseDate', function () {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        ngModel.$formatters.push(function (fromModel) {
+          fromModel = new Date(fromModel);
+          return fromModel;
+        });
+        ngModel.$parsers.push(function (fromField) {
+          fromField = fromField.getTime();
+          return fromField;
+        });
+      }
     };
   });
 }());

@@ -52,7 +52,7 @@ var PropertySchema = new Schema({
   men14: { type: String, trim: true },
   // 物件名
   men15: { type: String, trim: true },
-  // 確認受付日
+  // 事前受付日
   men16: { type: Date },
   // 確認受付番号
   men17: { type: String, trim: true },
@@ -218,12 +218,36 @@ var PropertySchema = new Schema({
   men3_13_5_1: { type: String },
   men3_13_5_2: { type: String },
   // ﾆ.建築基準法第56条第７項の規定による特例の適用の有無
-  men3_13_6: { type: String },
+  men3_13_6: { type: Number },
   // ﾎ.適用があるときは、特例の区分
   men3_13_7: [{ type: String }],
 
   // 14.許可・認定等
   men3_14: { type: String },
+  // 15.工事着手予定年月日
+  men3_15: { type: Date },
+  // 16.工事完了予定年月日
+  men3_16: { type: Date },
+  // 17.特定工程工事終了予定年月日
+  men3_17: {
+    c1: {
+      times: { type: Number },
+      date: { type: Date }
+    },
+    c2: {
+      times: { type: Number },
+      date: { type: Date }
+    },
+    c3: {
+      times: { type: Number },
+      date: { type: Date }
+    }
+  },
+  // 18.その他必要な事項
+  men3_18: { type: String },
+  // 19.備考
+  men3_19: { type: String },
+
   // form men 4
   // 1.番号
   men4_1: { type: Number },
@@ -289,60 +313,13 @@ var PropertySchema = new Schema({
   // 階種別
   men4_10_14: { type: String },
   // 階別合計
-  men4_10_5: {
+  men4_10_5: [{
+    c0: { type: String }, // 階種別
     c1: { type: Number }, // 階別
     c2: { type: Number }, // 申請部分
     c3: { type: Number }, // 申請以外の部分
     c4: { type: Number } //  合計
-  },
-  men4_10_6: {
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
-  men4_10_7: {
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
-  men4_10_8: {
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
-  men4_10_9: {
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
-  men4_10_10: {
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
-  men4_10_11: {
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
-  men4_10_12: {
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
-  men4_10_13: { // No 9
-    c1: { type: Number }, // 階別
-    c2: { type: Number }, // 申請部分
-    c3: { type: Number }, // 申請以外の部分
-    c4: { type: Number } //  合計
-  },
+  }],
 
   men4_11: { type: String },
   men4_12: { type: String },

@@ -45,7 +45,7 @@
         }
     </style>
     <form name="vm.form.propertyForm" ng-submit="vm.save(vm.form.propertyForm.$valid)" autocomplete="on" novalidate>
-        <uib-tabset type="tabs" class="w3-bar"  active="0">
+        <uib-tabset type="tabs" class="w3-bar"  active="1">
             <uib-tab index="0" heading="物件概要" class="tablink">
                 <div class="row gamen" id="men1">
                     <div class="col-xs-12">
@@ -80,10 +80,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="title_label">確認受付日</label>
+                                        <label class="title_label">事前受付日</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">年/月/日</span>
-                                            <input type="date" class="form-control" ng-model="vm.property.men16"
+                                            <input type="date" firebase-date class="form-control" ng-model="vm.property.men16"
                                             autocomplete="men16" name="men16"/>
                                             <span class="input-group-addon add-on flat">
                                                 <i class="glyphicon glyphicon-calendar"></i>
@@ -96,7 +96,7 @@
                                         <label class="title_label">引受日</label>
                                         <div class="input-group form-inline panel">
                                             <span class="input-group-addon">年/月/日</span>
-                                            <input type="date" class="form-control" ng-model="vm.property.men10"
+                                            <input type="date" firebase-date class="form-control" ng-model="vm.property.men10"
                                             autocomplete="men10" name="men10"/>
                                             <span class="input-group-addon add-on flat">
                                                 <i class="glyphicon glyphicon-calendar"></i>

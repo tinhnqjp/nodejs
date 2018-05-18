@@ -486,6 +486,29 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men3_13_7 = getValueMen3_13_7(_property);
     // 14.許可・認定等
     newPro.men3_14 = trim(_property.col_269);
+    // 15.工事着手予定年月日
+    newPro.men3_15 = trim(_property.col_270);
+    // 16.工事完了予定年月日
+    newPro.men3_16 = trim(_property.col_271);
+    // 17.特定工程工事終了予定年月日
+    newPro.men3_17 = {
+      c1: {
+        times: toFloat(_property.col_272),
+        date: trim(_property.col_273)
+      },
+      c2: {
+        times: toFloat(_property.col_275),
+        date: trim(_property.col_276)
+      },
+      c3: {
+        times: toFloat(_property.col_278),
+        date: trim(_property.col_279)
+      }
+    };
+    // 18.その他必要な事項
+    newPro.men3_18 = trim(_property.col_290);
+    // 19.備考
+    newPro.men3_19 = trim(_property.col_291);
 
     // 第四面
     newPro.men4_1 = toFloat(_property.col_292);
@@ -546,21 +569,20 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men4_10_2 = toFloat(_property.col_350);
     newPro.men4_10_3 = toFloat(_property.col_351);
     newPro.men4_10_4 = toFloat(_property.col_352);
+    newPro.men4_10_5 = [];
     if (list_floor.length > 0) {
-      newPro.men4_10_14 = getValueMen4_10_14(list_floor[0].f_001);
-      // list 5~13 (men4_10_5 ~ men4_10_13)
-      var index = 5;
       var total_c1 = 0;
       list_floor.forEach(function (f) {
-        newPro['men4_10_' + index] = {
-          c1: toFloat(f.f_002),
-          c2: toFloat(f.f_004),
-          c3: toFloat(f.f_005),
-          c4: toFloat(f.f_006)
-        };
-
+        newPro.men4_10_5.push(
+          {
+            c0: getValueMen4_10_floor(f.f_001),
+            c1: toFloat(f.f_002),
+            c2: toFloat(f.f_004),
+            c3: toFloat(f.f_005),
+            c4: toFloat(f.f_006)
+          }
+        );
         total_c1 += toFloat(f.f_002);
-        index++;
       });
       newPro.men4_10_1 = total_c1;
     }
@@ -741,7 +763,7 @@ function getDataFloor4_10(property_floor, no4_id) {
   return _.filter(property_floor, { no4_id: parseInt(no4_id, 10) });
 }
 
-function getValueMen4_10_14(f_001) {
+function getValueMen4_10_floor(f_001) {
   var out = '';
   if (f_001 === '1') { out = ('F'); }
   if (f_001 === '2') { out = ('B'); }
