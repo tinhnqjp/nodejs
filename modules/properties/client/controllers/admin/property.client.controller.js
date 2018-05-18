@@ -448,7 +448,7 @@
         })
         .then(function (_listCheckSheetForm7) {
           listCheckSheetForm7 = _listCheckSheetForm7;
-          
+
           vm.property.doc.form1_ro = [];
           vm.property.doc.form4_ro = [];
           listChecksheet.forEach(function (item) {

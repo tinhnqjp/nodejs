@@ -225,8 +225,8 @@ exports.importPropertyFormMysql = function (req, res) {
   mysqlSelect(query_select, id)
   .then(function (result_property) {
     if (result_property.length === 0) {
-      return res.status(422).send({
-        message: 'application_id dont find'
+      return new Promise(function (resolve, reject) {
+        reject({ message: 'application_id dont find' });
       });
     }
     property = result_property[0];
@@ -241,14 +241,13 @@ exports.importPropertyFormMysql = function (req, res) {
     return listMasterProperties();
   })
   .then(function (masterProperties) {
-    console.log("propertypropertyproperty", property);
     return setupImportProperty(property, property_floor, masterProperties);
   })
   .then(function (_property) {
     return res.json(_property);
   })
   .catch(function (err) {
-    console.log("B", err);
+    console.log(err);
     return res.status(422).send({
       message: errorHandler.getErrorMessage(err)
     });
@@ -294,7 +293,6 @@ function mysqlSelect(query, param) {
       if (error) {
         reject(error);
       }
-      
       resolve(results);
     });
   });
@@ -303,7 +301,6 @@ function mysqlSelect(query, param) {
 function setupImportProperty(property, property_floor, masterProperties) {
   return new Promise(function (resolve, reject) {
     var list_floor = getDataFloor4_10(property_floor, property.no4_id);
-    console.log("setupImportProperty list_floor", list_floor);
     checkUpdateOrCreate(property.application_id)
     .then(function (propertyObj) {
       return importProperty(propertyObj, property, masterProperties, list_floor);
@@ -322,11 +319,9 @@ function checkUpdateOrCreate(application_id) {
   return new Promise(function (resolve, reject) {
     Property.findOne({ application_id: application_id }).exec(function (err, property) {
       if (err) {
-        console.log("1 err:", err);
         reject(err);
       }
       if (property) {
-        console.log("2 property:", property);
         resolve(property);
       } else {
         resolve();
@@ -387,18 +382,18 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men3_7_5.c3 = toFloat(_property.col_183);
     newPro.men3_7_5.c4 = toFloat(_property.col_184);
     // ﾆ.建築基準法第53条第１項の規定による建築物の建蔽率
-    newPro.men3_7_6.c1 = toFloat(_property.col_181);
-    newPro.men3_7_6.c2 = toFloat(_property.col_182);
-    newPro.men3_7_6.c3 = toFloat(_property.col_183);
-    newPro.men3_7_6.c4 = toFloat(_property.col_184);
+    newPro.men3_7_6.c1 = toFloat(_property.col_185);
+    newPro.men3_7_6.c2 = toFloat(_property.col_186);
+    newPro.men3_7_6.c3 = toFloat(_property.col_187);
+    newPro.men3_7_6.c4 = toFloat(_property.col_188);
     // ﾎ.敷地面積の合計
     newPro.men3_7_7 = {
-      c1: newPro.men3_7_1.c1 + newPro.men3_7_1.c2 + newPro.men3_7_1.c3 + newPro.men3_7_1.c4,
-      c2: newPro.men3_7_1.c5 + newPro.men3_7_1.c6 + newPro.men3_7_1.c7 + newPro.men3_7_1.c8
+      c1: toFloat(_property.col_189),
+      c2: toFloat(_property.col_190)
     };
     // ﾍ.敷地に建築可能な延べ面積を敷地面積で除した数値
     newPro.men3_7_3 = toFloat(_property.col_191);
-    // ﾊ.建築基準法第52条第１項及び第２項の規定による建築物の容積率
+    // ﾄ.敷地に建築可能な建築面積を敷地面積で除した数値
     newPro.men3_7_4 = toFloat(_property.col_193);
     // 8.主要用途
     newPro.men3_8.c1 = {
@@ -419,7 +414,7 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     // ｦ.延べ面積
     newPro.men3_11_2 = toFloat(_property.col_251);
     // ﾜ.容積率
-    // newPro.men3_11_3 = // toFloat(_property.col_216); // TODO
+    newPro.men3_11_3 = toFloat(_property.col_253);
     // ﾛ.地階の住宅又は老人ホーム、福祉ホームその他これらに類するものの部分
     newPro.men3_11_6 = {
       c1: toFloat(_property.col_217),
@@ -528,29 +523,46 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men4_8 = trim(_property.col_339);
     newPro.men4_9_1 = trim(_property.col_340);
     newPro.men4_9_2 = trim(_property.col_341);
-    // newPro.men4_9_3 = trim(_property.col_341); // TODO
+
+    var number_men4_9_3 = 0;
+    if (toFloat(_property.col_342) > 0) {
+      number_men4_9_3 = 1;
+    }
+    if (toFloat(_property.col_343) > 0) {
+      number_men4_9_3 = 2;
+    }
+    if (toFloat(_property.col_344) > 0) {
+      number_men4_9_3 = 3;
+    }
+    if (toFloat(_property.col_345) > 0) {
+      number_men4_9_3 = 4;
+    }
+    newPro.men4_9_3 = number_men4_9_3;
     newPro.men4_9_4 = toFloat(_property.col_346);
     newPro.men4_9_5 = getValueMen4_9_5(_property);
     newPro.men4_9_6 = toFloat(_property.col_349);
     // 10.床 面 積
-    // newPro.men4_10_1 = toFloat(_property.col_349); // TODO
-    // newPro.men4_10_2 = toFloat(_property.col_349); // TODO
-    // newPro.men4_10_3 = toFloat(_property.col_349); // TODO
-    // newPro.men4_10_4 = toFloat(_property.col_349); // TODO
-
+    newPro.men4_10_1 = 0;
+    newPro.men4_10_2 = toFloat(_property.col_350);
+    newPro.men4_10_3 = toFloat(_property.col_351);
+    newPro.men4_10_4 = toFloat(_property.col_352);
     if (list_floor.length > 0) {
       newPro.men4_10_14 = getValueMen4_10_14(list_floor[0].f_001);
       // list 5~13 (men4_10_5 ~ men4_10_13)
       var index = 5;
+      var total_c1 = 0;
       list_floor.forEach(function (f) {
         newPro['men4_10_' + index] = {
-          c1: f.f_002,
-          c2: f.f_004,
-          c3: f.f_005,
-          c4: f.f_006
+          c1: toFloat(f.f_002),
+          c2: toFloat(f.f_004),
+          c3: toFloat(f.f_005),
+          c4: toFloat(f.f_006)
         };
+
+        total_c1 += toFloat(f.f_002);
         index++;
       });
+      newPro.men4_10_1 = total_c1;
     }
     newPro.men4_11 = trim(_property.col_353);
     newPro.men4_12 = trim(_property.col_354);

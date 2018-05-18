@@ -13,6 +13,7 @@
     </a>
     <div style="font-weight:bold; padding-top:10px;">
         <a data-ui-sref="admin.laws.list">一覧 </a> > 法令登録
+        <div ng-show="vm.busy" class="fa fa-spinner fa-spin"></div>
     </div>
     <hr>
     <!-- #コントロールボタン -->
@@ -183,5 +184,4 @@
       </div>
     </div>
   </script>
-<div ng-show="vm.busy" class="show-busy"></div>
 <div ng-include="'/modules/laws/client/views/admin/modal-confirm.client.view.html'"></div>

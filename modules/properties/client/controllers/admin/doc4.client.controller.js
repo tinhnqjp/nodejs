@@ -89,7 +89,7 @@
             var ck_ha1 = 0;
             while (ck_ha1 <= 0) {
               obj = _.find(vm.listMasterCheckSheetForm4, { id: i + '' });
-              ck_ha1 = parseInt(obj.rowspan_ck_ha1);
+              ck_ha1 = parseInt(obj.rowspan_ck_ha1, 10);
               if (ck_ha1 > 0) {
                 vm.property.doc.form4_ha1.push(i);
               } else {

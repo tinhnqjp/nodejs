@@ -54,7 +54,7 @@
      */
     function save(isValid) {
       $scope.handleShowConfirm({
-        message: 'インポートします。よろしいですか？'
+        message: 'このデータを選択します。よろしいですか？'
       }, function () {
         vm.busy = true;
         if (!vm.property.application_id) {

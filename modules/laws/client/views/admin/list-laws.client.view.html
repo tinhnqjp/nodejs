@@ -7,7 +7,7 @@
     <div>
         <strong style="font-size:20px;">法令管理</strong><br/>
     </div>
-    <div style="font-weight:bold; padding-top:10px;">一覧</div>
+    <div style="font-weight:bold; padding-top:10px;">一覧 <div ng-show="vm.busy" class="fa fa-spinner fa-spin"></div></div>
 
     <hr>
     <div class="table-responsive">
@@ -27,7 +27,7 @@
                     <th class="bg-primary" style="width:60px;">年度</th>
                     <th class="bg-primary" style="width:400px;">名称</th>
                     <th class="bg-primary" style="width:100px">最終更新日</th>
-                    <th class="bg-primary" style="width:100px;">操作<div ng-show="vm.busy" class="show-busy"></div></th>
+                    <th class="bg-primary" style="width:100px;">操作</th>
                 </tr>
             </thead>
             <tbody>
