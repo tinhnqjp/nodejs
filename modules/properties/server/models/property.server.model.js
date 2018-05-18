@@ -232,15 +232,33 @@ var PropertySchema = new Schema({
   men3_17: {
     c1: {
       times: { type: Number },
-      date: { type: Date }
+      date: { type: Date },
+      text: { type: String }
     },
     c2: {
       times: { type: Number },
-      date: { type: Date }
+      date: { type: Date },
+      text: { type: String }
     },
     c3: {
       times: { type: Number },
-      date: { type: Date }
+      date: { type: Date },
+      text: { type: String }
+    },
+    c4: {
+      times: { type: Number },
+      date: { type: Date },
+      text: { type: String }
+    },
+    c5: {
+      times: { type: Number },
+      date: { type: Date },
+      text: { type: String }
+    },
+    c6: {
+      times: { type: Number },
+      date: { type: Date },
+      text: { type: String }
     }
   },
   // 18.その他必要な事項

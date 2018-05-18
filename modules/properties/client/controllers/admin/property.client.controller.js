@@ -80,6 +80,15 @@
         if (vm.property.men3_17.c3.date) {
           vm.property.men3_17.c3.date = new Date(vm.property.men3_17.c3.date);
         }
+        if (vm.property.men3_17.c4.date) {
+          vm.property.men3_17.c4.date = new Date(vm.property.men3_17.c4.date);
+        }
+        if (vm.property.men3_17.c5.date) {
+          vm.property.men3_17.c5.date = new Date(vm.property.men3_17.c5.date);
+        }
+        if (vm.property.men3_17.c6.date) {
+          vm.property.men3_17.c6.date = new Date(vm.property.men3_17.c6.date);
+        }
       }
 
       // sum men3_7_5

@@ -494,17 +494,48 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men3_17 = {
       c1: {
         times: toFloat(_property.col_272),
-        date: trim(_property.col_273)
+        text: trim(_property.col_274)
       },
       c2: {
         times: toFloat(_property.col_275),
-        date: trim(_property.col_276)
+        text: trim(_property.col_277)
       },
       c3: {
         times: toFloat(_property.col_278),
-        date: trim(_property.col_279)
+        text: trim(_property.col_280)
+      },
+      c4: {
+        times: toFloat(_property.col_281),
+        text: trim(_property.col_283)
+      },
+      c5: {
+        times: toFloat(_property.col_284),
+        text: trim(_property.col_286)
+      },
+      c6: {
+        times: toFloat(_property.col_287),
+        text: trim(_property.col_289)
       }
     };
+    if (_property.col_273) {
+      newPro.men3_17.c1.date = _property.col_273;
+    }
+    if (_property.col_276) {
+      newPro.men3_17.c2.date = _property.col_276;
+    }
+    if (_property.col_279) {
+      newPro.men3_17.c3.date = _property.col_279;
+    }
+    if (_property.col_282) {
+      newPro.men3_17.c4.date = _property.col_282;
+    }
+    if (_property.col_285) {
+      newPro.men3_17.c5.date = _property.col_285;
+    }
+    if (_property.col_288) {
+      newPro.men3_17.c6.date = _property.col_288;
+    }
+
     // 18.その他必要な事項
     newPro.men3_18 = trim(_property.col_290);
     // 19.備考
@@ -604,6 +635,10 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
   });
 }
 
+function trimDate(string) {
+  if (!string) { return ''; }
+  return string.trim();
+}
 
 function trim(string) {
   if (!string) { return ''; }
