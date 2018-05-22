@@ -328,8 +328,6 @@ var PropertySchema = new Schema({
   men4_10_3: { type: Number },
   // 合計合計
   men4_10_4: { type: Number },
-  // 階種別
-  men4_10_14: { type: String },
   // 階別合計
   men4_10_5: [{
     c0: { type: String }, // 階種別

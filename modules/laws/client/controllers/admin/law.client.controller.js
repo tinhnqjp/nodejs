@@ -449,6 +449,10 @@
         rs_law.createOrUpdate()
           .then(function (res) {
             vm.busy = false;
+            if (!vm.law._id) {
+              console.log(res.data);
+              // $state.go('admin.laws.edit', { lawId: res.data._id });
+            }
             $scope.nofitySuccess('法令データの保存が完了しました。');
           })
           .catch(function (res) {

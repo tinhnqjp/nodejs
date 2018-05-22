@@ -59,14 +59,14 @@
                                             <td>{{ row.legal_text }}</td>
                                             <!-- checkbox form4_ha （ろ） -->
                                             <td style="text-align:center;">
-                                                <input ng-show="row.ck_ro > 0" type='checkbox' checklist-model='vm.property.doc.form4_ro' ng-click="vm.checkParent(row.id)" checklist-value="row.id"/>
+                                                <input ng-show="row.ck_ro > 0" type='checkbox' checklist-model='vm.property.doc.form4_ro' ng-click="vm.checkParent(row.id, checked)" checklist-value="row.id"/>
                                             </td>
 
                                             <!-- process rowspan of checkbox form4_ha1 （は） -->
                                             <td ng-if="row.rowspan_ck_ha1 > 0" rowspan="{{ row.rowspan_ck_ha1 }}" style="text-align:center;">
-                                                <input type='checkbox' checklist-model='vm.property.doc.form4_ha1' ng-click="vm.checkha(row.id)" checklist-value="row.id"/></td>
+                                                <input type='checkbox' checklist-model='vm.property.doc.form4_ha1' checklist-value="row.id"/></td>
                                             <td ng-if="row.rowspan_ck_ha1 === 0" style="text-align:center;">
-                                                <input type='checkbox' checklist-model='vm.property.doc.form4_ha1'  ng-click="vm.checkha(row.id)" checklist-value="row.id"/></td>
+                                                <input type='checkbox' checklist-model='vm.property.doc.form4_ha1' checklist-value="row.id"/></td>
                                             <!-- process rowspan of checkbox form4_ha2（は） -->
                                             <td ng-if="row.rowspan_ck_ha2 > 0" rowspan="{{ row.rowspan_ck_ha2 }}" style="text-align:center;">
                                                 <input ng-show="row.ck_ha2 > 0" type='checkbox' checklist-model='vm.property.doc.form4_ha2' checklist-value="row.id"/></td>

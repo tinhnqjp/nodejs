@@ -57,7 +57,7 @@
                                             <td>{{ lawData.legal_text }}</td>
                                             <!-- checkbox form1_ha （ろ） -->
                                             <td style="text-align:center;">
-                                                <input type='checkbox' checklist-model='vm.property.doc.form1_ro' checklist-value="lawData.id"/>
+                                                <input type='checkbox' checklist-model='vm.property.doc.form1_ro' checklist-value="lawData.id" ng-click="vm.checkParent(lawData.id, checked)"/>
                                             </td>
 
                                             <!-- process rowspan of checkbox form1_ha （は） -->

@@ -15,8 +15,66 @@ var path = require('path'),
   _ = require('lodash'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-function createDataComon(req, res) {
-  // TODO
+function getMasterLaw() {
+  return new Promise(function (resolve, reject) {
+    MasterLaw.find().exec(function (err, masterLawList) {
+      if (err) {
+        reject(err);
+      }
+      resolve(masterLawList);
+    });
+  });
+}
+
+function saveLawData(lawId, item) {
+  return new Promise(function (resolve, reject) {
+    var newLawData = new LawData({
+      law_id: lawId,
+      master_law: item
+    });
+    newLawData.save(function (err, result) {
+      if (err) {
+        reject(err);
+      }
+      resolve(result);
+    });
+  });
+}
+
+function saveLawDetail(lawId, law_details) {
+  return new Promise(function (resolve, reject) {
+    var newLawDedail = new LawDetail({
+      law_id: lawId,
+      law_details: law_details
+    });
+    newLawDedail.save(function (err, result) {
+      if (err) {
+        reject(err);
+      }
+      resolve(result);
+    });
+  });
+}
+
+function saveLawRegulation(lawId, todoufuken_regulations) {
+  return new Promise(function (resolve, reject) {
+    var newLawRegulation = new LawRegulation({
+      law_id: lawId,
+      todoufuken_regulations: todoufuken_regulations
+    });
+    newLawRegulation.save(function (err, result) {
+      if (err) {
+        reject(err);
+      }
+      resolve(result);
+    });
+  });
+}
+
+/**
+ * Create an law
+ */
+exports.create = function (req, res) {
   var tdfk = [
     '東京都'
   ];
@@ -91,18 +149,10 @@ function createDataComon(req, res) {
         return res.status(422).send({
           message: errorHandler.getErrorMessage(err)
         });
-      } else {
-        res.json(lawnew);
       }
     });
   });
-}
-
-/**
- * Create an law
- */
-exports.create = function (req, res) {
-  createDataComon(req, res);
+  res.json(lawnew);
 };
 
 /**
@@ -197,91 +247,22 @@ exports.delete = function (req, res) {
   var _lawId = req.law._id;
 
   removeLaw(_lawId)
-  .then(function () {
-    return Promise.all([
-      removeLawDetail(_lawId),
-      removeLawRegulation(_lawId),
-      removeLawData(_lawId),
-      removeLawRuleByLawId(_lawId)
-    ]);
-  })
-  .then(function () {
-    res.json(req.law);
-  })
-  .catch(function (err) {
-    return res.status(422).send({
-      message: errorHandler.getErrorMessage(err)
-    });
-  });
-};
-
-exports.createData = function (req, res) {
-  // TODO
-  var _lawDataId = '5a9d120fa7325530b8b5228e';
-  var _lawRules = [{
-    rule_name: 'rule 1',
-    fields: [{
-      bukken: '3',
-      deuta1: '2',
-      deuta2: '3',
-      atai: '1111',
-      type: '1'
-    },
-    {
-      bukken: '4',
-      deuta1: '7',
-      deuta2: '2',
-      atai: '22222',
-      type: '1'
-    }
-    ]
-  },
-  {
-    rule_name: 'rule 2',
-    fields: [{
-      bukken: '3',
-      deuta1: '2',
-      deuta2: '3',
-      atai: '1111',
-      type: '1'
-    }]
-  }
-  ];
-  LawData.findById(_lawDataId)
-    .exec(function (err, law_Data) {
-
-      var removeLawRule = LawRule.remove({
-        law_data_id: law_Data._id
-      }, function (err) {
-        if (err) throw err;
+    .then(function () {
+      return Promise.all([
+        removeLawDetail(_lawId),
+        removeLawRegulation(_lawId),
+        removeLawData(_lawId),
+        removeLawRuleByLawId(_lawId)
+      ]);
+    })
+    .then(function () {
+      res.json(req.law);
+    })
+    .catch(function (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
       });
-      removeLawRule.exec();
-
-      var law_rules = [];
-      _lawRules.forEach(function (item, index, array) {
-        var fields = [];
-        item.fields.forEach(function (field, inx) {
-          console.log(field);
-          var f = {
-            type: field.type,
-            name: field.bukken + ',' + field.deuta1 + ',' + field.deuta2,
-            value: field.atai
-          };
-          fields[inx] = f;
-        });
-        var newRule = new LawRule({
-          rule_name: item.rule_name,
-          law_data_id: law_Data._id,
-          law_id: law_Data.law_id,
-          fields: fields
-        });
-        newRule.save();
-        law_rules[index] = newRule;
-      });
-      law_Data.law_rules = law_rules;
-      law_Data.save();
     });
-  res.end();
 };
 
 /**
@@ -323,19 +304,19 @@ exports.lawByID = function (req, res, next, id) {
   }
 
   Law.findById(id)
-  .populate('law_details')
-  .populate('todoufuken_regulations')
-  .exec(function (err, law) {
-    if (err) {
-      return next(err);
-    } else if (!law) {
-      return res.status(404).send({
-        message: 'No law with that identifier has been found'
-      });
-    }
-    req.law = law;
-    next();
-  });
+    .populate('law_details')
+    .populate('todoufuken_regulations')
+    .exec(function (err, law) {
+      if (err) {
+        return next(err);
+      } else if (!law) {
+        return res.status(404).send({
+          message: 'No law with that identifier has been found'
+        });
+      }
+      req.law = law;
+      next();
+    });
 };
 
 exports.lawDetailById = function (req, res) {
@@ -435,16 +416,18 @@ exports.lawDataById = function (req, res) {
 
 exports.lawDataByLawId = function (req, res) {
   var _lawId = req.law._id;
-  LawData.find({ law_id: _lawId })
-    .populate('law_rules')
-    .exec(function (err, law_datas) {
-      if (err) {
-        return res.status(422).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      }
-      res.json(law_datas);
-    });
+  LawData.find({
+    law_id: _lawId
+  })
+  .populate('law_rules')
+  .exec(function (err, law_datas) {
+    if (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+    res.json(law_datas);
+  });
 };
 
 /**
@@ -497,14 +480,14 @@ exports.listMasterLawTdfk = function (req, res) {
 exports.requestLawsByYear = function (req, res) {
   var year = req.body.year;
   getLawsByYear(year)
-  .then(function (law) {
-    res.json(law);
-  })
-  .catch(function (err) {
-    return res.status(422).send({
-      message: errorHandler.getErrorMessage(err)
+    .then(function (law) {
+      res.json(law);
+    })
+    .catch(function (err) {
+      return res.status(422).send({
+        message: errorHandler.getErrorMessage(err)
+      });
     });
-  });
 };
 
 function getLawsByYear(_year) {
@@ -524,12 +507,26 @@ function getLawsByYear(_year) {
         }
       }
     })
+    .populate({
+      path: 'todoufuken_regulations',
+      model: 'LawRegulation',
+      populate: {
+        path: 'todoufuken_regulations.law_regulations',
+        model: 'LawData',
+        populate: {
+          path: 'law_rules',
+          model: 'LawRule'
+        }
+      }
+    })
     .exec(function (err, laws) {
       if (err) {
         reject(err);
       }
       if (laws.length > 1) {
-        reject({ message: '同じ年度の法令データがあります。ご確認ください。' });
+        reject({
+          message: '同じ年度の法令データがあります。ご確認ください。'
+        });
       }
       resolve(laws[0]);
     });
@@ -849,4 +846,3 @@ function saveLaw(_law) {
     });
   });
 }
-

@@ -71,6 +71,10 @@
       });
     };
 
+    vm.checkParent = function (value, checked) {
+      vm.property.doc.form1_ha = $scope.checkSheetRoHa(value, checked, vm.property.doc.form1_ha,
+        vm.property.doc.form1_ro, vm.listMasterLaw, 'form1');
+    };
     // End controller
   }
 

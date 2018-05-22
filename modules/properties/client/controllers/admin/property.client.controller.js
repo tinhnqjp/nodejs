@@ -6,11 +6,11 @@
     .controller('PropertiesAdminController', PropertiesAdminController);
 
   PropertiesAdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'Authentication',
-    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi'
+    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi', 'AutoCheckService'
   ];
 
   function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification,
-    PropertiesService, LawsApi, PropertyApi) {
+    PropertiesService, LawsApi, PropertyApi, AutoCheckService) {
     var vm = this;
 
     vm.property = property;
@@ -103,7 +103,6 @@
           vm.data_men3_5_1 = getOptionsFormMaster(3, 5, 1);
           vm.data_men3_5_2 = getOptionsFormMaster(3, 5, 2);
           vm.data_men3_5_3 = getOptionsFormMaster(3, 5, 3);
-
           vm.data_men3_7_2 = getOptionsFormMaster(3, 7, 2);
           var data_men3_8_tmp = getOptionsFormMaster(3, 8);
           vm.data_men3_8 = {
@@ -141,7 +140,7 @@
           vm.data_men4_4 = getOptionsFormMaster(4, 4);
           vm.data_men4_5 = getOptionsFormMaster(4, 5);
           vm.data_men4_8 = getOptionsFormMaster(4, 8);
-          vm.data_men4_10 = getOptionsFormMaster(4, 10, 14);
+          vm.data_men4_10 = getOptionsFormMaster(4, 10, 5);
           vm.data_men4_15 = getOptionsFormMaster(4, 15);
         })
         .catch(function (res) {
@@ -175,6 +174,7 @@
           var json = filter.json.replace(/'/g, '"');
           return JSON.parse(json);
         } catch (error) {
+          console.log(error, _bukken, _daikoumoku, _kokoumoku);
           $scope.nofityError('Format json' + error);
           return null;
         }
@@ -456,6 +456,7 @@
     };
 
     vm.listMasterLaw = [];
+    vm.listMasterLawTdfk = [];
     /**
      * automatic button
      * @param {*} propertyId
@@ -469,6 +470,7 @@
         var listChecksheet = [];
         var listCheckSheetForm4 = [];
         var listCheckSheetForm7 = [];
+        var listCheckSheetMention = [];
         getlistMasterLaw()
           .then(function (_listMasterLaw) {
             vm.listMasterLaw = _listMasterLaw;
@@ -512,8 +514,49 @@
           .then(function (_listCheckSheetForm7) {
             listCheckSheetForm7 = _listCheckSheetForm7;
 
+            if (property.men3_1_1) {
+              return getlistMasterLawTdfk();
+            }
+            return null;
+          })
+          .then(function (_listMasterLawTdfk) {
+            vm.listMasterLawTdfk = _listMasterLawTdfk;
+
+            if (property.men3_1_1) {
+              // men3_1_1 : "東京都"
+              var _promises = [];
+              law.todoufuken_regulations.todoufuken_regulations.forEach(function (tdfk) {
+                if (property.men3_1_1 === tdfk.todoufuken) {
+                  tdfk.law_regulations.forEach(function (lawData) {
+                    if (lawData.law_rules.length) {
+                      _promises.push(checkRules(property, lawData));
+                    }
+                  });
+                }
+              });
+              return Promise.all(_promises);
+            }
+            return null;
+          })
+          .then(function (_checkListTdfk) {
+            if (_checkListTdfk) {
+              listCheckSheetMention = _.map(_checkListTdfk, function (element) {
+                var treasure = _.findWhere(vm.listMasterLawTdfk, {
+                  _id: element.master_law
+                });
+                return _.extend(element, treasure);
+              });
+              return listCheckSheetMention;
+            }
+            return null;
+          })
+          .then(function (_listCheckSheetMention) {
+            listCheckSheetMention = _listCheckSheetMention;
+            console.log('listCheckSheetMention', listCheckSheetMention);
+
             vm.property.doc.form1_ro = [];
             vm.property.doc.form4_ro = [];
+            vm.property.doc.formMen_ro = [];
             listChecksheet.forEach(function (item) {
               if (item.form1_ro && item.id) {
                 vm.property.doc.form1_ro.push(item.id);
@@ -533,6 +576,12 @@
                 });
               }
             });
+
+            if (listCheckSheetMention) {
+              listCheckSheetMention.forEach(function (item) {
+                vm.property.doc.formMen_ro.push(item.id);
+              });
+            }
             console.log(vm.property.doc);
             vm.property.createOrUpdate()
               .then(function (res) {
@@ -543,6 +592,7 @@
               });
           })
           .catch(function (err) {
+            console.log(err);
             $scope.nofityError('自動チェックが失敗しました。' + err);
           });
       });
@@ -634,6 +684,18 @@
       });
     }
 
+    function getlistMasterLawTdfk() {
+      return new Promise(function (resolve, reject) {
+        LawsApi.listMasterLawTdfk()
+        .then(function (res) {
+          resolve(res.data);
+        })
+        .catch(function (res) {
+          reject(res.data.message);
+        });
+      });
+    }
+
     function checkRules(formProperty, lawData) {
       return new Promise(function (resolve, reject) {
         var FORM = 'men';
@@ -643,339 +705,44 @@
         lawData.law_rules.forEach(function (rule) {
           // OR with rules
           var validateAndFields = [];
+          var validateAndProperties = [];
           rule.fields.forEach(function (field) {
             // field.name = '3_6_1';
             var form_name = FORM + field.name;
             console.log(form_name);
-            var valueInput = formProperty[form_name];
-            // check obj or number
-            // obj: men3_7_1 {c1: 1, c2: 2, c3: 3, c4: 4, c5: 55}
-            // number: men3_6_1 60
-            if (!valueInput) {
-              validateAndFields.push(false);
-            } else {
-              // multi object
-              var isMulti = checkMulti(valueInput);
-              // AND with properties
-              var validateAndProperties = [];
-              field.properties.forEach(function (property) {
-                var formMaster;
-                switch (property.type) {
-                  case 4:
-                    validateAndProperties = processType4(isMulti, valueInput, property, validateAndProperties);
-                    break;
-                  case 3:
-                    formMaster = getFormMaster(field.name);
-                    validateAndProperties = processType3(isMulti, valueInput, property, validateAndProperties, formMaster);
-                    break;
-                  case 2:
-                    formMaster = getFormMaster(field.name);
-                    validateAndProperties = processType2(isMulti, valueInput, property, validateAndProperties, formMaster);
-                    break;
-                }
-              });
+            var resultCheckAnd = [];
 
-              var resultCheckAnd = checkedAND(validateAndProperties);
-              console.log(validateAndProperties, 'xxx', resultCheckAnd);
+            if (form_name === 'men4_10_5' || form_name === 'men4_10_6' || form_name === 'men4_10_7') {
+              validateAndProperties = AutoCheckService.processFloor(field, formProperty, form_name);
+              resultCheckAnd = AutoCheckService.checkedAND(validateAndProperties);
               validateAndFields.push(resultCheckAnd);
+            } else {
+              var valueInput = formProperty[form_name];
+              // check obj or number
+              // obj: men3_7_1 {c1: 1, c2: 2, c3: 3, c4: 4, c5: 55}
+              // number: men3_6_1 60
+              if (!valueInput) {
+                validateAndFields.push(false);
+              } else {
+                validateAndProperties = AutoCheckService.processProperties(field, valueInput, vm.listMasterProperties);
+                resultCheckAnd = AutoCheckService.checkedAND(validateAndProperties);
+                console.log(validateAndProperties, 'xxx', resultCheckAnd);
+                validateAndFields.push(resultCheckAnd);
+              }
             }
-
           });
           console.log('validateAndFields', validateAndFields);
-          validateOrRules.push(checkedAND(validateAndFields));
+          validateOrRules.push(AutoCheckService.checkedAND(validateAndFields));
         });
         // OR with rules
         console.log('validateOrRules', validateOrRules);
-        var result = checkedOR(validateOrRules);
+        var result = AutoCheckService.checkedOR(validateOrRules);
         console.log('checkedOR', result);
         resolve({
           master_law: lawData.master_law,
           form1_ro: result
         });
       });
-    }
-
-    function checkMulti(valueInput) {
-      console.log('checkMulti', (valueInput.constructor));
-      if (valueInput.constructor === Object) {
-        return 1;
-      }
-      if (valueInput.constructor === Array) {
-        return 2;
-      }
-      return 0;
-    }
-
-    function processType4(isMulti, valueInput, property, validateAndProperties) {
-      if (isMulti === 0) {
-        validateAndProperties.push(getConditonType4(valueInput, property));
-      } else {
-        var isEmpty = true;
-        for (var i in valueInput) {
-          if (valueInput[i]) {
-            isEmpty = false;
-            validateAndProperties.push(getConditonType4(valueInput[i], property));
-          }
-        }
-        if (isEmpty) {
-          validateAndProperties.push(false);
-        }
-      }
-      return validateAndProperties;
-    }
-
-    function processType3(isMulti, valueInput, property, validateAndProperties, formMaster) {
-      console.log('processType3', valueInput);
-      if (formMaster.parent_flag === 0) {
-        switch (isMulti) {
-          case 0:
-            validateAndProperties.push(checkPullDownAndCheckboxs(valueInput, property.value));
-            break;
-          case 1:
-            // this case (law: listcheckbox, properties is multi and pulldown)
-            // form4 - 4.構造
-            for (var i in valueInput) {
-              if (valueInput[i]) {
-                validateAndProperties.push(checkCheckboxs([valueInput[i]], property.value));
-              }
-            }
-            break;
-          case 2:
-            validateAndProperties.push(checkCheckboxs(valueInput, property.value));
-            break;
-        }
-      } else if (formMaster.parent_flag === 1) {
-        validateAndProperties.push(checkCheckboxsParent(valueInput, property.value, formMaster));
-      }
-
-      return validateAndProperties;
-    }
-
-    function processType2(isMulti, valueInput, property, validateAndProperties, formMaster) {
-      var isCorrect = false;
-      if (isMulti === 0) {
-        if (formMaster.mapping === 1) {
-          validateAndProperties.push(checkedEq(valueInput, property.value));
-        }
-        if (formMaster.mapping === 2) {
-          var listLaws = valueInput.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-          console.log('processType2', property, listLaws);
-          validateAndProperties.push(checkedContains(property.value, listLaws));
-        }
-      } else {
-        // valueInput have mutil properties.
-        console.log('valueInput', valueInput, isMulti);
-        for (var i in valueInput) {
-          if (formMaster.mapping === 1 && valueInput[i]) {
-            validateAndProperties.push(checkedEq(valueInput[i], property.value));
-          }
-          if (formMaster.mapping === 3 && property.value) {
-            var check = false;
-            if (checkedEq(valueInput[i].class, property.value)) {
-              check = true;
-            } else if (checkedEq(valueInput[i].division, property.value)) {
-              check = true;
-            }
-            validateAndProperties.push(check);
-          }
-        }
-      }
-
-      return validateAndProperties;
-    }
-
-    function getConditonType4(valueInput, property) {
-      var strCondition = '';
-      if (property.compare1 && property.value1) {
-        strCondition += valueInput + ' ' + property.compare1 + ' ' + property.value1;
-      }
-      if (strCondition && property.compare2 && property.value2) {
-        strCondition += ' && ';
-      }
-      if (property.compare2 && property.value2) {
-        strCondition += valueInput + ' ' + property.compare2 + ' ' + property.value2;
-      }
-      return strCondition;
-    }
-
-    function checkPullDownAndCheckboxs(value, strLaws) {
-      var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-      console.log('checkPullDownAndCheckboxs', value, listLaws);
-      var isCorrect = false;
-      listLaws.forEach(function (law) {
-        if (!isCorrect) {
-          console.log(law);
-          if (value === law) {
-            isCorrect = true;
-          }
-        }
-      });
-      return isCorrect;
-    }
-
-    function checkCheckboxs(listValue, strLaws) {
-      var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-      console.log('checkCheckboxs', listValue, listLaws);
-      var isCorrect = false;
-      listLaws.forEach(function (law) {
-        if (!isCorrect) {
-          console.log(law);
-          if (_.contains(listValue, law)) {
-            isCorrect = true;
-          }
-        }
-      });
-      return isCorrect;
-    }
-
-    function checkCheckboxsParent(listValue, strLaws, formMaster) {
-      var json = formMaster.json.replace(/'/g, '"');
-      var options = JSON.parse(json);
-      var listLaws = strLaws.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
-      var intersects = checkParentChild(options, listLaws, listValue);
-      var isCorrect = false;
-      intersects.forEach(function (item) {
-        if (!isCorrect) {
-          if (!item.hasChild || (item.hasChild && item.child.length > 0)) {
-            isCorrect = true;
-          }
-        }
-      });
-      return isCorrect;
-    }
-
-    function checkParentChild(options, listLaws, listValue) {
-      // json of master properties
-      // and list value of law
-      // -> intersect list
-      var newjson = [];
-      options.forEach(function (option) {
-        if (_.contains(listLaws, option.name)) {
-          if (option.child) {
-            var childs = [];
-            option.child.forEach(function (child) {
-              if (_.contains(listLaws, child.name)) {
-                childs.push({
-                  name: child.name
-                });
-              }
-            });
-            newjson.push({
-              name: option.name,
-              child: childs,
-              hasChild: true
-            });
-          } else {
-            newjson.push({
-              name: option.name,
-              hasChild: false
-            });
-          }
-        }
-      });
-
-      var intersects = [];
-      // intersect list (master properties + value of law)
-      // and list value of form
-      // -> intersect list
-      newjson.forEach(function (option) {
-        if (_.contains(listValue, option.name)) {
-          if (option.hasChild && option.child.length > 0) {
-            var childs = [];
-            option.child.forEach(function (child) {
-              if (_.contains(listValue, child.name)) {
-                childs.push({
-                  name: child.name
-                });
-              }
-            });
-            intersects.push({
-              name: option.name,
-              child: childs,
-              hasChild: true
-            });
-          } else {
-            intersects.push({
-              name: option.name,
-              hasChild: false
-            });
-          }
-        }
-      });
-      return intersects;
-    }
-
-    function getFormMaster(_men) {
-      var _dataField = _men.split('_');
-      var condition = {
-        bukken: parseInt(_dataField[0], 10),
-        daikoumoku: parseInt(_dataField[1], 10)
-      };
-      if (_dataField[2]) {
-        condition.kokoumoku = parseInt(_dataField[2], 10);
-      }
-      // get first
-      var filter = _.filter(vm.listMasterProperties, condition)[0];
-      // exist
-      if (filter) {
-        return filter;
-      }
-      return null;
-    }
-
-    function checkedEq(valueInput, valueProperty) {
-      var isCorrect = false;
-      console.log('checkedEq', valueInput, valueProperty);
-      if (valueInput === valueProperty) {
-        isCorrect = true;
-      }
-      return isCorrect;
-    }
-
-    function checkedContains(valueInput, listChecked) {
-      var isCorrect = false;
-      if (_.contains(listChecked, valueInput)) {
-        isCorrect = true;
-      }
-      return isCorrect;
-    }
-    /**
-     check OR in each array
-     * @param {*} conditions array [true, true, false] => false
-     */
-    function checkedOR(conditions) {
-      var isCorrect = false;
-      conditions.forEach(function (condition) {
-        if (exeEval(condition)) {
-          isCorrect = true;
-        }
-      });
-      return isCorrect;
-    }
-
-    function exeEval(string) {
-      return eval(string);
-    }
-
-    /**
-     * check AND in each array
-     * [true, true, false] => false
-     * [false, false, false] => false
-     * [true, true, true] => true
-     * @param {*} conditions array [true, true, false] => false
-     */
-    function checkedAND(conditions) {
-      var isCorrect = false;
-      if (conditions.length > 0) {
-        isCorrect = true;
-        conditions.forEach(function (condition) {
-          if (!exeEval(condition)) {
-            isCorrect = false;
-          }
-        });
-      }
-
-      return isCorrect;
     }
     // end controller
   }
@@ -986,6 +753,7 @@
       return array.indexOf(needle) >= 0;
     };
   });
+
   angular.module('properties.admin').directive('firebaseDate', function () {
     return {
       require: 'ngModel',
