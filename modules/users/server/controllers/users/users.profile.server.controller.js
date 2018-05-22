@@ -61,7 +61,7 @@ exports.update = function (req, res) {
     });
   } else {
     res.status(401).send({
-      message: 'User is not signed in'
+      message: 'ユーザのログインが必要です。'
     });
   }
 };
@@ -106,7 +106,7 @@ exports.changeProfilePicture = function (req, res) {
       });
   } else {
     res.status(401).send({
-      message: 'User is not signed in'
+      message: 'ユーザのログインが必要です。'
     });
   }
 

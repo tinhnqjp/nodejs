@@ -37,7 +37,7 @@ exports.renderIndex = function (req, res) {
  */
 exports.renderServerError = function (req, res) {
   res.status(500).render('modules/core/server/views/500', {
-    error: 'Oops! Something went wrong...'
+    error: '何かが間違っていた...'
   });
 };
 
@@ -55,11 +55,11 @@ exports.renderNotFound = function (req, res) {
     },
     'application/json': function () {
       res.json({
-        error: 'Path not found'
+        error: 'パスが見つかりません'
       });
     },
     'default': function () {
-      res.send('Path not found');
+      res.send('パスが見つかりません');
     }
   });
 };

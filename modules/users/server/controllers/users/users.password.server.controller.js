@@ -38,7 +38,7 @@ exports.changePassword = function (req, res, next) {
                       res.status(400).send(err);
                     } else {
                       res.send({
-                        message: 'Password changed successfully'
+                        message: 'パスワードの変更が完了しました。'
                       });
                     }
                   });
@@ -46,28 +46,28 @@ exports.changePassword = function (req, res, next) {
               });
             } else {
               res.status(422).send({
-                message: 'Passwords do not match'
+                message: 'パスワードが一致しません。'
               });
             }
           } else {
             res.status(422).send({
-              message: 'Current password is incorrect'
+              message: 'パスワードに誤りがあります。'
             });
           }
         } else {
           res.status(400).send({
-            message: 'User is not found'
+            message: 'ユーザが見つかりません。'
           });
         }
       });
     } else {
       res.status(422).send({
-        message: 'Please provide a new password'
+        message: '新しいスワードを入力してください。'
       });
     }
   } else {
     res.status(401).send({
-      message: 'User is not signed in'
+      message: 'ユーザのログインが必要です。'
     });
   }
 };

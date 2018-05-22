@@ -65,26 +65,26 @@
     function onUserSignupSuccess(response) {
       // If successful we assign the response to the global user model
       // vm.authentication.user = response;
-      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Signup successful!' });
+      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> サインアップ成功!' });
       // And redirect to the previous or home page
       $state.go('admin.users.list');
     }
 
     function onUserSignupError(response) {
-      Notification.error({ message: response.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Signup Error!', delay: 6000 });
+      Notification.error({ message: response.data.message, title: '<i class="glyphicon glyphicon-remove"></i> ログインエラー!', delay: 6000 });
     }
 
     function onUserSigninSuccess(response) {
       // If successful we assign the response to the global user model
       vm.authentication.user = response;
-      Notification.info({ message: 'Welcome ' + response.firstName });
+      Notification.info({ message: 'ようこそ！' + response.firstName });
       // And redirect to the previous or home page
       // $state.go($state.previous.state.name || 'home', $state.previous.params);
       $window.location.href = ('/admin/properties');
     }
 
     function onUserSigninError(response) {
-      Notification.error({ message: response.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Signin Error!', delay: 6000 });
+      Notification.error({ message: response.data.message, title: '<i class="glyphicon glyphicon-remove"></i> ログインエラー!', delay: 6000 });
     }
   }
 }());

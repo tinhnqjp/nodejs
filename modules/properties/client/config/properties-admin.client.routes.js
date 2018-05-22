@@ -20,7 +20,8 @@
         controller: 'PropertiesAdminListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: '物件データ管理'
         }
       })
       .state('admin.properties.import', {
@@ -29,7 +30,8 @@
         controller: 'PropertyImportsAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic']
+          roles: ['admin', 'jaic'],
+          pageTitle: 'NICE選択'
         },
         resolve: {
           propertyResolve: newProperty
@@ -41,7 +43,8 @@
         controller: 'PropertiesAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: '物件登録'
         },
         resolve: {
           propertyResolve: newProperty
@@ -53,7 +56,8 @@
         controller: 'PropertiesAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: '物件登録'
         },
         resolve: {
           propertyResolve: getProperty
@@ -64,7 +68,8 @@
         controller: 'Doc1AdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: '第一号様式'
         },
         resolve: {
           propertyResolve: getProperty
@@ -75,7 +80,8 @@
         controller: 'Doc4AdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: '第四号様式'
         },
         resolve: {
           propertyResolve: getProperty
@@ -86,7 +92,8 @@
         controller: 'Doc7AdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: '第七号様式'
         },
         resolve: {
           propertyResolve: getProperty
@@ -97,7 +104,8 @@
         controller: 'MentionsAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: '特記様式'
         },
         resolve: {
           propertyResolve: getProperty

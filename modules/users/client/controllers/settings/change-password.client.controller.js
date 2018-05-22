@@ -30,7 +30,7 @@
 
     function onChangePasswordSuccess(response) {
       // If successful show success message and clear form
-      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Password Changed Successfully' });
+      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> パスワードの変更が完了しました。' });
       vm.passwordDetails = null;
     }
 

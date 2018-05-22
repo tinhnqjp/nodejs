@@ -20,7 +20,8 @@
         controller: 'LawsAdminListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin'],
+          pageTitle: '法令管理一覧'
         }
       })
       .state('admin.laws.create', {
@@ -29,7 +30,8 @@
         controller: 'LawsAdminController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin']
+          roles: ['admin'],
+          pageTitle: '法令登録'
         },
         resolve: {
           lawResolve: newLaw
@@ -42,7 +44,7 @@
         controllerAs: 'vm',
         data: {
           roles: ['admin'],
-          pageTitle: '{{ lawResolve.title }}'
+          pageTitle: '法令登録'
         },
         resolve: {
           lawResolve: getLaw

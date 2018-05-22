@@ -55,7 +55,7 @@ exports.getErrorMessage = function (err) {
         message = 'Missing `newProfilePicture` field';
         break;
       default:
-        message = 'Something went wrong';
+        message = '何かが間違っていた';
     }
   } else if (err.message && !err.errors) {
     message = err.message;

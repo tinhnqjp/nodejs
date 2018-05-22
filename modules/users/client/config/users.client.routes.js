@@ -18,7 +18,8 @@
         controller: 'SettingsController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user']
+          roles: ['admin', 'jaic', 'user'],
+          pageTitle: 'アカウント登録'
         }
       })
       .state('settings.profile', {
@@ -27,7 +28,7 @@
         controller: 'EditProfileController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Settings'
+          pageTitle: 'プロファイル編集'
         }
       })
       .state('settings.password', {
@@ -36,7 +37,7 @@
         controller: 'ChangePasswordController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Settings password'
+          pageTitle: 'パスワード変更'
         }
       })
       .state('settings.accounts', {
@@ -45,7 +46,7 @@
         controller: 'SocialAccountsController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Settings accounts'
+          pageTitle: '設定アカウント'
         }
       })
       .state('settings.picture', {
@@ -54,7 +55,7 @@
         controller: 'ChangeProfilePictureController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Settings picture'
+          pageTitle: 'アカウント登録'
         }
       })
       .state('authentication', {
@@ -70,7 +71,7 @@
         controller: 'AuthenticationController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Signup',
+          pageTitle: 'サインアップ',
           roles: ['admin']
         }
       })
@@ -80,7 +81,7 @@
         controller: 'AuthenticationController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Signin'
+          pageTitle: 'ログイン'
         }
       })
       .state('password', {
@@ -94,7 +95,7 @@
         controller: 'PasswordController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Password forgot'
+          pageTitle: 'パスワードを忘れました'
         }
       })
       .state('password.reset', {
@@ -106,14 +107,14 @@
         url: '/invalid',
         templateUrl: '/modules/users/client/views/password/reset-password-invalid.client.view.html',
         data: {
-          pageTitle: 'Password reset invalid'
+          pageTitle: 'パスワードリセットが無効です'
         }
       })
       .state('password.reset.success', {
         url: '/success',
         templateUrl: '/modules/users/client/views/password/reset-password-success.client.view.html',
         data: {
-          pageTitle: 'Password reset success'
+          pageTitle: 'パスワードリセットの成功'
         }
       })
       .state('password.reset.form', {
@@ -122,7 +123,7 @@
         controller: 'PasswordController',
         controllerAs: 'vm',
         data: {
-          pageTitle: 'Password reset form'
+          pageTitle: 'パスワードリセットフォーム'
         }
       });
   }

@@ -18,13 +18,10 @@
       $rootScope.$on('$stateChangeSuccess', listener);
 
       function listener(event, toState) {
-        var applicationCoreTitle = 'MEAN.js',
+        var applicationCoreTitle = '建築確認審査システム',
           separator = ' - ',
           stateTitle = applicationCoreTitle + separator;
 
-        toState.name.split('.').forEach(function (value, index) {
-          stateTitle = stateTitle + value.charAt(0).toUpperCase() + value.slice(1) + separator;
-        });
         if (toState.data && toState.data.pageTitle) {
           stateTitle = $interpolate(stateTitle + toState.data.pageTitle + separator)(($state.$current.locals.globals));
         }

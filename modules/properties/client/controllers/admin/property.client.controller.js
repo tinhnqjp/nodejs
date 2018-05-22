@@ -175,7 +175,7 @@
           return JSON.parse(json);
         } catch (error) {
           console.log(error, _bukken, _daikoumoku, _kokoumoku);
-          $scope.nofityError('Format json' + error);
+          $scope.nofityError('フォーマットjson' + error);
           return null;
         }
       }

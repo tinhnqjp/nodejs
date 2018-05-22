@@ -2,9 +2,9 @@
 
 module.exports = {
   app: {
-    title: 'JAIC　System',
-    description: 'JAIC　System',
-    keywords: 'JAIC　System',
+    title: '建築確認審査システム',
+    description: '建築確認審査システム',
+    keywords: '建築確認審査システム',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
   db: {
@@ -28,7 +28,7 @@ module.exports = {
     secure: false
   },
   // sessionSecret should be changed for security measures and concerns
-  sessionSecret: process.env.SESSION_SECRET || 'MEAN',
+  sessionSecret: process.env.SESSION_SECRET || 'MrErArN',
   // sessionKey is the cookie session name
   sessionKey: 'sessionId',
   sessionCollection: 'sessions',

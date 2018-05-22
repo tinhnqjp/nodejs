@@ -88,7 +88,7 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     });
     console.log(value);
     var index;
-    var ckHaClick = getRowspanCkHa(obj, form)
+    var ckHaClick = getRowspanCkHa(obj, form);
     console.log('ckHaClick', ckHaClick);
     if (ckHaClick === 0) {
       console.log();
@@ -146,10 +146,10 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     switch (form) {
       case 'form1':
         rowspan_ck_ha = obj.rowspan_ck_ha;
-      break;
+        break;
       case 'form4':
         rowspan_ck_ha = obj.rowspan_ck_ha1;
-      break;
+        break;
     }
     return parseInt(rowspan_ck_ha, 10);
   }

@@ -21,7 +21,8 @@
         controller: 'UserListController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic']
+          roles: ['admin', 'jaic'],
+          pageTitle: 'アカウント管理'
         }
       })
       .state('admin.users.create', {
@@ -30,7 +31,8 @@
         controller: 'AuthenticationController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic']
+          roles: ['admin', 'jaic'],
+          pageTitle: 'アカウント登録'
         },
         resolve: {
           userResolve: newUser
@@ -42,7 +44,8 @@
         controller: 'UserController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic']
+          roles: ['admin', 'jaic'],
+          pageTitle: 'アカウント登録'
         },
         resolve: {
           userResolve: getUser

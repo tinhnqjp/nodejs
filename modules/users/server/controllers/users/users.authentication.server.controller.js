@@ -48,7 +48,8 @@ exports.signup = function (req, res) {
 exports.signin = function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
     if (err || !user) {
-      res.status(422).send(info);
+      console.log(info);
+      res.status(422).send({ message: 'ユーザーIDまたはパスワードが違います。' });
     } else {
       // Remove sensitive data before login
       user.password = undefined;
@@ -207,7 +208,7 @@ exports.removeOAuthProvider = function (req, res, next) {
 
   if (!user) {
     return res.status(401).json({
-      message: 'User is not authenticated'
+      message: 'このユーザは存在しません。'
     });
   } else if (!provider) {
     return res.status(400).send();

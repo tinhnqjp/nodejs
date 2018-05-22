@@ -63,9 +63,9 @@ var UserSchema = new Schema({
   },
   username: {
     type: String,
-    unique: 'Username already exists',
-    required: 'Please fill in a username',
-    validate: [validateUsername, 'Please enter a valid username: 3+ characters long, non restricted word, characters "_-.", no consecutive dots, does not begin or end with dots, letters a-z and numbers 0-9.'],
+    unique: 'ユーザー名は既に存在します',
+    required: 'ユーザー名を入力してください',
+    validate: [validateUsername, '大小を含む10文字以上の英数字、および記号文字（!,@,#,=,<,&など）の入力が必要です。'],
     lowercase: true,
     trim: true
   },
@@ -92,7 +92,7 @@ var UserSchema = new Schema({
       enum: ['user', 'admin', 'jaic']
     }],
     default: ['user'],
-    required: 'Please provide at least one role'
+    required: '少なくとも1つの役割を指定してください'
   },
   updated: {
     type: Date

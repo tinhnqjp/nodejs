@@ -26,7 +26,7 @@ module.exports = function () {
       }
       if (!user || !user.authenticate(password)) {
         return done(null, false, {
-          message: 'Invalid username or password (' + (new Date()).toLocaleTimeString() + ')'
+          message: 'ユーザー名かパスワードが無効 (' + (new Date()).toLocaleTimeString() + ')'
         });
       }
 

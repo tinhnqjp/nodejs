@@ -1,4 +1,4 @@
-<div id="content2" class="w3-container" style="padding-top:50px;">
+<div id="content2" class="w3-container" style="padding-top:10px;">
     <div id="myTop" class="w3-container w3-top w3-theme w3-large">
       <span id="myIntro" class="w3-hide">アカウント管理</span>
     </div>
@@ -24,7 +24,7 @@
               <input type="text" id="username" name="username" class="form-control" ng-model="vm.credentials.username" ng-pattern="vm.usernameRegex" placeholder="ユーザー名" lowercase required>
               <div ng-messages="vm.userForm.username.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">*</p>
-                <p class="help-block error-text" ng-message="pattern">Please enter a valid username: 3+ characters long, non restricted word, characters "_-.", no consecutive dots, does not begin or end with dots, letters a-z and numbers 0-9.</p>
+                <p class="help-block error-text" ng-message="pattern">大小を含む10文字以上の英数字、および記号文字（!,@,#,=,<,&など）の入力が必要です。</p>
               </div>
             </div>
             <div class="form-group" show-errors>
