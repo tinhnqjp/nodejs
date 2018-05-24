@@ -87,7 +87,6 @@
                 </div>
             </div>
             <hr>
-
             <div class="form-group row">
                 <label for="txtTodo" class="col-sm-2 col-form-label title_label">6.道路</label>
                 <div class="col-sm-12">
@@ -100,7 +99,7 @@
                         <div class="col-sm-3"></div>
                         <div class="col-sm-4">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men3_6_1" ng-model="vm.property.men3_6_1"/>
+                                <input type="text" class="form-control" name="men3_6_1" ng-model="vm.property.men3_6_1" ng-blur="vm.setDecimal('men3_6_1', 3)" to-decimal/>
                                 <span class="input-group-addon add-on flat">mm</span>
                             </div>
                         </div>
@@ -116,7 +115,7 @@
                         <div class="col-sm-3"></div>
                         <div class="col-sm-4">
                             <div class="input-group form-inline panel">
-                                <input type="number" class="form-control" name="men3_6_2" ng-model="vm.property.men3_6_2"/>
+                                <input type="text" class="form-control" name="men3_6_2" ng-model="vm.property.men3_6_2" ng-blur="vm.setDecimal('men3_6_2', 3)" to-decimal/>
                                 <span class="input-group-addon add-on flat">mm</span>
                             </div>
                         </div>

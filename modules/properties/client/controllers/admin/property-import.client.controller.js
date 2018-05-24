@@ -29,19 +29,21 @@
      * init
      */
     function initData() {
-      vm.busyLoad = true;
-      var input = { page: vm.currentPage, limit: vm.pageSize, keyword: vm.keyword };
-      PropertyApi.requestPropertiesMysql(input)
-      .then(function (res) {
-        vm.busyLoad = false;
-        vm.listproperties = res.data.list;
-        vm.totalItems = res.data.total;
-        vm.currentPage = res.data.current;
-      })
-      .catch(function (res) {
-        vm.busyLoad = false;
-        $scope.nofityError('マスターデータのロードが失敗しました。');
-      });
+      if (!vm.busyLoad) {
+        vm.busyLoad = true;
+        var input = { page: vm.currentPage, limit: vm.pageSize, keyword: vm.keyword };
+        PropertyApi.requestPropertiesMysql(input)
+        .then(function (res) {
+          vm.busyLoad = false;
+          vm.listproperties = res.data.list;
+          vm.totalItems = res.data.total;
+          vm.currentPage = res.data.current;
+        })
+        .catch(function (res) {
+          vm.busyLoad = false;
+          $scope.nofityError('マスターデータのロードが失敗しました。');
+        });
+      }
     }
 
     function search(isValid) {

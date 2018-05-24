@@ -1,11 +1,11 @@
 <style>
-    .bg-primary { background-color:#286090; color: white }
+    .bg-primary { font-weight: bold; }
 </style>
 <table class="table table-striped table-bordered table-hover">
     <tr>
         <td></td>
         <td></td>
-        <td colspan="4" style="border-bottom-style: solid; font-size: 20px; font-weight: bold">建築主　：	{{ vm.property.men15 }}</td>
+        <td colspan="4" style="border-bottom-style: solid; font-size: 20px; font-weight: bold">物件名　：	{{ vm.property.men15 }}</td>
     </tr>
     <tr>
         <td></td>
@@ -25,7 +25,6 @@
             <th class="bg-primary" colspan="3" style="text-align:center;">（い）</th>
             <th class="bg-primary" rowspan="2" style="text-align:center;">(ろ)</th>
             <th class="bg-primary" colspan="2" style="text-align:center;">（は）</th>
-            <th class="bg-primary" rowspan="2" style="text-align:center;">最終チェック項目</th>
         </tr>
         <tr>
             <th class="bg-primary" colspan="2" style="text-align:center;">条項</th>
@@ -46,129 +45,56 @@
             <td>{{ row.legal_text }}</td>
             <td style="text-align:center;">
                 <span ng-if="(vm.property.doc.form4_ro | contains:row.id) && row.ck_ro > 0">☑</span>
-                <span ng-if="!(vm.property.doc.form4_ro | contains:row.id) && row.ck_ro > 0">□</span>
+                <span ng-if="!(vm.property.doc.form4_ro | contains:row.id) && row.ck_ro > 0">－</span>
             </td>
             <!-- process rowspan of checkbox form4_ha1 （は） -->
             <td ng-if="row.rowspan_ck_ha1 > 0" rowspan="{{ row.rowspan_ck_ha1 }}" style="text-align:center;">
                 <span ng-if="vm.property.doc.form4_ha1 | contains:row.id">☑</span>
-                <span ng-if="!(vm.property.doc.form4_ha1 | contains:row.id)">□</span>
+                <span ng-if="!(vm.property.doc.form4_ha1 | contains:row.id)">－</span>
             </td>
             <td ng-if="row.rowspan_ck_ha1 === 0" style="text-align:center;">
                 <span ng-if="vm.property.doc.form4_ha1 | contains:row.id">☑</span>
-                <span ng-if="!(vm.property.doc.form4_ha1 | contains:row.id)">□</span>
+                <span ng-if="!(vm.property.doc.form4_ha1 | contains:row.id)">－</span>
             </td>
             <!-- process rowspan of checkbox form4_ha2（は） -->
             <td ng-if="row.rowspan_ck_ha2 > 0" rowspan="{{ row.rowspan_ck_ha2 }}" style="text-align:center;">
                 <span ng-if="(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
-                <span ng-if="!(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
+                <span ng-if="!(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">－</span>
             </td>
             <td ng-if="row.rowspan_ck_ha2 === 0" style="text-align:center;">
                 <span ng-if="(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">☑</span>
-                <span ng-if="!(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">□</span>
-            </td>
-            <td>
-                <span ng-if="vm.property.doc.form4_item | contains:row.id">☑</span>
-                <span ng-if="!(vm.property.doc.form4_item | contains:row.id)">□</span>
+                <span ng-if="!(vm.property.doc.form4_ha2 | contains:row.id) && (row.ck_ha2 > 0)">－</span>
             </td>
         </tr>
-        <tr><td colspan="7"></td></tr>
+        <tr><td colspan="6"></td></tr>
         <tr>
             <td colspan="3">工事監理の状況</td>
             <td colspan="3" style="text-align:center;">
                 <span ng-if="vm.property.doc.form4_ro | contains:146">☑</span>
-                <span ng-if="!(vm.property.doc.form4_ro | contains:146)">□</span>
-            </td>
-            <td style="text-align:center;">
-                <span ng-if="vm.property.doc.form4_item | contains:146">☑</span>
-                <span ng-if="!(vm.property.doc.form4_item | contains:146)">□</span>
+                <span ng-if="!(vm.property.doc.form4_ro | contains:146)">－</span>
             </td>
         </tr>
     </tbody>
 </table>
 <!-- table comment -->
-<table border="1" class="footer-table" style="border: 1px solid black; text-align: left;">
-    <tr><td colspan="7" style="border: none">検査箇所</td></tr>
-    <tr><td colspan="7" style="border: none"> </td></tr>
-    <tr><td colspan="7" style="border: none"> </td></tr>
-    <tr><td colspan="7" style="border: none"> </td></tr>
-    <tr><td colspan="7" style="border: none"> </td></tr>
+<table border="0" cellpadding=0 cellspacing=0 class="footer-table" style="border-style:solid; text-align: left;">
+    <tr><td colspan="5" style="border-style: none">備考</td></tr>
+    <tr><td colspan="5" style="border-style: none">&nbsp;</td></tr>
+    <tr><td colspan="5" style="border-style: none">&nbsp;</td></tr>
+    <tr><td colspan="5" style="border-style: none">&nbsp;</td></tr>
+    <tr><td colspan="5" style="border-style: none">&nbsp;</td></tr>
 </table>
 <!-- end table comment -->
-<table border=0 cellpadding=0 cellspacing=0 width=1775 class=xl6430789
- style='border-collapse:collapse;table-layout:fixed;width:1332pt'>
- <col class=xl6430789 width=45>
- <col class=xl6430789 width=389>
- <col class=xl6930789 width=1160>
- <col class=xl6430789 width=61 span=2>
- <col class=xl6430789 width=59>
- <tr height=20>
-  <td height=20 class=xl6530789 width=45 style='height:15.0pt;width:34pt'></td>
-  <td class=xl6630789></td>
-  <td class=xl6730789 width=1160 style='width:870pt'></td>
-  <td class=xl6630789></td>
-  <td class=xl6630789></td>
-  <td class=xl6630789></td>
- </tr>
- <tr height=20>
-  <td colspan=5 height=20 class=xl8230789 style='height:15.0pt'>（注意事項）</td>
-  <td class=xl6830789></td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>１．この様式による書類は、（い）欄に掲げる建築基準関係規定が、検査を行った建築物に適用されない場合は、当該規定に係る部分を省略した様式により作成することができます。</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>２．検査を行った建築物について（い）欄に掲げる建築基準関係規定の適用がないときは、（ろ）欄に斜線を入れてください。</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>３．検査を行った建築物の工事が施行規則第４条の４の２において準用する施行規則第４条第１項第１号に規定する図書のとおり実施されていることを確かめたときは、（い）欄</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>　に掲げる建築基準関係規定ごとに、（は）欄の該当するチェックボックスに「レ」マークを入れてください。この場合において、目視又は簡易な計測機器等による測定を行った</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>　ときは、「目視検査」の欄のチェックボックスに、動作確認を行ったときは、「動作確認」の欄のチェックボックスに、それぞれ「レ」マークを入れてください。</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>４．検査を行った建築物が法第39条第２項、法第40条、法第43条第２項、法第43条の２、法第49条から法第50条まで、法第68条の２第１項若しくは法第68条の９第１項の規定に基</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>　づく条例（これらの規定に基づく条例の規定を法第87条第２項又は第３項において準用する場合を含む。）、法第68条の９第２項の規定に基づく条例又は令第９条に掲げる法律</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>　の規定に基づく条例の規定の適用を受ける場合は、当該条例の名称及び適用を受ける規定を備考欄に記載し、又は別紙に記載して添えてください。</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>５．施行規則別記第19号様式による申請書の第４面に記載された工事監理の状況、施行規則第４条の４の２において準用する施行規則第４条第１項第２号及び第３号に規定する写</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>　真並びに施行規則第４条の４の２において準用する施行規則第４条第１項第６号の書類による検査を行ったときは、「工事監理の状況」の欄のチェックボックスに「レ」マーク</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>　を入れてください。</td>
- </tr>
- <tr height=20>
-  <td colspan=6 height=20 class=xl7030789 width=1775 style='height:15.0pt;
-  width:1332pt'>６．（は）欄の記載では書き表せない事項で特に報告すべき事項は、備考欄に記載し、又は別紙に記載して添えてください。</td>
- </tr>
- <![if supportMisalignedColumns]>
- <tr height=0 style='display:none'>
-  <td width=45 style='width:34pt'></td>
-  <td width=389 style='width:292pt'></td>
-  <td width=1160 style='width:870pt'></td>
-  <td width=61 style='width:46pt'></td>
-  <td width=61 style='width:46pt'></td>
-  <td width=59 style='width:44pt'></td>
- </tr>
- <![endif]>
+<table class="footer-table" style="text-align: left; font-family: ＭＳ 明朝; font-size: 10px;">
+    <tr>
+        <td colspan="6" style="border: none">
+                （注意事項）<br>
+１．この様式による書類は、（い）欄に掲げる建築基準関係規定が、検査を行った建築物に適用されない場合は、当該規定に係る部分を省略した様式により作成することができます。<br>
+２．検査を行った建築物について（い）欄に掲げる建築基準関係規定の適用がないときは、（ろ）欄に斜線を入れてください。<br>
+３．検査を行った建築物の工事が施行規則第４条の４の２において準用する施行規則第４条第１項第１号に規定する図書のとおり実施されていることを確かめたときは、（い）欄に掲げる建築基準関係規定ごとに、（は）欄の該当するチェックボックスに「レ」マークを入れてください。この場合において、目視又は簡易な計測機器等による測定を行ったときは、「目視検査」の欄のチェックボックスに、動作確認を行ったときは、「動作確認」の欄のチェックボックスに、それぞれ「レ」マークを入れてください。<br>
+４．検査を行った建築物が法第39条第２項、法第40条、法第43条第２項、法第43条の２、法第49条から法第50条まで、法第68条の２第１項若しくは法第68条の９第１項の規定に基づく条例（これらの規定に基づく条例の規定を法第87条第２項又は第３項において準用する場合を含む。）、法第68条の９第２項の規定に基づく条例又は令第９条に掲げる法律の規定に基づく条例の規定の適用を受ける場合は、当該条例の名称及び適用を受ける規定を備考欄に記載し、又は別紙に記載して添えてください。<br>
+５．施行規則別記第19号様式による申請書の第４面に記載された工事監理の状況、施行規則第４条の４の２において準用する施行規則第４条第１項第２号及び第３号に規定する写真並びに施行規則第４条の４の２において準用する施行規則第４条第１項第６号の書類による検査を行ったときは、「工事監理の状況」の欄のチェックボックスに「レ」マークを入れてください。<br>
+６．（は）欄の記載では書き表せない事項で特に報告すべき事項は、備考欄に記載し、又は別紙に記載して添えてください。<br>
+        </td>
+    </tr>
 </table>

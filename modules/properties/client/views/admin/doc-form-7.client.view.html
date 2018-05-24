@@ -41,7 +41,7 @@
                                                 <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
                                             </tr>
                                             <tr>
-                                                <th class="bg-primary" colspan="4">検査箇所</th>
+                                                <th class="bg-primary" colspan="4">備考</th>
                                                 <th class="bg-primary">検査事項</th>
                                                 <th class="bg-primary" colspan="2">目視検査</th>
                                             </tr>
@@ -52,10 +52,10 @@
                                                 <td ng-if="row.rsp_item1 == 0" colspan="4">{{ row.item1 }}</td>
 
                                                 <td>{{ row.legal_text }}</td>
-                                                <td colspan="2" style="text-align:center;">
+                                                <td colspan="2" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_ro1 | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_ro1' checklist-value="row.id"/>
                                                 </td>
-                                                <td style="text-align:center;">
+                                                <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_item | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_item' checklist-value="row.id"/>
                                                 </td>
                                             </tr>
@@ -72,7 +72,7 @@
                                                 <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
                                             </tr>
                                             <tr>
-                                                <th class="bg-primary" colspan="4">検査箇所</th>
+                                                <th class="bg-primary" colspan="4">備考</th>
                                                 <th class="bg-primary">検査事項</th>
                                                 <th class="bg-primary">目視<br>検査</th>
                                                 <th class="bg-primary">監理<br>報告</th>
@@ -85,13 +85,13 @@
                                                 <td ng-if="row.rsp_item4 > 0" rowspan="{{ row.rsp_item4 }}">{{ row.item4 }}</td>
                                                 <td ng-if="row.rsp_item4 == 0">{{ row.item4 }}</td>
                                                 <td >{{ row.legal_text }}</td>
-                                                <td style="text-align:center;">
+                                                <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_ro1 | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_ro1' checklist-value="row.id"/>
                                                 </td>
-                                                <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;">
+                                                <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_ro1 | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_ro2' checklist-value="row.id"/>
                                                 </td>
-                                                <td style="text-align:center;">
+                                                <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_item | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_item' checklist-value="row.id"/>
                                                 </td>
                                             </tr>
@@ -108,7 +108,7 @@
                                                 <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
                                             </tr>
                                             <tr>
-                                                <th class="bg-primary" colspan="4">検査箇所</th>
+                                                <th class="bg-primary" colspan="4">備考</th>
                                                 <th class="bg-primary">検査事項</th>
                                                 <th class="bg-primary">目視<br>検査</th>
                                                 <th class="bg-primary">監理<br>報告</th>
@@ -131,13 +131,13 @@
                                                 <td ng-if="row.rsp_item4 > 0" rowspan="{{ row.rsp_item4 }}">{{ row.item4 }}</td>
                                                 <td ng-if="row.rsp_item4 == 0">{{ row.item4 }}</td>
                                                 <td >{{ row.legal_text }}</td>
-                                                <td style="text-align:center;">
+                                                <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_ro1 | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_ro1' checklist-value="row.id"/>
                                                 </td>
-                                                <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;">
+                                                <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_ro1 | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_ro2' checklist-value="row.id"/>
                                                 </td>
-                                                <td style="text-align:center;">
+                                                <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_item | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_item' checklist-value="row.id"/>
                                                 </td>
                                             </tr>
@@ -154,7 +154,7 @@
                                                 <th class="bg-primary" rowspan="2">最終チェック<br>項目</th>
                                             </tr>
                                             <tr>
-                                                <th class="bg-primary" colspan="4">検査箇所</th>
+                                                <th class="bg-primary" colspan="4">備考</th>
                                                 <th class="bg-primary">検査事項</th>
                                                 <th class="bg-primary">目視<br>検査</th>
                                                 <th class="bg-primary">監理<br>報告</th>
@@ -171,13 +171,13 @@
                                                 <td ng-if="row.rsp_item4 > 0" rowspan="{{ row.rsp_item4 }}">{{ row.item4 }}</td>
                                                 <td ng-if="row.rsp_item4 == 0">{{ row.item4 }}</td>
                                                 <td >{{ row.legal_text }}</td>
-                                                <td style="text-align:center;">
+                                                <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_ro1 | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_ro1' checklist-value="row.id"/>
                                                 </td>
-                                                <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;">
+                                                <td ng-if="row.rsp_ck_ro1 > 0" rowspan="{{ row.rsp_ck_ro1 }}" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_ro1 | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_ro2' checklist-value="row.id"/>
                                                 </td>
-                                                <td style="text-align:center;">
+                                                <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form7_item | contains:row.id)}">
                                                     <input type='checkbox' checklist-model='vm.property.doc.form7_item' checklist-value="row.id"/>
                                                 </td>
                                             </tr>

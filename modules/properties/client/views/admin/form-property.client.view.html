@@ -12,7 +12,11 @@
         キャンセル
     </a>
     <button type="button" ng-if="vm.property._id" ng-click="vm.autoChecked(vm.property._id)"
-         class="btn btn-info mg15r pull-right"><i class="glyphicon glyphicon-ok"></i> 自動チェック</button>
+         class="btn btn-info mg15r pull-right">
+         <i ng-if="!vm.busyLoad" class="glyphicon glyphicon-ok"></i>
+         <span ng-if="vm.busyLoad" class="fa fa-spinner fa-spin"></span>
+          自動チェック
+    </button>
     <div style="font-weight:bold; padding-top:10px;">
         <a data-ui-sref="admin.properties.list">一覧 </a> > 物件登録
     </div>
@@ -73,7 +77,7 @@
                                     <div class="col-md-6">
                                         <label class="title_label">物件名</label>
                                         <div class="input-group form-inline panel">
-                                            <span class="input-group-addon">氏名</span>
+                                            <span class="input-group-addon">名称</span>
                                             <input type="text" class="form-control" ng-model="vm.property.men15" name="men15" maxlength="50"/>
                                         </div>
                                     </div>

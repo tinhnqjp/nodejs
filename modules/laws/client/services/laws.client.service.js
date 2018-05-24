@@ -77,14 +77,14 @@
     this.listMasterProperties = function () {
       return $http.get('/api/listMasterProperties', null, { ignoreLoadingBar: true });
     };
-    this.listMasterLaw = function () {
-      return $http.get('/api/listMasterLaw', null, { ignoreLoadingBar: true });
+    this.listMasterLawDetail = function () {
+      return $http.get('/api/listMasterLawDetail', null, { ignoreLoadingBar: true });
     };
     this.listMasterLawTdfk = function () {
       return $http.get('/api/listMasterLawTdfk', null, { ignoreLoadingBar: true });
     };
-    this.requestLawsByYear = function (year) {
-      return $http.post('/api/requestLawsByYear', { year: year }, { ignoreLoadingBar: true });
+    this.listLawsByYear = function (year) {
+      return $http.post('/api/listLawsByYear', { year: year }, { ignoreLoadingBar: true });
     };
     return this;
   }

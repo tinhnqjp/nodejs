@@ -5,11 +5,11 @@
     .module('properties.admin')
     .controller('Doc4AdminController', Doc4AdminController);
 
-  Doc4AdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'PropertyService',
+  Doc4AdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve',
     'Authentication', 'Notification', 'Excel', '$timeout', 'LawsApi', 'PropertyApi', '$stateParams'
   ];
 
-  function Doc4AdminController($scope, $state, $window, property, Authentication, PropertyService,
+  function Doc4AdminController($scope, $state, $window, property, Authentication,
     Notification, Excel, $timeout, LawsApi, PropertyApi, $stateParams) {
     var vm = this;
     vm.propertyId;
@@ -69,7 +69,7 @@
       var href = $scope.exportExcel('#tableToExport', 'チェックシート');
       $scope.handleShowDownload({
         href: href,
-        file: 'ダウンロード.xls',
+        file: '第四号様式_' + vm.property.men17 + '.xls',
         text: 'ダウンロード'
       });
     };

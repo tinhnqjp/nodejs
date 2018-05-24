@@ -6,7 +6,8 @@
     .controller('LawsAdminController', LawsAdminController);
 
   LawsAdminController.$inject = ['$scope', '$state', '$window', 'lawResolve',
-    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce', '$timeout'];
+    'Authentication', 'Notification', 'LawsService', 'LawsApi', '$uibModal', '$sce', '$timeout'
+  ];
 
   function LawsAdminController($scope, $state, $window, law, Authentication,
     Notification, LawsService, LawsApi, $uibModal, $sce, $timeout) {
@@ -20,21 +21,55 @@
     vm.showLawsRule = showLawsRule;
     vm.formLawsRule = {};
     vm.save = save;
-    vm.years = [
-      { id: 2020, name: '2020年' },
-      { id: 2019, name: '2019年' },
-      { id: 2018, name: '2018年' },
-      { id: 2017, name: '2017年' },
-      { id: 2016, name: '2016年' },
-      { id: 2015, name: '2015年' },
-      { id: 2014, name: '2014年' }
+    vm.years = [{
+      id: 2020,
+      name: '2020年'
+    },
+    {
+      id: 2019,
+      name: '2019年'
+    },
+    {
+      id: 2018,
+      name: '2018年'
+    },
+    {
+      id: 2017,
+      name: '2017年'
+    },
+    {
+      id: 2016,
+      name: '2016年'
+    },
+    {
+      id: 2015,
+      name: '2015年'
+    },
+    {
+      id: 2014,
+      name: '2014年'
+    }
     ];
-    vm.typeValidation = [
-      { id: '==', name: '等しい' },
-      { id: '>=', name: '以上' },
-      { id: '<=', name: '以下' },
-      { id: '<', name: '未満' },
-      { id: '>', name: '超過' }
+    vm.typeValidation = [{
+      id: '==',
+      name: '等しい'
+    },
+    {
+      id: '>=',
+      name: '以上'
+    },
+    {
+      id: '<=',
+      name: '以下'
+    },
+    {
+      id: '<',
+      name: '未満'
+    },
+    {
+      id: '>',
+      name: '超過'
+    }
     ];
 
     vm.tmpLawDetails = [];
@@ -449,10 +484,6 @@
         rs_law.createOrUpdate()
           .then(function (res) {
             vm.busy = false;
-            if (!vm.law._id) {
-              console.log(res.data);
-              // $state.go('admin.laws.edit', { lawId: res.data._id });
-            }
             $scope.nofitySuccess('法令データの保存が完了しました。');
           })
           .catch(function (res) {
@@ -491,9 +522,9 @@
      */
     vm.download = function (isHourei, title, regulation_id) {
       vm.busy = true;
-      requestDataByLawId(law._id)
-        .then(function (lawDataList) {
-          vm.lawDataListUpdate = lawDataList;
+      LawsApi.requestDataByLawId(law._id)
+        .then(function (rs) {
+          vm.lawDataListUpdate = rs.data;
         })
         .then(function () {
           // 法令
@@ -563,7 +594,7 @@
                 item.daikoumoku === field.deuta1 &&
                 item.kokoumoku === field.deuta2;
             });
-            if (tmpPropertiesKo) {
+            if (tmpPropertiesKo.length) {
               field.bukken_name = tmpPropertiesKo[0].bukken_name;
               field.daikoumoku_name = tmpPropertiesKo[0].daikoumoku_name;
               field.kokoumoku_name = tmpPropertiesKo[0].kokoumoku_name;
@@ -574,33 +605,6 @@
       return rules;
     }
 
-    /**
-     * Get law data by law id
-     * @param {*} _lawId law
-     */
-    function requestDataByLawId(_lawId) {
-      return new Promise(function (resolve, reject) {
-        LawsApi.requestDataByLawId(_lawId)
-          .then(function (res) {
-            resolve(res.data);
-          })
-          .catch(function (res) {
-            reject(res.data.message);
-          });
-      });
-    }
-
-    function requesLawByLawId(_lawId) {
-      return new Promise(function (resolve, reject) {
-        LawsApi.requestDataByLawId(_lawId)
-          .then(function (res) {
-            resolve(res.data);
-          })
-          .catch(function (res) {
-            reject(res.data.message);
-          });
-      });
-    }
     /**
      * Get law by law id
      * @param {*} _lawId law

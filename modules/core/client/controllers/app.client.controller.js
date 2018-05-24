@@ -2,9 +2,9 @@
 
 angular.module('core').controller('AppController', AppController);
 
-AppController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'ngDialog', 'notifyService', 'Excel'];
+AppController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'ngDialog', 'notifyService', 'Excel', 'PropertyApi'];
 
-function AppController($scope, $timeout, $window, Authentication, ngDialog, notifyService, Excel) {
+function AppController($scope, $timeout, $window, Authentication, ngDialog, notifyService, Excel, PropertyApi) {
   $scope.Authentication = Authentication;
   $scope.handleShowConfirm = handleShowConfirm;
   $scope.handleShowDownload = handleShowDownload;
@@ -86,12 +86,9 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     var obj = _.find(listMaster, {
       id: value.toString()
     });
-    console.log(value);
     var index;
     var ckHaClick = getRowspanCkHa(obj, form);
-    console.log('ckHaClick', ckHaClick);
     if (ckHaClick === 0) {
-      console.log();
       if (checked) {
         form4_ha1.push(value.toString());
       } else {
@@ -108,7 +105,6 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
           id: i.toString()
         });
         ck_ha1 = getRowspanCkHa(obj, form);
-        console.log('ck_ha1', ck_ha1);
         if (ck_ha1 > 0) {
           if (checked && !_.contains(form4_ha1, i.toString())) {
             form4_ha1.push(i.toString());
@@ -141,7 +137,6 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
   }
 
   function getRowspanCkHa(obj, form) {
-    console.log(obj);
     var rowspan_ck_ha = 0;
     switch (form) {
       case 'form1':
@@ -153,4 +148,5 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     }
     return parseInt(rowspan_ck_ha, 10);
   }
+
 }

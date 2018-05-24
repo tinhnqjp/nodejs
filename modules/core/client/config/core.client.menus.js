@@ -34,7 +34,7 @@
       title: 'ユーザ情報設定',
       parrent_state: 'settings',
       state: 'settings.profile',
-      roles: ['admin', 'jaic', 'user']
+      roles: []
     });
 
     menuService.addMenu('account', {

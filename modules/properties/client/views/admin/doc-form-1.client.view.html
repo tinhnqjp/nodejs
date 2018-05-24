@@ -45,7 +45,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="lawData in vm.listMasterLaw">
+                                        <tr ng-repeat="lawData in vm.listMasterLawDetail">
                                             <!-- process rowspan and colspan of item1 & item2 条項 -->
                                             <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}">{{ lawData.item1 }}</td>
                                             <td ng-if="lawData.rowspan > 0">{{ lawData.item2 }}</td>
@@ -56,25 +56,28 @@
                                             <!-- legal_text -->
                                             <td>{{ lawData.legal_text }}</td>
                                             <!-- checkbox form1_ha （ろ） -->
-                                            <td style="text-align:center;">
-                                                <input type='checkbox' checklist-model='vm.property.doc.form1_ro' checklist-value="lawData.id" ng-click="vm.checkParent(lawData.id, checked)"/>
+                                            <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form1_ro | contains:lawData.id)}">
+                                                <input type='checkbox' checklist-model='vm.property.doc.form1_ro' 
+                                                checklist-value="lawData.id" ng-click="vm.checkParent(lawData.id, checked)"/>
                                             </td>
 
                                             <!-- process rowspan of checkbox form1_ha （は） -->
-                                            <td ng-if="lawData.rowspan_ck_ha > 0" rowspan="{{ lawData.rowspan_ck_ha }}" style="text-align:center;">
+                                            <td ng-class="{'checked': (vm.property.doc.form1_ha | contains:lawData.id)}"
+                                            ng-if="lawData.rowspan_ck_ha > 0" rowspan="{{ lawData.rowspan_ck_ha }}" style="text-align:center;">
                                                 <input type='checkbox' checklist-model='vm.property.doc.form1_ha' checklist-value="lawData.id"/></td>
-                                            <td ng-if="lawData.rowspan_ck_ha === 0" style="text-align:center;">
+                                            <td  ng-class="{'checked': (vm.property.doc.form1_ha | contains:lawData.id)}"
+                                            ng-if="lawData.rowspan_ck_ha === 0" style="text-align:center;">
                                                 <input type='checkbox' checklist-model='vm.property.doc.form1_ha' checklist-value="lawData.id"/></td>
                                             
                                             <!-- process rowspan of checkbox item  最終チェック 項目-->
-                                            <td style="text-align:center;">
+                                            <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form1_item | contains:lawData.id)}">
                                                 <input type='checkbox' checklist-model='vm.property.doc.form1_item' checklist-value="lawData.id">
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div ng-include="'/modules/properties/client/views/admin/doc-form-1-export.client.view.html'" ng-if="vm.listMasterLaw" class="col-sm-12" 
+                            <div ng-include="'/modules/properties/client/views/admin/doc-form-1-export.client.view.html'" ng-if="vm.listMasterLawDetail" class="col-sm-12" 
                                 id="tableToExport" style="display: none"></div>
                         </div>
                     </div>

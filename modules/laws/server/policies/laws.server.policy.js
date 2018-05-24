@@ -20,6 +20,21 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/laws/:lawId',
       permissions: '*'
+    }, {
+      resources: '/api/laws/:lawId/*',
+      permissions: '*'
+    }]
+  }, {
+    roles: ['jaic'],
+    allows: [{
+      resources: '/api/laws',
+      permissions: '*'
+    }, {
+      resources: '/api/laws/:lawId',
+      permissions: '*'
+    }, {
+      resources: '/api/laws/:lawId/*',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -31,12 +46,36 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }]
   }, {
-    roles: ['guest'],
+    roles: ['admin', 'jaic', 'user'],
     allows: [{
-      resources: '/api/laws',
+      resources: '/api/laws/:lawId/requestDetail',
+      permissions: ['post']
+    }, {
+      resources: '/api/laws/:lawId/requestRegulation',
+      permissions: ['post']
+    }, {
+      resources: '/api/laws/:lawId/requestData',
+      permissions: ['post']
+    }, {
+      resources: '/api/laws/:lawId/requestDataByLawId',
+      permissions: ['post']
+    }, {
+      resources: '/api/laws/:lawId/postLawData',
+      permissions: ['post']
+    }, {
+      resources: '/api/laws/:lawId/copyLaw',
+      permissions: ['post']
+    }, {
+      resources: '/api/listMasterProperties',
       permissions: ['get']
     }, {
-      resources: '/api/laws/:lawId',
+      resources: '/api/listMasterLawDetail',
+      permissions: ['get']
+    }, {
+      resources: '/api/listMasterLawTdfk',
+      permissions: ['get']
+    }, {
+      resources: '/api/listLawsByYear',
       permissions: ['get']
     }]
   }]);
@@ -47,7 +86,7 @@ exports.invokeRolesPolicies = function () {
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-
+  console.log(roles);
   // If an law is being processed and the current user created it then allow any manipulation
   if (req.law && req.user && req.law.user && req.law.user.id === req.user.id) {
     return next();

@@ -58,27 +58,34 @@
                                             <!-- legal_text -->
                                             <td>{{ row.legal_text }}</td>
                                             <!-- checkbox form4_ha （ろ） -->
-                                            <td style="text-align:center;">
+                                            <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_ro | contains:row.id)}">
                                                 <input ng-show="row.ck_ro > 0" type='checkbox' checklist-model='vm.property.doc.form4_ro' ng-click="vm.checkParent(row.id, checked)" checklist-value="row.id"/>
                                             </td>
 
                                             <!-- process rowspan of checkbox form4_ha1 （は） -->
-                                            <td ng-if="row.rowspan_ck_ha1 > 0" rowspan="{{ row.rowspan_ck_ha1 }}" style="text-align:center;">
+                                            <td ng-if="row.rowspan_ck_ha1 > 0" rowspan="{{ row.rowspan_ck_ha1 }}" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_ha1 | contains:row.id)}">
                                                 <input type='checkbox' checklist-model='vm.property.doc.form4_ha1' checklist-value="row.id"/></td>
-                                            <td ng-if="row.rowspan_ck_ha1 === 0" style="text-align:center;">
+                                            <td ng-if="row.rowspan_ck_ha1 === 0" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_ha1 | contains:row.id)}">
                                                 <input type='checkbox' checklist-model='vm.property.doc.form4_ha1' checklist-value="row.id"/></td>
                                             <!-- process rowspan of checkbox form4_ha2（は） -->
-                                            <td ng-if="row.rowspan_ck_ha2 > 0" rowspan="{{ row.rowspan_ck_ha2 }}" style="text-align:center;">
+                                            
+                                            <td ng-if="row.rowspan_ck_ha2 > 0" rowspan="{{ row.rowspan_ck_ha2 }}" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_ha2 | contains:row.id)}">
                                                 <input ng-show="row.ck_ha2 > 0" type='checkbox' checklist-model='vm.property.doc.form4_ha2' checklist-value="row.id"/></td>
-                                            <td ng-if="row.rowspan_ck_ha2 === 0" style="text-align:center;">
+                                            <td ng-if="row.rowspan_ck_ha2 === 0" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_ha2 | contains:row.id)}">
                                                 <input ng-show="row.ck_ha2 > 0" type='checkbox' checklist-model='vm.property.doc.form4_ha2' checklist-value="row.id"/></td>
-                                            <td style="text-align:center;"><input type='checkbox' checklist-model='vm.property.doc.form4_item' checklist-value="row.id"/></td>
+                                            <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_item | contains:row.id)}">
+                                                <input type='checkbox' checklist-model='vm.property.doc.form4_item' checklist-value="row.id"/>
+                                            </td>
                                         </tr>
                                         <tr><td colspan="7"></td></tr>
                                         <tr>
                                             <td colspan="3">工事監理の状況</td>
-                                            <td colspan="3" style="text-align:center;"><input type='checkbox' checklist-model='vm.property.doc.form4_ro' checklist-value="146"/></td>
-                                            <td style="text-align:center;"><input type='checkbox' checklist-model='vm.property.doc.form4_item' checklist-value="146"/></td>
+                                            <td colspan="3" style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_ro | contains:146)}">
+                                                <input type='checkbox' checklist-model='vm.property.doc.form4_ro' checklist-value="146"/>
+                                            </td>
+                                            <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.form4_item | contains:146)}">
+                                                <input type='checkbox' checklist-model='vm.property.doc.form4_item' checklist-value="146"/>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

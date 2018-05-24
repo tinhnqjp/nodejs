@@ -36,7 +36,7 @@
 
           vm.listTable1 = _.filter(list, { table: 1 });
           // ['木造','木造（枠組壁工法）','組積造','補強コンクリートブロック造','鉄骨造','鉄筋コンクリート造','鉄骨鉄筋コンクリート造','その他']
-          if (vm.property.men4_4) {
+          if (vm.property.men4_4 && vm.property.men4_4.c1) {
             var men4_4_c1 = vm.property.men4_4.c1;
             if (men4_4_c1 === '木造' || men4_4_c1 === '木造（枠組壁工法）') {
               vm.listTable2 = _.filter(list, { table: 2 });
@@ -47,6 +47,10 @@
             if (men4_4_c1 === '補強コンクリートブロック造' || men4_4_c1 === '鉄筋コンクリート造' || men4_4_c1 === '鉄骨鉄筋コンクリート造') {
               vm.listTable4 = _.filter(list, { table: 4 });
             }
+          } else {
+            vm.listTable2 = _.filter(list, { table: 2 });
+            vm.listTable3 = _.filter(list, { table: 3 });
+            vm.listTable4 = _.filter(list, { table: 4 });
           }
         })
         .catch(function (res) {
@@ -86,7 +90,7 @@
       var href = $scope.exportExcel('#tableToExport', 'チェックシート');
       $scope.handleShowDownload({
         href: href,
-        file: 'ダウンロード.xls',
+        file: '第七号様式_' + vm.property.men17 + '.xls',
         text: 'ダウンロード'
       });
     };

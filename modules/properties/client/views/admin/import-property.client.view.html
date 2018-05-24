@@ -68,15 +68,12 @@
     </form>
     <div style="width:100%; text-align:center;">
         <hr>
-        <ul uib-pagination
-            total-items="vm.totalItems"
-            items-per-page="vm.pageSize"
-            previous-text="前"
-            force-ellipses="true"
-            next-text="次"
-            max-size=10
-            ng-model="vm.currentPage" ng-click="vm.pageChanged()">
+        <ul uib-pagination ng-click="vm.pageChanged()" total-items="vm.totalItems" ng-model="vm.currentPage" 
+    max-size="10" ng-disabled="vm.busyLoad" class="pagination-sm" boundary-link-numbers="true" previous-text="前" next-text="次"
         </ul>
+    </div>
+    <div style="width:100%; text-align:center;">
+        <span ng-if="vm.busyLoad"  class="fa fa-spinner fa-spin"></span>
     </div>
     <!-- #入力Form -->
 </div>

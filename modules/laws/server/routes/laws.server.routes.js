@@ -4,9 +4,12 @@
  * Module dependencies
  */
 var lawsPolicy = require('../policies/laws.server.policy'),
+  lawsMaster = require('../controllers/laws-master.server.controller'),
   laws = require('../controllers/laws.server.controller');
 
 module.exports = function (app) {
+  app.route('/api/createLawsData').post(laws.createData);
+
   // Laws collection routes
   app.route('/api/laws').all(lawsPolicy.isAllowed)
     .get(laws.list)
@@ -18,18 +21,30 @@ module.exports = function (app) {
     .put(laws.update)
     .delete(laws.delete);
 
-  app.route('/api/laws/:lawId/requestDetail').post(laws.lawDetailById);
-  app.route('/api/laws/:lawId/requestRegulation').post(laws.lawRegulationById);
-  app.route('/api/laws/:lawId/requestData').post(laws.lawDataById);
-  app.route('/api/laws/:lawId/requestDataByLawId').post(laws.lawDataByLawId);
-  app.route('/api/laws/:lawId/postLawData').post(laws.postLawData);
-  app.route('/api/laws/:lawId/copyLaw').post(laws.copy);
+  app.route('/api/laws/:lawId/requestDetail')
+    .all(lawsPolicy.isAllowed)
+    .post(laws.lawDetailById);
+  app.route('/api/laws/:lawId/requestRegulation')
+    .all(lawsPolicy.isAllowed)
+    .post(laws.lawRegulationById);
+  app.route('/api/laws/:lawId/requestData')
+    .all(lawsPolicy.isAllowed)
+    .post(laws.lawDataById);
+  app.route('/api/laws/:lawId/requestDataByLawId')
+    .all(lawsPolicy.isAllowed)
+    .post(laws.lawDataByLawId);
+  app.route('/api/laws/:lawId/postLawData')
+    .all(lawsPolicy.isAllowed)
+    .post(laws.postLawData);
+  app.route('/api/laws/:lawId/copyLaw')
+    .all(lawsPolicy.isAllowed)
+    .post(laws.copy);
 
   // Finish by binding the law middleware
   app.param('lawId', laws.lawByID);
 
-  app.route('/api/listMasterProperties').get(laws.listMasterProperties);
-  app.route('/api/listMasterLaw').get(laws.listMasterLaw);
-  app.route('/api/listMasterLawTdfk').get(laws.listMasterLawTdfk);
-  app.route('/api/requestLawsByYear').post(laws.requestLawsByYear);
+  app.route('/api/listMasterProperties').get(lawsMaster.listMasterProperties);
+  app.route('/api/listMasterLawDetail').get(lawsMaster.listMasterLawDetail);
+  app.route('/api/listMasterLawTdfk').get(lawsMaster.listMasterLawTdfk);
+  app.route('/api/listLawsByYear').post(lawsMaster.listLawsByYear);
 };

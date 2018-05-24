@@ -6,11 +6,11 @@
     .controller('PropertiesAdminController', PropertiesAdminController);
 
   PropertiesAdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'Authentication',
-    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi', 'AutoCheckService'
+    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi', 'AutoCheckService', 'CommonPromiseService'
   ];
 
   function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification,
-    PropertiesService, LawsApi, PropertyApi, AutoCheckService) {
+    PropertiesService, LawsApi, PropertyApi, AutoCheckService, CommonPromiseService) {
     var vm = this;
 
     vm.property = property;
@@ -51,6 +51,7 @@
     vm.goukei_4_10 = goukei_4_10;
     vm.selectParent3_8 = selectParent3_8;
     vm.selectParent4_2 = selectParent4_2;
+    vm.busyLoad = false;
     initData();
 
     /**
@@ -91,7 +92,6 @@
         }
       }
 
-      // sum men3_7_5
       vm.property.men3_7_5_1 = vm.property.men3_7_1_1 + vm.property.men3_7_1_2 + vm.property.men3_7_1_3 + vm.property.men3_7_1_4;
       // get data from master properties
       LawsApi.listMasterProperties()
@@ -174,7 +174,7 @@
           var json = filter.json.replace(/'/g, '"');
           return JSON.parse(json);
         } catch (error) {
-          console.log(error, _bukken, _daikoumoku, _kokoumoku);
+          // console.log(error, _bukken, _daikoumoku, _kokoumoku);
           $scope.nofityError('フォーマットjson' + error);
           return null;
         }
@@ -455,7 +455,7 @@
       }
     };
 
-    vm.listMasterLaw = [];
+    vm.listMasterLawDetail = [];
     vm.listMasterLawTdfk = [];
     /**
      * automatic button
@@ -465,29 +465,30 @@
       $scope.handleShowConfirm({
         message: '自動チェックします。よろしいですか？'
       }, function () {
+        vm.busyLoad = true;
         var property;
         var law;
         var listChecksheet = [];
         var listCheckSheetForm4 = [];
         var listCheckSheetForm7 = [];
         var listCheckSheetMention = [];
-        getlistMasterLaw()
-          .then(function (_listMasterLaw) {
-            vm.listMasterLaw = _listMasterLaw;
+        LawsApi.listMasterLawDetail()
+          .then(function (rs) {
+            vm.listMasterLawDetail = rs.data;
             // get law by year
             return getFormProperty(propertyId);
           })
           .then(function (_property) {
             property = _property;
             var _year = new Date(property.men10).getFullYear();
-            return getLawsByYear(_year);
+            return LawsApi.listLawsByYear(_year);
           })
-          .then(function (_law) {
-            law = _law;
-            return getMasterProperties();
+          .then(function (rs) {
+            law = rs.data;
+            return LawsApi.listMasterProperties();
           })
-          .then(function (_listMaster) {
-            vm.listMasterProperties = _listMaster;
+          .then(function (rs) {
+            vm.listMasterProperties = rs.data;
             var _promises = [];
             // each law data
             law.law_details.law_details.forEach(function (lawData) {
@@ -500,27 +501,26 @@
           .then(function (checkList) {
             // maping list master law with result check each law data
             listChecksheet = _.map(checkList, function (element) {
-              var treasure = _.findWhere(vm.listMasterLaw, {
+              var treasure = _.findWhere(vm.listMasterLawDetail, {
                 _id: element.master_law
               });
               return _.extend(element, treasure);
             });
-            return getMasterCheckSheetForm4();
+            return PropertyApi.listMasterCheckSheetForm4();
           })
-          .then(function (_listCheckSheetForm4) {
-            listCheckSheetForm4 = _listCheckSheetForm4;
-            return getMasterCheckSheetForm7();
+          .then(function (rs) {
+            listCheckSheetForm4 = rs.data;
+            return PropertyApi.listMasterCheckSheetForm7();
           })
-          .then(function (_listCheckSheetForm7) {
-            listCheckSheetForm7 = _listCheckSheetForm7;
-
+          .then(function (rs) {
+            listCheckSheetForm7 = rs.data;
             if (property.men3_1_1) {
-              return getlistMasterLawTdfk();
+              return LawsApi.listMasterLawTdfk();
             }
             return null;
           })
-          .then(function (_listMasterLawTdfk) {
-            vm.listMasterLawTdfk = _listMasterLawTdfk;
+          .then(function (rs) {
+            vm.listMasterLawTdfk = rs ? rs.data : null;
 
             if (property.men3_1_1) {
               // men3_1_1 : "東京都"
@@ -552,20 +552,29 @@
           })
           .then(function (_listCheckSheetMention) {
             listCheckSheetMention = _listCheckSheetMention;
-            console.log('listCheckSheetMention', listCheckSheetMention);
 
             vm.property.doc.form1_ro = [];
+            vm.property.doc.form1_ha = [];
             vm.property.doc.form4_ro = [];
+            vm.property.doc.form4_ha1 = [];
+            vm.property.doc.form7_ro1 = [];
             vm.property.doc.formMen_ro = [];
+            vm.property.doc.formMen_ha = [];
             listChecksheet.forEach(function (item) {
               if (item.form1_ro && item.id) {
                 vm.property.doc.form1_ro.push(item.id);
+                // form ha
+                vm.property.doc.form1_ha = $scope.checkSheetRoHa(item.id, true, vm.property.doc.form1_ha,
+                  vm.property.doc.form1_ro, vm.listMasterLawDetail, 'form1');
                 // form4
                 var filterForm4 = _.filter(listCheckSheetForm4, {
                   form1: parseInt(item.id, 10)
                 });
                 filterForm4.forEach(function (form4) {
                   vm.property.doc.form4_ro.push(form4.id);
+                  // form ha
+                  vm.property.doc.form4_ha1 = $scope.checkSheetRoHa(form4.id, true, vm.property.doc.form4_ha1,
+                    vm.property.doc.form4_ro, listCheckSheetForm4, 'form4');
                 });
                 // form7
                 var filterForm7 = _.filter(listCheckSheetForm7, {
@@ -579,12 +588,16 @@
 
             if (listCheckSheetMention) {
               listCheckSheetMention.forEach(function (item) {
-                vm.property.doc.formMen_ro.push(item.id);
+                if (item.form1_ro && item.id) {
+                  vm.property.doc.formMen_ro.push(item.id);
+                  vm.property.doc.formMen_ha.push(item.id);
+                }
               });
             }
             console.log(vm.property.doc);
             vm.property.createOrUpdate()
               .then(function (res) {
+                vm.busyLoad = false;
                 $scope.nofitySuccess('自動チェックが完了しました。');
               })
               .catch(function (res) {
@@ -592,49 +605,12 @@
               });
           })
           .catch(function (err) {
+            vm.busyLoad = false;
             console.log(err);
             $scope.nofityError('自動チェックが失敗しました。' + err);
           });
       });
     };
-
-
-    function getlistMasterLaw() {
-      return new Promise(function (resolve, reject) {
-        // load list data masterlaw
-        LawsApi.listMasterLaw()
-          .then(function (res) {
-            resolve(res.data);
-          })
-          .catch(function (res) {
-            reject(res.data.message);
-          });
-      });
-    }
-
-    function getMasterCheckSheetForm4() {
-      return new Promise(function (resolve, reject) {
-        PropertyApi.listMasterCheckSheetForm4()
-          .then(function (res) {
-            resolve(res.data);
-          })
-          .catch(function (res) {
-            reject(res.data.message);
-          });
-      });
-    }
-
-    function getMasterCheckSheetForm7() {
-      return new Promise(function (resolve, reject) {
-        PropertyApi.listMasterCheckSheetForm7()
-          .then(function (res) {
-            resolve(res.data);
-          })
-          .catch(function (res) {
-            reject(res.data.message);
-          });
-      });
-    }
 
     /**
      * request api get property
@@ -649,59 +625,12 @@
       });
     }
 
-    /**
-     * request api get law by year
-     * @param {*} year 2018, 2019...
-     */
-    function getLawsByYear(year) {
-      return new Promise(function (resolve, reject) {
-        console.log('year', year);
-        LawsApi.requestLawsByYear(year)
-          .then(function (res) {
-            if (!res.data) {
-              reject('法令情報が見つかりません');
-            }
-            resolve(res.data);
-          })
-          .catch(function (res) {
-            reject(res.data.message);
-          });
-      });
-    }
-
-    /**
-     * request api get master properties
-     */
-    function getMasterProperties() {
-      return new Promise(function (resolve, reject) {
-        LawsApi.listMasterProperties()
-          .then(function (res) {
-            resolve(res.data);
-          })
-          .catch(function (res) {
-            reject(res.data.message);
-          });
-      });
-    }
-
-    function getlistMasterLawTdfk() {
-      return new Promise(function (resolve, reject) {
-        LawsApi.listMasterLawTdfk()
-        .then(function (res) {
-          resolve(res.data);
-        })
-        .catch(function (res) {
-          reject(res.data.message);
-        });
-      });
-    }
-
     function checkRules(formProperty, lawData) {
       return new Promise(function (resolve, reject) {
         var FORM = 'men';
         var validateOrRules = [];
         var obj = [];
-
+        // console.log('formProperty', formProperty);
         lawData.law_rules.forEach(function (rule) {
           // OR with rules
           var validateAndFields = [];
@@ -709,7 +638,7 @@
           rule.fields.forEach(function (field) {
             // field.name = '3_6_1';
             var form_name = FORM + field.name;
-            console.log(form_name);
+            console.log('form_name', form_name);
             var resultCheckAnd = [];
 
             if (form_name === 'men4_10_5' || form_name === 'men4_10_6' || form_name === 'men4_10_7') {
@@ -718,6 +647,7 @@
               validateAndFields.push(resultCheckAnd);
             } else {
               var valueInput = formProperty[form_name];
+              // console.log('valueInput', valueInput);
               // check obj or number
               // obj: men3_7_1 {c1: 1, c2: 2, c3: 3, c4: 4, c5: 55}
               // number: men3_6_1 60
@@ -726,7 +656,7 @@
               } else {
                 validateAndProperties = AutoCheckService.processProperties(field, valueInput, vm.listMasterProperties);
                 resultCheckAnd = AutoCheckService.checkedAND(validateAndProperties);
-                console.log(validateAndProperties, 'xxx', resultCheckAnd);
+                console.log('validateAndProperties', validateAndProperties, resultCheckAnd);
                 validateAndFields.push(resultCheckAnd);
               }
             }
@@ -737,13 +667,24 @@
         // OR with rules
         console.log('validateOrRules', validateOrRules);
         var result = AutoCheckService.checkedOR(validateOrRules);
-        console.log('checkedOR', result);
+        console.log('checkedORvalidateOrRules', result);
         resolve({
           master_law: lawData.master_law,
           form1_ro: result
         });
       });
     }
+
+    vm.setDecimal = function (form, decimal) {
+      var value = 0;
+      if (!vm.property[form]) {
+        value = parseFloat(value).toFixed(decimal);
+      } else {
+        value = parseFloat(vm.property[form]).toFixed(decimal);
+      }
+      vm.property[form] = value;
+    };
+
     // end controller
   }
 
@@ -751,6 +692,24 @@
     return function (array, needle) {
       if (!array) return 0;
       return array.indexOf(needle) >= 0;
+    };
+  });
+
+  angular.module('properties.admin').directive('toDecimal', function () {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function (value) {
+          return '' + value;
+        });
+        ngModel.$formatters.push(function (value) {
+          if (!value) {
+            value = 0;
+          }
+          var text = parseFloat(value).toFixed(3);
+          return text;
+        });
+      }
     };
   });
 

@@ -359,7 +359,7 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men3_4 = split(_property.col_158);
     newPro.men3_5_1 = getValueMen3_5_1(_property);
     newPro.men3_5_2 = getValueMen3_5_2(_property);
-    newPro.men3_5_3 = trim(_property.col_165);
+    newPro.men3_5_3 = replace(_property.col_165);
     newPro.men3_6_1 = toFloat(_property.col_166);
     newPro.men3_6_2 = toFloat(_property.col_167);
     // 7.敷地面積
@@ -485,7 +485,7 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men3_13_6 = trim(_property.col_265);
     newPro.men3_13_7 = getValueMen3_13_7(_property);
     // 14.許可・認定等
-    newPro.men3_14 = trim(_property.col_269);
+    newPro.men3_14 = replace(_property.col_269);
     // 15.工事着手予定年月日
     newPro.men3_15 = trim(_property.col_270);
     // 16.工事完了予定年月日
@@ -537,9 +537,9 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     }
 
     // 18.その他必要な事項
-    newPro.men3_18 = trim(_property.col_290);
+    newPro.men3_18 = replace(_property.col_290);
     // 19.備考
-    newPro.men3_19 = trim(_property.col_291);
+    newPro.men3_19 = replace(_property.col_291);
 
     // 第四面
     newPro.men4_1 = toFloat(_property.col_292);
@@ -622,8 +622,8 @@ function importProperty(newPro, _property, masterProperties, list_floor) {
     newPro.men4_13 = trim(_property.col_355);
     newPro.men4_14 = trim(_property.col_356);
     newPro.men4_15 = getValueMen4_15(_property);
-    newPro.men4_16 = trim(_property.col_364);
-    newPro.men4_17 = trim(_property.col_365);
+    newPro.men4_16 = replace(_property.col_364);
+    newPro.men4_17 = replace(_property.col_365);
 
     newPro.save(function (err, result) {
       if (err) {
@@ -663,6 +663,11 @@ function percent(number) {
 
 function split(string) {
   return string.replace(/^\s+|\s+$/g, '').split(/\s*,\s*/);
+}
+
+function replace(string) {
+  if (!string) { return ''; }
+  return string.replace(/^\s+|\s+$/g, '').replace(/、+/g, ',').replace(/　+/g, ',');
 }
 
 // method create data for form

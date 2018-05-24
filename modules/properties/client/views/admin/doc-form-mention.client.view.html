@@ -57,15 +57,15 @@
                                         <!-- legal_text -->
                                         <td><input type="text" class="form-control" ng-model="vm.property.doc.mentions[$index].headline"/></td>
                                         <!-- checkbox form1_ha （ろ） -->
-                                        <td style="text-align:center;">
+                                        <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.mentions[$index].time1_check) }">
                                             <input type='checkbox' ng-model='vm.property.doc.mentions[$index].time1_check'/>
                                         </td>
                                         <!-- process rowspan of checkbox form1_ha （は） -->
-                                        <td style="text-align:center;">
+                                        <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.mentions[$index].time2_check) }">
                                             <input type='checkbox' ng-model='vm.property.doc.mentions[$index].time2_check'/>
                                         </td>
                                         <!-- process rowspan of checkbox item  最終チェック 項目-->
-                                        <td style="text-align:center;">
+                                        <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.mentions[$index].final_check) }">
                                             <input type='checkbox' ng-model='vm.property.doc.mentions[$index].final_check'/>
                                         </td>
                                         <td style="text-align:center;">
@@ -95,7 +95,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="lawData in vm.listMasterLaw">
+                                <tr ng-repeat="lawData in vm.listMasterLawTdfk">
                                     <!-- process rowspan and colspan of item1 & item2 条項 -->
                                     <td ng-if="lawData.rowspan > 0" rowspan="{{ lawData.rowspan }}">{{ lawData.item1 }}</td>
                                     <td ng-if="lawData.rowspan > 0">{{ lawData.item2 }}</td>
@@ -106,15 +106,15 @@
                                     <!-- legal_text -->
                                     <td>{{ lawData.legal_text }}</td>
                                     <!-- checkbox formMen_ro （ろ） -->
-                                    <td style="text-align:center;">
-                                        <input type='checkbox' checklist-model='vm.property.doc.formMen_ro' checklist-value="lawData.id"/>
+                                    <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.formMen_ro | contains:lawData.id)}">
+                                        <input type='checkbox' checklist-model='vm.property.doc.formMen_ro' checklist-value="lawData.id" ng-click="vm.checkParent(lawData.id, checked)"/>
                                     </td>
                                     <!-- process rowspan of checkbox formMen_ha （は） -->
-                                    <td style="text-align:center;">
+                                    <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.formMen_ha | contains:lawData.id)}">
                                         <input type='checkbox' checklist-model='vm.property.doc.formMen_ha' checklist-value="lawData.id"/>
                                     </td>
                                     <!-- process rowspan of checkbox formMen_item  最終チェック 項目-->
-                                    <td style="text-align:center;">
+                                    <td style="text-align:center;" ng-class="{'checked': (vm.property.doc.formMen_item | contains:lawData.id)}">
                                         <input type='checkbox' checklist-model='vm.property.doc.formMen_item' checklist-value="lawData.id">
                                     </td>
                                 </tr>

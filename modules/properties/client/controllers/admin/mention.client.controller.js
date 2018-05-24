@@ -15,31 +15,30 @@
     vm.property = property;
     vm.authentication = Authentication;
     vm.form = {};
-    vm.listMasterLaw = [];
+    vm.listMasterLawTdfk = [];
     vm.isTdfk = false;
     vm.busyLoad = false;
     initData();
 
     function initData() {
-      vm.busyLoad = true;
       vm.propertyId = vm.property._id;
       if (!vm.property.doc.mentions) {
         vm.property.doc.mentions = [];
       }
 
       if (vm.property.men3_1_1 === '東京都') {
+        vm.busyLoad = true;
         vm.isTdfk = true;
-        getlistMasterLawTdfk()
-        .then(function (_list) {
+        LawsApi.listMasterLawTdfk()
+        .then(function (rs) {
           vm.busyLoad = false;
-          vm.listMasterLaw = _list;
+          vm.listMasterLawTdfk = rs.data;
         })
         .catch(function (err) {
           vm.busyLoad = false;
           $scope.nofityError('特記様式登録が失敗しました。' + err);
         });
       }
-      vm.busyLoad = false;
     }
     /**
      * save to database rules
@@ -83,18 +82,6 @@
       });
     };
 
-    function getlistMasterLawTdfk() {
-      return new Promise(function (resolve, reject) {
-        LawsApi.listMasterLawTdfk()
-        .then(function (res) {
-          resolve(res.data);
-        })
-        .catch(function (res) {
-          reject(res.data.message);
-        });
-      });
-    }
-
     /**
      * down file excel checksheet
      * @param {*} mendou form1, form4, form7
@@ -103,9 +90,14 @@
       var href = $scope.exportExcel('#tableToExport', 'チェックシート');
       $scope.handleShowDownload({
         href: href,
-        file: 'ダウンロード.xls',
+        file: '特記様式_' + vm.property.men17 + '.xls',
         text: 'ダウンロード'
       });
+    };
+
+    vm.checkParent = function (value, checked) {
+      vm.property.doc.formMen_ha = $scope.checkSheetRoHa(value, checked, vm.property.doc.formMen_ha,
+        vm.property.doc.formMen_ro, vm.listMasterLawTdfk, 'form1');
     };
     // controller
   }

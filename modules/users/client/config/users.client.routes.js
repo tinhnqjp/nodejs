@@ -18,7 +18,7 @@
         controller: 'SettingsController',
         controllerAs: 'vm',
         data: {
-          roles: ['admin', 'jaic', 'user'],
+          roles: ['other'],
           pageTitle: 'アカウント登録'
         }
       })
