@@ -86,7 +86,7 @@ exports.invokeRolesPolicies = function () {
  */
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
-  console.log(roles);
+
   // If an law is being processed and the current user created it then allow any manipulation
   if (req.law && req.user && req.law.user && req.law.user.id === req.user.id) {
     return next();

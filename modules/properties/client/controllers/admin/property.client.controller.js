@@ -6,11 +6,11 @@
     .controller('PropertiesAdminController', PropertiesAdminController);
 
   PropertiesAdminController.$inject = ['$scope', '$state', '$window', 'propertyResolve', 'Authentication',
-    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi', 'AutoCheckService', 'CommonPromiseService'
+    'Notification', 'PropertiesService', 'LawsApi', 'PropertyApi', 'AutoCheckService'
   ];
 
   function PropertiesAdminController($scope, $state, $window, property, Authentication, Notification,
-    PropertiesService, LawsApi, PropertyApi, AutoCheckService, CommonPromiseService) {
+    PropertiesService, LawsApi, PropertyApi, AutoCheckService) {
     var vm = this;
 
     vm.property = property;

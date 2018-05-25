@@ -2,9 +2,9 @@
 
 angular.module('core').controller('AppController', AppController);
 
-AppController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'ngDialog', 'notifyService', 'Excel', 'PropertyApi'];
+AppController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'ngDialog', 'notifyService', 'Excel'];
 
-function AppController($scope, $timeout, $window, Authentication, ngDialog, notifyService, Excel, PropertyApi) {
+function AppController($scope, $timeout, $window, Authentication, ngDialog, notifyService, Excel) {
   $scope.Authentication = Authentication;
   $scope.handleShowConfirm = handleShowConfirm;
   $scope.handleShowDownload = handleShowDownload;
@@ -148,5 +148,4 @@ function AppController($scope, $timeout, $window, Authentication, ngDialog, noti
     }
     return parseInt(rowspan_ck_ha, 10);
   }
-
 }

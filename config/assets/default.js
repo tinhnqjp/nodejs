@@ -48,10 +48,10 @@ module.exports = {
         'public/lib/checklist-model/checklist-model.js',
         'public/lib/jquery-ui/jquery-ui.min.js',
         'public/lib/angular-ui-sortable/sortable.min.js',
+        'public/scripts/docs.js',
         'public/lib/underscore/underscore.js',
         'public/lib/angular-loading-bar/src/loading-bar.js',
-        'public/lib/ng-dialog/js/ngDialog.min.js',
-        'public/core/property.js'
+        'public/lib/ng-dialog/js/ngDialog.min.js'
         // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
