@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   path = require('path'),
   config = require(path.resolve('./config/config')),
+  LawData = mongoose.model('LawData'),
   chalk = require('chalk');
 
 var LawRegulationSchema = new Schema({
@@ -75,6 +76,54 @@ var LawRegulationSchema = new Schema({
     default: Date.now
   }
 });
+
+
+/** MT 4 */
+function createLawRegulationTdfk(lawId, tdfk_name, masterLawTdfkList) {
+  return new Promise(function (resolve, reject) {
+    LawData.createLawDataList(lawId, masterLawTdfkList)
+    .then(function (result) {
+      var todoufuken_regulation = {
+        todoufuken: tdfk_name,
+        law_regulations: result
+      };
+      resolve(todoufuken_regulation);
+    })
+    .catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+/** MT 5 */
+function createListLawRegulationTdfk(lawId, tdfk, masterLawTdfkList) {
+  var promises = [];
+  tdfk.forEach(function (tdfk_name) {
+    promises.push(createLawRegulationTdfk(lawId, tdfk_name, masterLawTdfkList));
+  });
+  return Promise.all(promises);
+}
+
+/** MT 6 */
+LawRegulationSchema.statics.saveLawRegulationTdfk = function (lawId, tdfk, masterLawTdfkList) {
+  return new Promise(function (resolve, reject) {
+    createListLawRegulationTdfk(lawId, tdfk, masterLawTdfkList)
+    .then(function (result) {
+      var LawRegulation = mongoose.model('LawRegulation');
+      var newLawRegulation = new LawRegulation({
+        law_id: lawId,
+        todoufuken_regulations: result
+      });
+      return newLawRegulation.save();
+    })
+    .then(function (result) {
+      resolve(result);
+    })
+    .catch(function (err) {
+      reject(err);
+    });
+  });
+};
 
 mongoose.model('LawRegulation', LawRegulationSchema, 'lawRegulation');
 

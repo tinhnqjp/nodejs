@@ -27,5 +27,23 @@ var LawDataSchema = new Schema({
   ]
 });
 
-mongoose.model('LawData', LawDataSchema, 'lawData');
+/** MT 1 */
+function saveLawData(lawId, item) {
+  var LawData = mongoose.model('LawData');
+  var newLawData = new LawData({
+    master_law: item,
+    law_id: lawId
+  });
+  return newLawData.save();
+}
 
+/** MT 2 */
+LawDataSchema.statics.createLawDataList = function (lawId, masterLawList) {
+  var promises = [];
+  masterLawList.forEach(function (item) {
+    promises.push(saveLawData(lawId, item));
+  });
+  return Promise.all(promises);
+};
+
+mongoose.model('LawData', LawDataSchema, 'lawData');

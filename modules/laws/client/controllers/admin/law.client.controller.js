@@ -482,14 +482,21 @@
           name: vm.law.name
         });
         rs_law.createOrUpdate()
-          .then(function (res) {
-            vm.busy = false;
-            $scope.nofitySuccess('法令データの保存が完了しました。');
-          })
-          .catch(function (res) {
-            vm.busy = false;
-            $scope.nofityError('法令データの保存が失敗しました。' + res.data.message);
-          });
+        .then(successCallback)
+        .catch(errorCallback);
+
+        function successCallback(law) {
+          if (!vm.law._id) {
+            $state.go('admin.laws.edit', { lawId: law._id });
+          }
+          vm.busy = false;
+          $scope.nofitySuccess('法令データの保存が完了しました。');
+        }
+
+        function errorCallback(err) {
+          vm.busy = false;
+          $scope.nofityError('法令データの保存が失敗しました。' + err.data.message);
+        }
       });
     }
 
